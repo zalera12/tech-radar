@@ -16,7 +16,7 @@ services:
       - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ./files:/var/www/storage/app/public/files
     networks:
-      - radar-network
+      - radar_network
 
   radar_caddy:
     image: caddy:2.8.4
@@ -31,7 +31,7 @@ services:
       - .:/var/www
     restart: unless-stopped
     networks:
-      - radar-network
+      - radar_network
 
   radar_db:
     image: mysql:5.7
@@ -39,7 +39,7 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} 
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       TZ: ${TZ}
@@ -48,7 +48,7 @@ services:
     volumes:
       - radar_db_data:/var/lib/mysql
     networks:
-      - radar-network
+      - radar_network
 
   radar_visualization:
     image: wwwthoughtworks/build-your-own-radar:latest
@@ -61,8 +61,8 @@ services:
       - ./files:/opt/build-your-own-radar/files
     restart: unless-stopped
     networks:
-      - radar-network
-      
+      - radar_network
+
 networks:
   radar_network:
     driver: bridge
