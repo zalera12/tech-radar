@@ -1,38 +1,4 @@
 services:
-  radar_app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: radar_app
-    container_name: radar_app
-    restart: unless-stopped
-    tty: true
-    environment:
-      SERVICE_NAME: app
-      SERVICE_TAGS: prod
-    working_dir: /var/www
-    volumes:
-      - .:/var/www
-      - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-      - ./files:/var/www/storage/app/public/files
-    networks:
-      - radar_network
-
-  radar_caddy:
-    image: caddy:2.8.4
-    container_name: radar_caddy
-    ports:
-      - '80:80'
-      - '443:443'
-    volumes:
-      - radar_caddy_config:/config
-      - radar_caddy_data:/data
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - .:/var/www
-    restart: unless-stopped
-    networks:
-      - radar_network
-
   radar_db:
     image: mysql:5.7
     container_name: radar_db
@@ -69,8 +35,4 @@ networks:
 
 volumes:
   radar_db_data:
-    driver: local
-  radar_caddy_config:
-    driver: local
-  radar_caddy_data:
     driver: local

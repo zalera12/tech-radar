@@ -1,47 +1,27 @@
-# Use the official PHP image as a base image
-FROM php:8.2-fpm
+FROM php:8.2-fpm-alpine
 
-# Set working directory
-WORKDIR /var/www
+ARG user
+ARG uid
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    locales \
-    zip \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
-    unzip \
-    git \
+RUN apk update && apk add \
     curl \
-    libzip-dev \
-    libpq-dev \
-    libonig-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd
+    libpng-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    shadow  # Add shadow package to install useradd
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring zip exif pcntl
+RUN docker-php-ext-install pdo pdo_mysql \
+    && apk --no-cache add nodejs npm
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+#USER root
 
-# Copy the existing application directory contents to the working directory
-COPY . /var/www
+#RUN chmod 777 -R /var/www/
 
-# Copy the existing application directory permissions to the working directory
-COPY --chown=www-data:www-data . /var/www
-
-# Change current user to www
-USER www-data
-
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-
-CMD ["php-fpm"]
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN mkdir -p /home/$user/.composer && \
+    chown -R $user:$user /home/$user
+WORKDIR /var/www
+USER $user
