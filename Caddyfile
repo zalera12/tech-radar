@@ -1,0 +1,29 @@
+tech-radar.gci.my.id {
+    root * /var/www/public
+    php_fastcgi app:9000
+    file_server
+    try_files {path} {path}/ /index.php?{query}
+
+    @phpFiles {
+        path *.php
+    }
+    
+		encode zstd gzip
+
+    handle @phpFiles {
+        php_fastcgi app:9000
+    }
+
+    handle {
+        try_files {path} {path}/ /index.php?{query}
+    }
+
+    handle /\.ht* {
+        respond 403
+	}
+}
+
+viz.tech-radar.gci.my.id {
+	encode zstd gzip
+	reverse_proxy http://radar_visualization:8081
+}
