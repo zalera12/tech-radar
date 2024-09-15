@@ -27,7 +27,7 @@ services:
     volumes:
       - radar_caddy_config:/config
       - radar_caddy_data:/data
-      - Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - .:/var/www
     restart: unless-stopped
     networks:
