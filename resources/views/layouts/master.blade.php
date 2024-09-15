@@ -130,6 +130,16 @@
             }
         });
     }
+
+    @if(session('error'))
+        Swal.fire({
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Oke',
+            })
+    @endif
 </script>
 </body>
 

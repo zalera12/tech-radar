@@ -59,7 +59,7 @@
                         <div class="col-md-auto ms-auto">
                             <div class="d-flex align-items-center gap-2">
                                 <span class="text-muted">Sort by: </span>
-                           
+
                             </div>
                         </div>
                     </div>
@@ -81,27 +81,31 @@
                                         <tr>
                                             <!-- Column Role Name -->
                                             <td>{{ $role->name }}</td>
-                            
+
                                             <!-- Permission Checkboxes -->
                                             @foreach ($permissions as $permission)
                                                 @php
                                                     // Check if the role is connected to the permission for the specific company
-                                                    $isConnected = $rolePermissions->where('role_id', $role->id)
-                                                                                    ->where('permission_id', $permission->id)
-                                                                                    ->isNotEmpty();
+                                                    $isConnected = $rolePermissions
+                                                        ->where('role_id', $role->id)
+                                                        ->where('permission_id', $permission->id)
+                                                        ->isNotEmpty();
                                                 @endphp
                                                 <td>
-                                                    <form action="{{ url('/toggle-role-permission') }}?permission=Manage User Permission&idcp={{ $company->id }}" method="POST">
+                                                    <form
+                                                        action="{{ url('/toggle-role-permission') }}?permission=Manage User Permission&idcp={{ $company->id }}"
+                                                        method="POST">
                                                         @csrf
                                                         <input type="hidden" name="role_id" value="{{ $role->id }}">
-                                                        <input type="hidden" name="permission_id" value="{{ $permission->id }}">
+                                                        <input type="hidden" name="permission_id"
+                                                            value="{{ $permission->id }}">
                                                         <input type="hidden" name="company_id" value="{{ $company->id }}">
-                                                        <input type="hidden" name="is_connected" value="{{ $isConnected ? 1 : 2 }}">
-                                                        
-                                                        <input type="checkbox" 
-                                                               class="form-check-input"
-                                                               {{ $isConnected ? 'checked' : '' }}
-                                                               onclick="this.form.submit()">
+                                                        <input type="hidden" name="is_connected"
+                                                            value="{{ $isConnected ? 1 : 2 }}">
+
+                                                        <input type="checkbox" class="form-check-input"
+                                                            {{ $isConnected ? 'checked' : '' }}
+                                                            onclick="this.form.submit()">
                                                     </form>
                                                 </td>
                                             @endforeach
@@ -109,15 +113,19 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            
+
                             <!-- Optional: Alert Messages -->
                             @if (session('success'))
-                                <script>alert('{{ session('success') }}');</script>
+                                <script>
+                                    alert('{{ session('success') }}');
+                                </script>
                             @endif
                             @if (session('error'))
-                                <script>alert('{{ session('error') }}');</script>
+                                <script>
+                                    alert('{{ session('error') }}');
+                                </script>
                             @endif
-                            
+
                             <div class="noresult" style="display: none">
                                 <div class="text-center">
                                     <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
@@ -308,16 +316,16 @@
 
     </div>
     <!--end row-->
-    @if(session('success_create'))
-    <script>
-        Swal.fire({
-            title: 'Role Berhasil Ditambahkan',
-            text: "Silakan isi permission untuk role yang baru.",
-            icon: 'success',
-            confirmButtonText: 'OK'
-        });
-    </script>
-@endif
+    @if (session('success_create'))
+        <script>
+            Swal.fire({
+                title: 'Role Berhasil Ditambahkan',
+                text: "Silakan isi permission untuk role yang baru.",
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
 @endsection
 @section('script')
     <script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>

@@ -58,7 +58,7 @@
                         <div class="col-md-auto ms-auto">
                             <div class="d-flex align-items-center gap-2">
                                 <span class="text-muted">Sort by: </span>
-                           
+
                             </div>
                         </div>
                     </div>
@@ -80,28 +80,32 @@
                                         <tr>
                                             <!-- Column Role Name -->
                                             <td><?php echo e($role->name); ?></td>
-                            
+
                                             <!-- Permission Checkboxes -->
                                             <?php $__currentLoopData = $permissions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $permission): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <?php
                                                     // Check if the role is connected to the permission for the specific company
-                                                    $isConnected = $rolePermissions->where('role_id', $role->id)
-                                                                                    ->where('permission_id', $permission->id)
-                                                                                    ->isNotEmpty();
+                                                    $isConnected = $rolePermissions
+                                                        ->where('role_id', $role->id)
+                                                        ->where('permission_id', $permission->id)
+                                                        ->isNotEmpty();
                                                 ?>
                                                 <td>
-                                                    <form action="<?php echo e(url('/toggle-role-permission')); ?>?permission=Manage User Permission&idcp=<?php echo e($company->id); ?>" method="POST">
+                                                    <form
+                                                        action="<?php echo e(url('/toggle-role-permission')); ?>?permission=Manage User Permission&idcp=<?php echo e($company->id); ?>"
+                                                        method="POST">
                                                         <?php echo csrf_field(); ?>
                                                         <input type="hidden" name="role_id" value="<?php echo e($role->id); ?>">
-                                                        <input type="hidden" name="permission_id" value="<?php echo e($permission->id); ?>">
+                                                        <input type="hidden" name="permission_id"
+                                                            value="<?php echo e($permission->id); ?>">
                                                         <input type="hidden" name="company_id" value="<?php echo e($company->id); ?>">
-                                                        <input type="hidden" name="is_connected" value="<?php echo e($isConnected ? 1 : 2); ?>">
-                                                        
-                                                        <input type="checkbox" 
-                                                               class="form-check-input"
-                                                               <?php echo e($isConnected ? 'checked' : ''); ?>
+                                                        <input type="hidden" name="is_connected"
+                                                            value="<?php echo e($isConnected ? 1 : 2); ?>">
 
-                                                               onclick="this.form.submit()">
+                                                        <input type="checkbox" class="form-check-input"
+                                                            <?php echo e($isConnected ? 'checked' : ''); ?>
+
+                                                            onclick="this.form.submit()">
                                                     </form>
                                                 </td>
                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -109,15 +113,19 @@
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tbody>
                             </table>
-                            
+
                             <!-- Optional: Alert Messages -->
                             <?php if(session('success')): ?>
-                                <script>alert('<?php echo e(session('success')); ?>');</script>
+                                <script>
+                                    alert('<?php echo e(session('success')); ?>');
+                                </script>
                             <?php endif; ?>
                             <?php if(session('error')): ?>
-                                <script>alert('<?php echo e(session('error')); ?>');</script>
+                                <script>
+                                    alert('<?php echo e(session('error')); ?>');
+                                </script>
                             <?php endif; ?>
-                            
+
                             <div class="noresult" style="display: none">
                                 <div class="text-center">
                                     <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
@@ -309,15 +317,15 @@
     </div>
     <!--end row-->
     <?php if(session('success_create')): ?>
-    <script>
-        Swal.fire({
-            title: 'Role Berhasil Ditambahkan',
-            text: "Silakan isi permission untuk role yang baru.",
-            icon: 'success',
-            confirmButtonText: 'OK'
-        });
-    </script>
-<?php endif; ?>
+        <script>
+            Swal.fire({
+                title: 'Role Berhasil Ditambahkan',
+                text: "Silakan isi permission untuk role yang baru.",
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    <?php endif; ?>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('script'); ?>
     <script src="<?php echo e(URL::asset('build/libs/list.js/list.min.js')); ?>"></script>

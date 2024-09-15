@@ -7,10 +7,9 @@
 <?php $__env->startSection('content'); ?>
     <?php $__env->startComponent('components.breadcrumb'); ?>
         <?php $__env->slot('li_1'); ?>
-            Companies
+            Perusahaan
         <?php $__env->endSlot(); ?>
         <?php $__env->slot('title'); ?>
-            Users
         <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
 
@@ -50,20 +49,35 @@
                 <div class="card-header">
                     <div class="row g-2">
                         <div class="col-md-3">
-                            <div class="search-box">
-                                <input type="text" class="form-control search" placeholder="Search for company...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
+                            <form action="<?php echo e(url()->current()); ?>" method="GET">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="search" class="form-control search bg-light border-light"
+                                        id="searchJob" value="<?php echo e(request('search')); ?>"
+                                        placeholder="Search for members...">
+                                    <!-- Hidden input untuk menjaga sort_order -->
+                                    <input type="hidden" name="sort_order" value="<?php echo e(request('sort_order')); ?>">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </button>
+                                </div>
+                            </form>
+                                           
                         </div>
                         <div class="col-md-auto ms-auto">
                             <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted">Sort by: </span>
-                                <select class="form-control mb-0" data-choices data-choices-search-false
-                                    id="choices-single-default">
-                                    <option value="Owner">Owner</option>
-                                    <option value="Company">Company</option>
-                                    <option value="location">Location</option>
-                                </select>
+                                <span class="fw-bold">Urutkan Berdasarkan : </span>
+                                <form action="<?php echo e(url()->current()); ?>" method="GET" id="filterForm">
+                                    <!-- Hidden input untuk menjaga search -->
+                                    <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+                                    <select class="form-control" style="cursor: pointer" name="sort_order" id="sortOrder" onchange="this.form.submit()">
+                                        <option value="terbaru" <?php echo e(request('sort_order') == 'terbaru' ? 'selected' : ''); ?>>Terbaru</option>
+                                        <option value="terlama" <?php echo e(request('sort_order') == 'terlama' ? 'selected' : ''); ?>>Terlama</option>
+                                        <option value="A-Z" <?php echo e(request('sort_order') == 'A-Z' ? 'selected' : ''); ?>>A-Z</option>
+                                        <option value="Z-A" <?php echo e(request('sort_order') == 'Z-A' ? 'selected' : ''); ?>>Z-A</option>
+                                    </select>
+                                </form>
+                                
+                                
                             </div>
                         </div>
                     </div>
@@ -87,7 +101,8 @@
                                 <tbody>
                                     <?php $__currentLoopData = $pendingMembers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $member): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr data-id="<?php echo e($member['user']->id); ?>" data-company-id="<?php echo e($company->id); ?>"
-                                            data-role-id="<?php echo e($member['role']->id); ?>" data-status="<?php echo e($member['status']); ?>">
+                                            data-role-id="<?php echo e($member['role']->id); ?>"
+                                            data-status="<?php echo e($member['status']); ?>">
                                             <td><?php echo e($index + 1); ?></td>
                                             <td>
                                                 <div class="d-flex align-items-center">
@@ -105,7 +120,8 @@
                                             <td>
                                                 <ul class="list-inline hstack gap-2 mb-0">
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="Edit Role">
+                                                        data-bs-trigger="hover" data-bs-placement="top"
+                                                        title="Edit Role">
                                                         <a class="edit-item-btn" href="#editPendingMemberModal"
                                                             data-bs-toggle="modal">
                                                             <i class="ri-pencil-fill align-bottom text-muted"></i>
@@ -133,14 +149,10 @@
                         </div>
                         <div class="d-flex justify-content-end mt-3">
                             <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="#">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="#">
-                                    Next
-                                </a>
+                                <?php echo e($pendingMembers->links()); ?>
+
                             </div>
+                            
                         </div>
                     </div>
                     <!-- Modal Edit Role for User -->
@@ -320,8 +332,8 @@
 
             // Event listener untuk reset action dan menghapus kelas/gaya overflow
             editModal.addEventListener('hidden.bs.modal', function() {
-              // Menghapus backdrop modal jika masih ada
-              const modalBackdrop = document.querySelector('.modal-backdrop');
+                // Menghapus backdrop modal jika masih ada
+                const modalBackdrop = document.querySelector('.modal-backdrop');
                 if (modalBackdrop) {
                     modalBackdrop.remove();
                 }

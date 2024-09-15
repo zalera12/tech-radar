@@ -13,20 +13,40 @@ use Symfony\Component\Uid\Ulid;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil user yang sedang login
         $user = auth()->user();
-
-        // Mengambil data companies yang terhubung dengan user saat ini dan hanya yang statusnya 'Accepted'
-        $companies = $user->companies()->wherePivot('status', 'Accepted')->get();
-
+        $search = $request->input('search');
+        $sortOrder = $request->input('sort_order');
+    
+        $companies = $user->companies()
+            ->wherePivot('status', 'Accepted')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->when($sortOrder, function ($query, $sortOrder) {
+                if ($sortOrder === 'A-Z') {
+                    $query->orderBy('name', 'asc');
+                } elseif ($sortOrder === 'Z-A') {
+                    $query->orderBy('name', 'desc');
+                } elseif ($sortOrder === 'terbaru') {
+                    $query->orderBy('created_at', 'desc');
+                } elseif ($sortOrder === 'terlama') {
+                    $query->orderBy('created_at', 'asc');
+                }
+            })
+            ->paginate(3);
+    
         return view('index', [
             'dataCompanies' => $companies,
             'user' => $user,
+            'search' => $search,
+            'sortOrder' => $sortOrder,
         ]);
-    }
-
+    }    
     public function profile()
     {
         return view('pages-profile', [
@@ -130,7 +150,7 @@ class DashboardController extends Controller
             'status' => 'ACCEPTED',
         ]);
 
-        return redirect('/')->with('add_success', 'Company created successfully!');
+        return redirect('/')->with('add_success', 'Perusahaan Berhasil Ditambahkan!');
     }
 
     public function editCompanies(Request $request, $id)

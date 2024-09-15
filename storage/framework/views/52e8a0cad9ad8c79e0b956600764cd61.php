@@ -11,8 +11,8 @@
 
             <div class="h-100">
                 <div class="flex-grow-1">
-                    <h4 class="fs-16 mb-1">Welcome, <?php echo e($user->name); ?>!</h4>
-                    <p class="text-muted mb-0">Here's what's happening with your store today.</p>
+                    <h4 class="fs-16 mb-1">Selamat Datang!, <?php echo e($user->name); ?>!</h4>
+                    <p class="text-muted mb-0">Inilah perkembangan terbaru dari radar teknologi Anda hari ini</p>
                 </div>
                 <div class="row mt-3">
                     <div class="col-lg-12">
@@ -20,43 +20,51 @@
                             <div class="card-body">
                                 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between button-container">
                                     <button class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#JoinCompanyModal">
-                                        <i class="ri-add-line align-bottom me-1"></i> Join Company
+                                        <i class="ri-add-line align-bottom me-1"></i> Gabung Perusahaan
                                     </button>
                                     
                                     <button class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#CreateJobModal">
-                                        <i class="ri-add-line align-bottom me-1"></i> Create Company
+                                        <i class="ri-add-line align-bottom me-1"></i> Buat Perusahaan
                                     </button>
                                 </div>
 
                                 <div class="row mt-3 gy-3">
                                     <div class="col-xxl-10 col-md-6">
-                                        <div class="search-box">
-                                            <input type="text" class="form-control search bg-light border-light"
-                                                id="searchJob" autocomplete="off"
-                                                placeholder="Search for jobs or companies...">
-                                            <i class="ri-search-line search-icon"></i>
-                                        </div>
+                                        <form action="/" method="GET">
+                                            <div class="input-group mb-3">
+                                                <input type="text" name="search" class="form-control search bg-light border-light" 
+                                                       id="searchJob" value="<?php echo e(request('search')); ?>" 
+                                                       placeholder="Search for companies...">
+                                                <input type="hidden" name="sort_order" value="<?php echo e(request('sort_order')); ?>">
+                                                <button class="btn btn-primary" type="submit">
+                                                    <i class="ri-search-line search-icon"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+                                        
+                                        
                                     </div>
-                                    <div class="col-xxl-2 col-md-6">
-                                        <div class="input-light">
-                                            <select class="form-control" data-choices data-choices-search-false
-                                                name="choices-single-default" id="idStatus">
-                                                <option value="All">All Selected</option>
-                                                <option value="Newest" selected>Newest</option>
-                                                <option value="Popular">Popular</option>
-                                                <option value="Oldest">Oldest</option>
-                                            </select>
+                                   
+                                        <div class="col-xxl-2 col-md-6">
+                                            <form id="filterForm" action="/" method="GET">
+                                                <div class="input-light">
+                                                    <select class="form-control" data-choices data-choices-search-false
+                                                            name="sort_order" id="sortOrder" onchange="this.form.submit()">
+                                                        <option value="terbaru" <?php echo e(request('sort_order') == 'terbaru' ? 'selected' : ''); ?>>Terbaru</option>
+                                                        <option value="terlama" <?php echo e(request('sort_order') == 'terlama' ? 'selected' : ''); ?>>Terlama</option>
+                                                        <option value="A-Z" <?php echo e(request('sort_order') == 'A-Z' ? 'selected' : ''); ?>>A-Z</option>
+                                                        <option value="Z-A" <?php echo e(request('sort_order') == 'Z-A' ? 'selected' : ''); ?>>Z-A</option>
+                                                    </select>
+                                                    <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+                                                </div>
+                                            </form>
+                                            
                                         </div>
-                                    </div>
-                                    <div class="col-xl-12 d-none" id="found-job-alert">
-                                        <div class="alert alert-success mb-0 text-center" role="alert">
-                                            <strong id="total-result">253</strong> jobs found
-                                        </div>
-                                    </div>
+                                
                                 </div>
                             </div>
                         </div>
-                        <h4 class="mt-2" style="margin-bottom: 30px;">List Companies</h4>
+                        <h4 class="mt-2" style="margin-bottom: 30px;">List Perusahaan Yang Terkait Dengan Anda</h4>
                         <div class="row">
                             <div class="col-xxl-9">
                                 <?php if($dataCompanies->isNotEmpty()): ?>
@@ -85,12 +93,12 @@
                                         </div>
                                         <div class="card-footer border-top-dashed">
                                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                                                <div><i class="ri-user-3-line align-bottom me-1"></i> 74 Applied</div>
+                                                <div><i class="ri-user-3-line align-bottom me-1"></i><?php echo e(count($data->users)); ?> orang</div>
                                                 <div><i class="ri-time-line align-bottom me-1"></i> 
                                                     <span class="job-postdate"><?php echo e(\Carbon\Carbon::parse($data->created_at)->format('d F Y')); ?></span>
                                                 </div>
                                                 <div>
-                                                    <a href="#!" class="btn btn-primary viewjob-list">View More 
+                                                    <a href="/companies/main/<?php echo e($data->id); ?>?permission=Read Company Profile&idcp=<?php echo e($data->id); ?>" class="btn btn-primary viewjob-list">View More 
                                                         <i class="ri-arrow-right-line align-bottom ms-1"></i>
                                                     </a>
                                                 </div>
@@ -101,7 +109,7 @@
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>      
                                 <?php else: ?>
-                                    <div id="job-list">
+                                    <div id="job-list mt-5" style="display: flex;align-items:center;">
                                         <h2>Anda tidak terkait dengan perusahaan manapun.</h2>
                                     </div>
                                 <?php endif; ?>
@@ -109,16 +117,43 @@
                                 <div class="row g-0 justify-content-end mb-4" id="pagination-element">
                                     <!-- end col -->
                                     <div class="col-sm-6">
-                                        <div
-                                            class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
-                                            <div class="page-item">
-                                                <a href="javascript:void(0);" class="page-link" id="page-prev">Previous</a>
-                                            </div>
-                                            <span id="page-num" class="pagination"></span>
-                                            <div class="page-item">
-                                                <a href="javascript:void(0);" class="page-link" id="page-next">Next</a>
-                                            </div>
+                                        <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                            <!-- Previous Page Link -->
+                                            <?php if($dataCompanies->onFirstPage()): ?>
+                                                <div class="page-item disabled">
+                                                    <span class="page-link">Previous</span>
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="page-item">
+                                                    <a href="<?php echo e($dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->previousPageUrl()); ?>" class="page-link" id="page-prev">Previous</a>
+                                                </div>
+                                            <?php endif; ?>
+                                        
+                                            <!-- Page Numbers -->
+                                            <span id="page-num" class="pagination">
+                                                <?php $__currentLoopData = $dataCompanies->links()->elements[0]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php if($page == $dataCompanies->currentPage()): ?>
+                                                        <span class="page-item active"><span class="page-link"><?php echo e($page); ?></span></span>
+                                                    <?php else: ?>
+                                                        <a href="<?php echo e($dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->url($page)); ?>" class="page-item"><span class="page-link"><?php echo e($page); ?></span></a>
+                                                    <?php endif; ?>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            </span>
+                                        
+                                            <!-- Next Page Link -->
+                                            <?php if($dataCompanies->hasMorePages()): ?>
+                                                <div class="page-item">
+                                                    <a href="<?php echo e($dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->nextPageUrl()); ?>" class="page-link" id="page-next">Next</a>
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="page-item disabled">
+                                                    <span class="page-link">Next</span>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
+                                        
+                                        
+                                        
                                     </div><!-- end col -->
                                 </div>
                             </div>
@@ -344,6 +379,12 @@ unset($__errorArgs, $__bag); ?>
     <!-- dashboard init -->
     <script src="<?php echo e(URL::asset('build/js/pages/dashboard-ecommerce.init.js')); ?>"></script>
     <script src="<?php echo e(URL::asset('build/js/app.js')); ?>"></script>
+    <script>
+         document.getElementById('sortOrder').addEventListener('change', function () {
+        // Submit form filter ketika dropdown berubah
+        document.getElementById('filterForm').submit();
+    });
+    </script>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\magang\test ui adminDashboard\Laravel\corporate\resources\views/index.blade.php ENDPATH**/ ?>

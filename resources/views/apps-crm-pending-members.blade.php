@@ -8,10 +8,9 @@
 @section('content')
     @component('components.breadcrumb')
         @slot('li_1')
-            Companies
+            Perusahaan
         @endslot
         @slot('title')
-            Users
         @endslot
     @endcomponent
 
@@ -51,20 +50,35 @@
                 <div class="card-header">
                     <div class="row g-2">
                         <div class="col-md-3">
-                            <div class="search-box">
-                                <input type="text" class="form-control search" placeholder="Search for company...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
+                            <form action="{{ url()->current() }}" method="GET">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="search" class="form-control search bg-light border-light"
+                                        id="searchJob" value="{{ request('search') }}"
+                                        placeholder="Search for members...">
+                                    <!-- Hidden input untuk menjaga sort_order -->
+                                    <input type="hidden" name="sort_order" value="{{ request('sort_order') }}">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </button>
+                                </div>
+                            </form>
+                                           
                         </div>
                         <div class="col-md-auto ms-auto">
                             <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted">Sort by: </span>
-                                <select class="form-control mb-0" data-choices data-choices-search-false
-                                    id="choices-single-default">
-                                    <option value="Owner">Owner</option>
-                                    <option value="Company">Company</option>
-                                    <option value="location">Location</option>
-                                </select>
+                                <span class="fw-bold">Urutkan Berdasarkan : </span>
+                                <form action="{{ url()->current() }}" method="GET" id="filterForm">
+                                    <!-- Hidden input untuk menjaga search -->
+                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                    <select class="form-control" style="cursor: pointer" name="sort_order" id="sortOrder" onchange="this.form.submit()">
+                                        <option value="terbaru" {{ request('sort_order') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                                        <option value="terlama" {{ request('sort_order') == 'terlama' ? 'selected' : '' }}>Terlama</option>
+                                        <option value="A-Z" {{ request('sort_order') == 'A-Z' ? 'selected' : '' }}>A-Z</option>
+                                        <option value="Z-A" {{ request('sort_order') == 'Z-A' ? 'selected' : '' }}>Z-A</option>
+                                    </select>
+                                </form>
+                                
+                                
                             </div>
                         </div>
                     </div>
@@ -88,7 +102,8 @@
                                 <tbody>
                                     @foreach ($pendingMembers as $index => $member)
                                         <tr data-id="{{ $member['user']->id }}" data-company-id="{{ $company->id }}"
-                                            data-role-id="{{ $member['role']->id }}" data-status="{{ $member['status'] }}">
+                                            data-role-id="{{ $member['role']->id }}"
+                                            data-status="{{ $member['status'] }}">
                                             <td>{{ $index + 1 }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
@@ -106,7 +121,8 @@
                                             <td>
                                                 <ul class="list-inline hstack gap-2 mb-0">
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="Edit Role">
+                                                        data-bs-trigger="hover" data-bs-placement="top"
+                                                        title="Edit Role">
                                                         <a class="edit-item-btn" href="#editPendingMemberModal"
                                                             data-bs-toggle="modal">
                                                             <i class="ri-pencil-fill align-bottom text-muted"></i>
@@ -134,14 +150,9 @@
                         </div>
                         <div class="d-flex justify-content-end mt-3">
                             <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="#">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="#">
-                                    Next
-                                </a>
+                                {{ $pendingMembers->links() }}
                             </div>
+                            
                         </div>
                     </div>
                     <!-- Modal Edit Role for User -->
@@ -320,8 +331,8 @@
 
             // Event listener untuk reset action dan menghapus kelas/gaya overflow
             editModal.addEventListener('hidden.bs.modal', function() {
-              // Menghapus backdrop modal jika masih ada
-              const modalBackdrop = document.querySelector('.modal-backdrop');
+                // Menghapus backdrop modal jika masih ada
+                const modalBackdrop = document.querySelector('.modal-backdrop');
                 if (modalBackdrop) {
                     modalBackdrop.remove();
                 }

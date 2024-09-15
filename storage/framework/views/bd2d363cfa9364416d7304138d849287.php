@@ -130,6 +130,16 @@
             }
         });
     }
+
+    <?php if(session('error')): ?>
+        Swal.fire({
+                title: 'Gagal!',
+                text: "<?php echo e(session('error')); ?>",
+                icon: 'error',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Oke',
+            })
+    <?php endif; ?>
 </script>
 </body>
 

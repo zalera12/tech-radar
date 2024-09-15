@@ -23,7 +23,7 @@ class AuthController extends Controller
             ]);
         }
         Auth::login($user);
-        return redirect('/')->with('login_success', 'Jelajahi Perusahaan Dan Tekhnologi Terkini!');
+        return redirect('/')->with('login_success', 'Temukan Perusahaan dan Teknologi Terbaru Sekarang!');
     }
 
     public function logout(Request $request)

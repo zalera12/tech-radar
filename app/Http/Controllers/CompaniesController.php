@@ -111,51 +111,87 @@ class CompaniesController extends Controller
         }
     }
 
-    public function pendingMemberCompanies(Company $company)
+    public function pendingMemberCompanies(Request $request, Company $company)
     {
         // Ambil user yang sedang login
         $user = auth()->user();
-
+    
         // Ambil companies terkait user tersebut
         $companies = $user->companies;
-
+    
         // Cari company yang spesifik berdasarkan ID
         $companyId = $company->id;
         $company = $companies->firstWhere('id', $companyId);
-
+    
+        // Ambil roles yang terkait dengan perusahaan
         $roles = Role::whereHas('companiesPermissions', function ($query) use ($company) {
             $query->where('companies.id', $company->id);
         })->get();
-
-        $pendingMembers = [];
+    
         // Periksa apakah company ditemukan
         if ($company) {
-            // Loop melalui setiap user yang terkait dengan perusahaan dan memiliki status WAITING di pivot
-            foreach ($company->users as $user) {
-                if ($user->pivot->status === 'WAITING') {
-                    // Ambil role ID dari pivot
-                    $roleId = $user->pivot->role_id;
-
-                    // Ambil data role berdasarkan role ID
-                    $role = Role::find($roleId);
-
-                    // Tambahkan data user, role, dan status ke dalam array
-                    $pendingMembers[] = [
-                        'user' => $user,
-                        'role' => $role,
-                        'status' => $user->pivot->status, // Tambahkan status
-                    ];
-                }
+            // Ambil parameter search dan sort_order dari request
+            $search = $request->input('search');
+            $sortOrder = $request->input('sort_order', 'terbaru'); // Default ke 'terbaru' jika tidak ada
+    
+            // Query untuk pending members
+            $pendingMembersQuery = $company->users()
+                ->wherePivot('status', 'WAITING') // Ambil hanya pengguna dengan status WAITING di pivot
+                ->when($search, function ($query) use ($search) {
+                    // Jika ada input search, filter berdasarkan nama pengguna
+                    $query->where('name', 'LIKE', '%' . $search . '%');
+                });
+    
+            // Sorting berdasarkan sort_order
+            switch ($sortOrder) {
+                case 'terbaru':
+                    $pendingMembersQuery->orderBy('created_at', 'desc');
+                    break;
+                case 'terlama':
+                    $pendingMembersQuery->orderBy('created_at', 'asc');
+                    break;
+                case 'A-Z':
+                    $pendingMembersQuery->orderBy('name', 'asc');
+                    break;
+                case 'Z-A':
+                    $pendingMembersQuery->orderBy('name', 'desc');
+                    break;
             }
-
+    
+            // Dapatkan hasil dari query dengan pagination
+            $pendingMembersData = $pendingMembersQuery->paginate(10); // Menampilkan 10 item per halaman
+    
+            $pendingMembers = [];
+            // Loop melalui hasil query untuk menambah data role dan status ke array pendingMembers
+            foreach ($pendingMembersData as $user) {
+                // Ambil role ID dari pivot
+                $roleId = $user->pivot->role_id;
+    
+                // Ambil data role berdasarkan role ID
+                $role = Role::find($roleId);
+                // Tambahkan data user, role, dan status ke dalam array
+                $pendingMembers[] = [
+                    'user' => $user,
+                    'role' => $role,
+                    'status' => $user->pivot->status, // Tambahkan status
+                ];
+            }
+            dd($pendingMembers);
+    
+            // Return view dengan data yang dibutuhkan
             return view('apps-crm-pending-members', [
-                'user' => auth()->user(),
+                'user' => $user,
                 'company' => $company,
-                'pendingMembers' => $pendingMembers,
+                'pendingMembers' => $pendingMembersData, // Gunakan hasil dari pagination query
                 'roles' => $roles,
             ]);
         }
+    
+        // Jika company tidak ditemukan, kembalikan response sesuai yang diinginkan, misal redirect atau pesan error
+        return redirect()->back()->with('error', 'Company not found');
     }
+    
+    
 
     public function addUser(Request $request)
     {
@@ -235,7 +271,6 @@ class CompaniesController extends Controller
             'user_id' => 'required|exists:users,id',
             'company_id' => 'required|exists:companies,id',
         ]);
-
 
         $user = User::findOrFail($request->user_id);
         $company = Company::findOrFail($request->company_id);
@@ -327,7 +362,7 @@ class CompaniesController extends Controller
 
         // Asumsikan terdapat company_id yang dikirim dari form
         $companyId = $request->company_id;
-        $permissionId = Permission::where('name','Read Company Profile')->first()->id;
+        $permissionId = Permission::where('name', 'Read Company Profile')->first()->id;
         // Simpan data ke table pivot role_permissions
         $role->companiesPermissions()->attach($companyId, [
             'permission_id' => $permissionId, // Kosongkan permission_id dulu
@@ -505,25 +540,24 @@ class CompaniesController extends Controller
             'name' => $request->name,
             'description' => $request->description,
         ]);
-        return redirect('/companies/categories/' . $request->company_id)
-            ->with('success_update', 'Category updated successfully.');
+        return redirect('/companies/categories/' . $request->company_id)->with('success_update', 'Category updated successfully.');
     }
 
     public function deleteCategoryCompanies(Request $request)
     {
         // Temukan kategori berdasarkan ID yang diterima dari request
         $category = Category::findOrFail($request->category_id);
-    
+
         // Tentukan path file JSON yang akan dihapus
         $filePath = public_path('files/' . $category->id . '.json');
         // Hapus kategori dari database
         $category->delete();
-    
+
         // Periksa apakah file JSON ada, jika ya maka hapus
         if (File::exists($filePath)) {
             File::delete($filePath);
         }
-    
+
         return redirect()->back()->with('success_delete', 'Category deleted successfully, and associated JSON file deleted.');
     }
 
