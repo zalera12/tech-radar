@@ -22,12 +22,14 @@ services:
     image: caddy:2.8.4
     container_name: radar_caddy
     ports:
+      - '9090:9090'
+      - '9091:9091'
       - '80:80'
       - '443:443'
     volumes:
       - radar_caddy_config:/config
       - radar_caddy_data:/data
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddyfile-Dev:/etc/caddy/Caddyfile
       - .:/var/www
     restart: unless-stopped
     networks:
