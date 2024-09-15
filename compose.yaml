@@ -24,7 +24,7 @@ services:
     environment:
       - SERVER_NAMES=localhost 127.0.0.1
     volumes:
-      - ./files:/opt/build-your-own-radar/files
+      - ../files:/opt/build-your-own-radar/files
     restart: unless-stopped
     networks:
       - radar_network
