@@ -27,5 +27,5 @@
 
 :9091 {
     encode zstd gzip
-    reverse_proxy radar_visualization:80
+    reverse_proxy http://radar_visualization
 }
