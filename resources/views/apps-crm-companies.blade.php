@@ -49,25 +49,77 @@
         <div class="col-xxl-9">
             <div class="card" id="companyList">
                 <div class="card-header">
-                    <div class="row g-2">
-                        <div class="col-md-3">
-                            <div class="search-box">
-                                <input type="text" class="form-control search" placeholder="Search for company...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
+                    <div
+                        class="row g-2 justify-content-between align-items-center flex-md-row align-items-center flex-column">
+                        <!-- Form Search -->
+                        <div class="col-md-3 col-12 d-flex flex-column align-items-center">
+                            <form action="{{ url()->current() }}" method="GET" class="d-flex align-items-center w-100">
+                                <div class="input-group mb-0">
+                                    <input type="text" name="search" class="form-control search bg-light border-light"
+                                        id="searchJob" value="{{ request('search') }}" placeholder="Search for members...">
+                                    <!-- Memastikan parameter filter dan sort_order tetap ada saat search dilakukan -->
+                                    <input type="hidden" name="sort_order" value="{{ request('sort_order') }}">
+                                    <input type="hidden" name="role_id" value="{{ request('role_id') }}">
+                                    <input type="hidden" name="idcp" value="{{ $company->id }}">
+                                    <input type="hidden" name="permission" value="Read Company User">
+
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="col-md-auto ms-auto">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted">Sort by: </span>
-                                <select class="form-control mb-0" data-choices data-choices-search-false
-                                    id="choices-single-default">
-                                    <option value="Owner">Owner</option>
-                                    <option value="Company">Company</option>
-                                    <option value="location">Location</option>
-                                </select>
-                            </div>
+
+                        <!-- Form Filter Role -->
+                        <div class="col-md-3 col-12 d-flex flex-column align-items-center">
+                            <form action="{{ url()->current() }}" method="GET" class="d-flex align-items-center w-100">
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                <input type="hidden" name="sort_order" value="{{ request('sort_order') }}">
+                                <input type="hidden" name="idcp" value="{{ $company->id }}">
+                                <input type="hidden" name="permission" value="Read Company User">
+
+                                <div class="input-group mb-0 d-flex align-items-center">
+                                    <label for="roleFilter" class="form-label me-3">Filter Role</label>
+                                    <select class="form-control" name="role_id" id="roleFilter"
+                                        onchange="this.form.submit()">
+                                        <option value="">-- All Roles --</option>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->id }}"
+                                                {{ request('role_id') == $role->id ? 'selected' : '' }}>
+                                                {{ $role->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Form Sort Order -->
+                        <div class="col-md-3 col-12 d-flex flex-column align-items-center">
+                            <form action="{{ url()->current() }}" method="GET" class="d-flex align-items-center w-100">
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                <input type="hidden" name="role_id" value="{{ request('role_id') }}">
+                                <input type="hidden" name="idcp" value="{{ $company->id }}">
+                                <input type="hidden" name="permission" value="Read Company User">
+
+                                <div class="input-group mb-0 d-flex align-items-center">
+                                    <label for="sortOrder" class="form-label me-3">Urutkan Berdasarkan</label>
+                                    <select class="form-control" name="sort_order" id="sortOrder"
+                                        onchange="this.form.submit()">
+                                        <option value="terbaru"
+                                            {{ request('sort_order') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                                        <option value="terlama"
+                                            {{ request('sort_order') == 'terlama' ? 'selected' : '' }}>Terlama</option>
+                                        <option value="A-Z" {{ request('sort_order') == 'A-Z' ? 'selected' : '' }}>A-Z
+                                        </option>
+                                        <option value="Z-A" {{ request('sort_order') == 'Z-A' ? 'selected' : '' }}>Z-A
+                                        </option>
+                                    </select>
+                                </div>
+                            </form>
                         </div>
                     </div>
+
                 </div>
                 <div class="card-body">
                     <div>
@@ -79,29 +131,33 @@
                                         <th class="sort" data-sort="name" scope="col">Photo</th>
                                         <th class="sort" data-sort="owner" scope="col">Name</th>
                                         <th class="sort" data-sort="industry_type" scope="col">Email</th>
-                                        <th class="sort" data-sort="star_value" scope="col">Google Id</th>
                                         <th class="sort" data-sort="role" scope="col">Role</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($companyUsers as $index => $member)
-                                        <tr data-id="{{ $member['user']->id }}" data-company-id="{{ $company->id }}"
-                                            data-role-id="{{ $member['role']->id }}">
-                                            <td>{{ $index + 1 }}</td>
+                                        <tr data-id="{{ $member->id }}" data-company-id="{{ $company->id }}"
+                                            data-role-id="{{ $member->pivot->role_id }}">
+                                            <td>{{ $companyUsers->firstItem() + $index }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="flex-shrink-0">
-                                                        <img src="{{ asset($member['user']->photo ? 'storage/' . $member['user']->photo : '/build/images/users/user-dummy-img.jpg') }}"
+                                                        <img src="{{ asset($member->photo ? 'storage/' . $member->photo : '/build/images/users/user-dummy-img.jpg') }}"
                                                             alt="User Photo"
                                                             class="avatar-xxs rounded-circle object-fit-cover">
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="name">{{ $member['user']->name }}</td>
-                                            <td class="email">{{ $member['user']->email }}</td>
-                                            <td class="google_id">{{ $member['user']->google_id }}</td>
-                                            <td class="role">{{ $member['role']->name }}</td>
+                                            <td class="name">{{ $member->name }}</td>
+                                            <td class="email">{{ $member->email }}</td>
+                                            <td>
+                                                <?php
+                                                $roleId = $member->pivot->role_id;
+                                                $role = App\Models\Role::find($roleId);
+                                                ?>
+                                                {{ $role ? $role->name : 'N/A' }}
+                                            </td>
                                             <td>
                                                 <ul class="list-inline hstack gap-2 mb-0">
                                                     <li class="list-inline-item edit" data-bs-toggle="tooltip"
@@ -121,8 +177,7 @@
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
                                                         data-bs-trigger="hover" data-bs-placement="top" title="Delete">
                                                         <a class="remove-item-btn" data-bs-toggle="modal"
-                                                            href="#deleteRecordModal"
-                                                            data-userId="{{ $member['user']->id }}">
+                                                            href="#deleteRecordModal" data-userId="{{ $member->id }}">
                                                             <i class="ri-delete-bin-fill align-bottom text-muted"></i>
                                                         </a>
                                                     </li>
@@ -145,15 +200,48 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-3">
-                            <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="#">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="#">
-                                    Next
-                                </a>
+                            <div class="col-sm-6">
+                                <div
+                                    class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                    @if ($companyUsers->onFirstPage())
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Previous</span>
+                                        </div>
+                                    @else
+                                        <div class="page-item">
+                                            <a href="{{ $companyUsers->appends(request()->except('page'))->previousPageUrl() }}"
+                                                class="page-link" id="page-prev">Previous</a>
+                                        </div>
+                                    @endif
+
+                                    <!-- Page Numbers -->
+                                    <span id="page-num" class="pagination">
+                                        @foreach ($companyUsers->links()->elements[0] as $page => $url)
+                                            @if ($page == $companyUsers->currentPage())
+                                                <span class="page-item active"><span
+                                                        class="page-link">{{ $page }}</span></span>
+                                            @else
+                                                <a href="{{ $companyUsers->appends(request()->except('page'))->url($page) }}"
+                                                    class="page-item">
+                                                    <span class="page-link">{{ $page }}</span>
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                    </span>
+
+                                    @if ($companyUsers->hasMorePages())
+                                        <div class="page-item">
+                                            <a href="{{ $companyUsers->appends(request()->except('page'))->nextPageUrl() }}"
+                                                class="page-link" id="page-next">Next</a>
+                                        </div>
+                                    @else
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Next</span>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
+
                         </div>
                     </div>
                     <!-- Modal Edit Role for User -->
@@ -264,7 +352,8 @@
                                         <h4 class="fs-semibold">You are about to remove a user from this company?</h4>
                                         <p class="text-muted fs-14 mb-4 pt-1">Removing this user will detach their
                                             association with the company.</p>
-                                        <form id="deleteUserForm" action="{{ route('companies.roles.delete') }}??permission=Delete Company User&idcp={{ $company->id }}"
+                                        <form id="deleteUserForm"
+                                            action="{{ route('companies.roles.delete') }}??permission=Delete Company User&idcp={{ $company->id }}"
                                             method="POST">
                                             @csrf
                                             <input type="hidden" name="user_id" id="userId">
@@ -372,13 +461,13 @@
 
         // Bersihkan elemen setelah modal hapus ditutup
         document.getElementById('deleteRecordModal').addEventListener('hidden.bs.modal', function() {
-        const modalBackdrop = document.querySelector('.modal-backdrop');
-        if (modalBackdrop) {
-            modalBackdrop.remove();
-        }
-        document.body.classList.remove('modal-open');
-        document.body.style.paddingRight = '';
-        document.body.style.overflow = '';
+            const modalBackdrop = document.querySelector('.modal-backdrop');
+            if (modalBackdrop) {
+                modalBackdrop.remove();
+            }
+            document.body.classList.remove('modal-open');
+            document.body.style.paddingRight = '';
+            document.body.style.overflow = '';
         });
     </script>
 @endsection

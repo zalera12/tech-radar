@@ -68,48 +68,68 @@ class CompaniesController extends Controller
         }
     }
 
-    public function usersCompanies(Company $company)
+    public function usersCompanies(Request $request, Company $company)
     {
         // Ambil user yang sedang login
         $user = auth()->user();
-
-        // Ambil companies terkait user tersebut
+    
+        // Ambil companies terkait user yang sedang login
         $companies = $user->companies;
-
+    
         // Cari company yang spesifik, misalnya berdasarkan ID
-        $companyId = $company->id; // Ganti dengan ID company yang ingin kamu akses
+        $companyId = $company->id;
         $company = $companies->firstWhere('id', $companyId);
-
-        $roles = Role::whereHas('companiesPermissions', function ($query) use ($company) {
+    
+        // Ambil roles yang terkait dengan perusahaan ini (melalui pivot company_users)
+        $roles = Role::whereHas('companies', function ($query) use ($company) {
             $query->where('companies.id', $company->id);
         })->get();
-
-        $companyUsers = [];
-        // Periksa apakah company ditemukan
-        if ($company) {
-            // Loop melalui setiap user yang terkait dengan perusahaan
-            foreach ($company->users as $user) {
-                // Ambil role ID dari pivot
-                $roleId = $user->pivot->role_id;
-
-                // Ambil data role berdasarkan role ID
-                $role = Role::find($roleId);
-
-                // Tambahkan data user dan role ke dalam array
-                $companyUsers[] = [
-                    'user' => $user,
-                    'role' => $role,
-                ];
-            }
-
-            return view('apps-crm-companies', [
-                'user' => auth()->user(),
-                'company' => $company,
-                'companyUsers' => $companyUsers,
-                'roles' => $roles,
-            ]);
+    
+        // Ambil nilai search dan role dari request
+        $search = $request->input('search');
+        $roleFilter = $request->input('role_id'); // Ganti ke 'role_id'
+        $sort_order = $request->input('sort_order', 'terbaru'); // Default sort 'terbaru'
+    
+        // Buat query untuk mengambil user yang terkait dengan perusahaan ini melalui pivot company_users
+        $usersQuery = $company->users()->withPivot('role_id', 'status');
+    
+        // Filter berdasarkan role (jika ada role yang dipilih)
+        if ($roleFilter) {
+            $usersQuery->wherePivot('role_id', $roleFilter);
         }
+    
+        // Jika ada input search, filter berdasarkan nama atau email
+        if ($search) {
+            $usersQuery->where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', '%' . $search . '%')
+                      ->orWhere('email', 'LIKE', '%' . $search . '%');
+            });
+        }
+    
+        // Terapkan logika sorting berdasarkan sort_order
+        if ($sort_order === 'terbaru') {
+            $usersQuery->orderBy('created_at', 'desc');
+        } elseif ($sort_order === 'terlama') {
+            $usersQuery->orderBy('created_at', 'asc');
+        } elseif ($sort_order === 'A-Z') {
+            $usersQuery->orderBy('name', 'asc');
+        } elseif ($sort_order === 'Z-A') {
+            $usersQuery->orderBy('name', 'desc');
+        }
+    
+        // Paginate hasil query
+        $companyUsers = $usersQuery->paginate(3);
+    
+        // Return ke view dengan data yang dibutuhkan
+        return view('apps-crm-companies', [
+            'user' => $user,
+            'company' => $company,
+            'companyUsers' => $companyUsers,
+            'roles' => $roles,
+        ]);
     }
+    
+    
 
     public function pendingMemberCompanies(Request $request, Company $company)
     {
@@ -119,21 +139,22 @@ class CompaniesController extends Controller
         $roles = Role::whereHas('companiesPermissions', function ($query) use ($company) {
             $query->where('companies.id', $company->id);
         })->get();
-    
+
         // Ambil nilai search dari request
         $search = $request->input('search');
-    
+
         // Ambil nilai sort_order dari request, default ke 'terbaru'
         $sort_order = $request->input('sort_order', 'terbaru');
-    
+
         // Buat query untuk pending members
-        $pendingMembersQuery = $company->users()
+        $pendingMembersQuery = $company
+            ->users()
             ->wherePivot('status', 'WAITING') // Hanya ambil pengguna dengan status WAITING
             ->when($search, function ($query) use ($search) {
                 // Filter berdasarkan nama jika ada input search
                 $query->where('name', 'LIKE', '%' . $search . '%');
             });
-    
+
         // Terapkan logika sorting berdasarkan sort_order
         if ($sort_order === 'terbaru') {
             $pendingMembersQuery->orderBy('created_at', 'desc');
@@ -144,10 +165,10 @@ class CompaniesController extends Controller
         } elseif ($sort_order === 'Z-A') {
             $pendingMembersQuery->orderBy('name', 'desc');
         }
-    
+
         // Paginate hasil query
         $pendingMembers = $pendingMembersQuery->paginate(1);
-    
+
         // Kembalikan ke view dengan data yang dibutuhkan
         return view('apps-crm-pending-members', [
             'user' => $user,
@@ -157,12 +178,6 @@ class CompaniesController extends Controller
             'sort_order' => $sort_order,
         ]);
     }
-    
-    
-    
-  
-    
-    
 
     public function addUser(Request $request)
     {
@@ -178,7 +193,7 @@ class CompaniesController extends Controller
 
         // Cek apakah user ada
         if (!$user) {
-            return back();
+            return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id");
         }
 
         // Cek apakah user sudah terdaftar di perusahaan ini
@@ -188,13 +203,13 @@ class CompaniesController extends Controller
                 ->where('user_id', $user->id)
                 ->exists()
         ) {
-            return back();
+            return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id");
         }
 
         // Tambahkan user ke perusahaan
         $company->users()->attach($user->id, ['id' => Ulid::generate(), 'role_id' => $request->role_id, 'status' => 'ACCEPTED']);
 
-        return back();
+        return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('add_success', 'user berhasil ditambahkan ke perusahaan');
     }
 
     public function updatePendingMember(Request $request, $memberId)
@@ -214,7 +229,7 @@ class CompaniesController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect('/companies/pendingMember/' . $company->id)->with('success', 'Pending member updated successfully');
+        return redirect("/companies/pendingMember/$company->id?permission=Read Pending Company User&idcp=$company->id")->with('update_success', 'Pending member updated successfully');
     }
 
     public function updateRoleUser(Request $request)
@@ -232,7 +247,7 @@ class CompaniesController extends Controller
             'role_id' => $request->role_id,
         ]);
 
-        return redirect('/companies/users/' . $company->id)->with('success', 'User role updated successfully');
+        return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('success', 'User role updated successfully');
     }
 
     public function destroyUserCompanies(Request $request)
@@ -250,17 +265,42 @@ class CompaniesController extends Controller
         $user->companies()->detach($company->id);
 
         // Redirect atau kembalikan response sukses
-        return redirect()->back()->with('success', 'User successfully removed from the company.');
+        return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('success', 'User successfully removed from the company.');
     }
 
     public function rolesCompanies(Company $company)
     {
         $user = auth()->user();
-        // Ambil roles yang terkait dengan perusahaan tertentu
+
+        // Ambil data request dari input
+        $search = request('search');
+        $sortOrder = request('sort_order', 'terbaru');
+
+        // Ambil semua roles yang terkait dengan perusahaan tertentu
         $roles = Role::whereHas('companiesPermissions', function ($query) use ($company) {
             $query->where('companies.id', $company->id);
-        })->get();
+        });
 
+        // Filter berdasarkan search jika ada input search
+        if ($search) {
+            $roles->where('name', 'like', '%' . $search . '%');
+        }
+
+        // Sorting berdasarkan input sort_order
+        if ($sortOrder === 'terbaru') {
+            $roles->orderBy('created_at', 'desc');
+        } elseif ($sortOrder === 'terlama') {
+            $roles->orderBy('created_at', 'asc');
+        } elseif ($sortOrder === 'A-Z') {
+            $roles->orderBy('name', 'asc');
+        } elseif ($sortOrder === 'Z-A') {
+            $roles->orderBy('name', 'desc');
+        }
+
+        // Pagination
+        $roles = $roles->paginate(3); // Sesuaikan jumlah per halaman
+
+        // Kirim data ke view
         return view('apps-crm-roles', [
             'company' => $company,
             'roles' => $roles,
@@ -309,7 +349,7 @@ class CompaniesController extends Controller
                 return redirect()->back()->with('success', 'Permission connected successfully.');
             } else {
                 role_permissions::where('role_id', $roleId)->where('permission_id', $permissionId)->where('company_id', $companyId)->delete();
-                return redirect()->back()->with('success', 'Permission disconnected successfully.');
+                return redirect("/companies/permissions/$companyId?permission=Read User permission&idcp=$companyId")->with('success', 'Permission disconnected successfully.');
             }
         } catch (\Exception $e) {
             dd($e->getMessage()); // Ini akan menampilkan pesan error langsung
@@ -340,7 +380,7 @@ class CompaniesController extends Controller
         ]);
 
         // Redirect ke halaman permissions
-        return redirect('/companies/permissions/' . $companyId)->with('success_create', 'Role berhasil ditambahkan. Silakan isi permission untuk role yang baru.');
+        return redirect("/companies/permissions/$companyId?permission=Read User permission&idcp=$companyId")->with('success_create', 'Role berhasil ditambahkan. Silakan isi permission untuk role yang baru.');
     }
 
     public function editRolesCompanies(Request $request)
@@ -356,7 +396,7 @@ class CompaniesController extends Controller
 
         // Redirect back with success message
 
-        return redirect()->back()->with('success_update', 'Role updated successfully!');
+        return redirect("/companies/roles/$request->company?permission=Read Company Role&idcp=$request->company")->with('success_update', 'Role updated successfully!');
     }
 
     public function deleteRolesCompanies(Request $request)
@@ -374,15 +414,39 @@ class CompaniesController extends Controller
             return redirect()->back()->with('success_delete', 'Role deleted successfully!');
         } catch (\Exception $e) {
             // Redirect back with error message
-            return redirect()->back()->with('error', 'Failed to delete role.');
+            return redirect("/companies/roles/$request->company?permission=Read Company Role&idcp=$request->company")->with('error', 'Failed to delete role.');
         }
     }
 
     public function categoriesCompanies(Company $company)
     {
         $user = auth()->user();
-        $categories = Category::where('company_id', $company->id)->get();
-
+         // Ambil data request dari input
+         $search = request('search');
+         $sortOrder = request('sort_order', 'terbaru');
+ 
+         // Ambil semua roles yang terkait dengan perusahaan tertentu
+         $categories = Category::where('company_id',$company->id);
+ 
+         // Filter berdasarkan search jika ada input search
+         if ($search) {
+             $categories->where('name', 'like', '%' . $search . '%');
+         }
+ 
+         // Sorting berdasarkan input sort_order
+         if ($sortOrder === 'terbaru') {
+             $categories->orderBy('created_at', 'desc');
+         } elseif ($sortOrder === 'terlama') {
+             $categories->orderBy('created_at', 'asc');
+         } elseif ($sortOrder === 'A-Z') {
+             $categories->orderBy('name', 'asc');
+         } elseif ($sortOrder === 'Z-A') {
+             $categories->orderBy('name', 'desc');
+         }
+ 
+         // Pagination
+         $categories = $categories->paginate(3); // Sesuaikan jumlah per halaman
+ 
         return view('apps-crm-categories', [
             'categories' => $categories,
             'user' => $user,
@@ -414,9 +478,7 @@ class CompaniesController extends Controller
         // Tulis data kosong ke file JSON
         File::put($filePath, json_encode([], JSON_PRETTY_PRINT));
 
-        return redirect()
-            ->route('categories.index', $company->id)
-            ->with('success_update', 'Category added successfully, and JSON file created.');
+        return redirect("/companies/categories/$company->id?permission=Read Category Technology&idcp=$company->id")->with('success_update', 'Category added successfully, and JSON file created.');
     }
     // Fungsi untuk memperbarui file JSON berdasarkan id_category
     private function updateCategoryJson($categoryId)
@@ -511,7 +573,7 @@ class CompaniesController extends Controller
             'name' => $request->name,
             'description' => $request->description,
         ]);
-        return redirect('/companies/categories/' . $request->company_id)->with('success_update', 'Category updated successfully.');
+        return redirect("/companies/categories/$request->company_id?permission=Read Category Technology&idcp=$request->company_id")->with('success_update', 'Category updated successfully.');
     }
 
     public function deleteCategoryCompanies(Request $request)
@@ -529,7 +591,7 @@ class CompaniesController extends Controller
             File::delete($filePath);
         }
 
-        return redirect()->back()->with('success_delete', 'Category deleted successfully, and associated JSON file deleted.');
+        return redirect("/companies/categories/$request->company_id?permission=Read Category Technology&idcp=$request->company_id")->with('success_delete', 'Category deleted successfully, and associated JSON file deleted.');
     }
 
     public function technologiesCompanies(Company $company)

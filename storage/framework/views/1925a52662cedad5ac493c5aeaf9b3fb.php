@@ -49,18 +49,7 @@
             <div class="card" id="companyList">
                 <div class="card-header">
                     <div class="row g-2">
-                        <div class="col-md-3">
-                            <div class="search-box">
-                                <input type="text" class="form-control search" placeholder="Search for company...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-auto ms-auto">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted">Sort by: </span>
-
-                            </div>
-                        </div>
+                        <h5>Setting permission</h5>
                     </div>
                 </div>
                 <div class="card-body">

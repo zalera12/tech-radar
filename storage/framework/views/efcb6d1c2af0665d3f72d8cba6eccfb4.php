@@ -48,25 +48,78 @@
         <div class="col-xxl-9">
             <div class="card" id="companyList">
                 <div class="card-header">
-                    <div class="row g-2">
-                        <div class="col-md-3">
-                            <div class="search-box">
-                                <input type="text" class="form-control search" placeholder="Search for company...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
+                    <div
+                        class="row g-2 justify-content-between align-items-center flex-md-row align-items-center flex-column">
+                        <!-- Form Search -->
+                        <div class="col-md-3 col-12 d-flex flex-column align-items-center">
+                            <form action="<?php echo e(url()->current()); ?>" method="GET" class="d-flex align-items-center w-100">
+                                <div class="input-group mb-0">
+                                    <input type="text" name="search" class="form-control search bg-light border-light"
+                                        id="searchJob" value="<?php echo e(request('search')); ?>" placeholder="Search for members...">
+                                    <!-- Memastikan parameter filter dan sort_order tetap ada saat search dilakukan -->
+                                    <input type="hidden" name="sort_order" value="<?php echo e(request('sort_order')); ?>">
+                                    <input type="hidden" name="role_id" value="<?php echo e(request('role_id')); ?>">
+                                    <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
+                                    <input type="hidden" name="permission" value="Read Company User">
+
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="col-md-auto ms-auto">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted">Sort by: </span>
-                                <select class="form-control mb-0" data-choices data-choices-search-false
-                                    id="choices-single-default">
-                                    <option value="Owner">Owner</option>
-                                    <option value="Company">Company</option>
-                                    <option value="location">Location</option>
-                                </select>
-                            </div>
+
+                        <!-- Form Filter Role -->
+                        <div class="col-md-3 col-12 d-flex flex-column align-items-center">
+                            <form action="<?php echo e(url()->current()); ?>" method="GET" class="d-flex align-items-center w-100">
+                                <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+                                <input type="hidden" name="sort_order" value="<?php echo e(request('sort_order')); ?>">
+                                <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
+                                <input type="hidden" name="permission" value="Read Company User">
+
+                                <div class="input-group mb-0 d-flex align-items-center">
+                                    <label for="roleFilter" class="form-label me-3">Filter Role</label>
+                                    <select class="form-control" name="role_id" id="roleFilter"
+                                        onchange="this.form.submit()">
+                                        <option value="">-- All Roles --</option>
+                                        <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($role->id); ?>"
+                                                <?php echo e(request('role_id') == $role->id ? 'selected' : ''); ?>>
+                                                <?php echo e($role->name); ?>
+
+                                            </option>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Form Sort Order -->
+                        <div class="col-md-3 col-12 d-flex flex-column align-items-center">
+                            <form action="<?php echo e(url()->current()); ?>" method="GET" class="d-flex align-items-center w-100">
+                                <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+                                <input type="hidden" name="role_id" value="<?php echo e(request('role_id')); ?>">
+                                <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
+                                <input type="hidden" name="permission" value="Read Company User">
+
+                                <div class="input-group mb-0 d-flex align-items-center">
+                                    <label for="sortOrder" class="form-label me-3">Urutkan Berdasarkan</label>
+                                    <select class="form-control" name="sort_order" id="sortOrder"
+                                        onchange="this.form.submit()">
+                                        <option value="terbaru"
+                                            <?php echo e(request('sort_order') == 'terbaru' ? 'selected' : ''); ?>>Terbaru</option>
+                                        <option value="terlama"
+                                            <?php echo e(request('sort_order') == 'terlama' ? 'selected' : ''); ?>>Terlama</option>
+                                        <option value="A-Z" <?php echo e(request('sort_order') == 'A-Z' ? 'selected' : ''); ?>>A-Z
+                                        </option>
+                                        <option value="Z-A" <?php echo e(request('sort_order') == 'Z-A' ? 'selected' : ''); ?>>Z-A
+                                        </option>
+                                    </select>
+                                </div>
+                            </form>
                         </div>
                     </div>
+
                 </div>
                 <div class="card-body">
                     <div>
@@ -78,29 +131,34 @@
                                         <th class="sort" data-sort="name" scope="col">Photo</th>
                                         <th class="sort" data-sort="owner" scope="col">Name</th>
                                         <th class="sort" data-sort="industry_type" scope="col">Email</th>
-                                        <th class="sort" data-sort="star_value" scope="col">Google Id</th>
                                         <th class="sort" data-sort="role" scope="col">Role</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $__currentLoopData = $companyUsers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $member): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <tr data-id="<?php echo e($member['user']->id); ?>" data-company-id="<?php echo e($company->id); ?>"
-                                            data-role-id="<?php echo e($member['role']->id); ?>">
-                                            <td><?php echo e($index + 1); ?></td>
+                                        <tr data-id="<?php echo e($member->id); ?>" data-company-id="<?php echo e($company->id); ?>"
+                                            data-role-id="<?php echo e($member->pivot->role_id); ?>">
+                                            <td><?php echo e($companyUsers->firstItem() + $index); ?></td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="flex-shrink-0">
-                                                        <img src="<?php echo e(asset($member['user']->photo ? 'storage/' . $member['user']->photo : '/build/images/users/user-dummy-img.jpg')); ?>"
+                                                        <img src="<?php echo e(asset($member->photo ? 'storage/' . $member->photo : '/build/images/users/user-dummy-img.jpg')); ?>"
                                                             alt="User Photo"
                                                             class="avatar-xxs rounded-circle object-fit-cover">
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="name"><?php echo e($member['user']->name); ?></td>
-                                            <td class="email"><?php echo e($member['user']->email); ?></td>
-                                            <td class="google_id"><?php echo e($member['user']->google_id); ?></td>
-                                            <td class="role"><?php echo e($member['role']->name); ?></td>
+                                            <td class="name"><?php echo e($member->name); ?></td>
+                                            <td class="email"><?php echo e($member->email); ?></td>
+                                            <td>
+                                                <?php
+                                                $roleId = $member->pivot->role_id;
+                                                $role = App\Models\Role::find($roleId);
+                                                ?>
+                                                <?php echo e($role ? $role->name : 'N/A'); ?>
+
+                                            </td>
                                             <td>
                                                 <ul class="list-inline hstack gap-2 mb-0">
                                                     <li class="list-inline-item edit" data-bs-toggle="tooltip"
@@ -120,8 +178,7 @@
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
                                                         data-bs-trigger="hover" data-bs-placement="top" title="Delete">
                                                         <a class="remove-item-btn" data-bs-toggle="modal"
-                                                            href="#deleteRecordModal"
-                                                            data-userId="<?php echo e($member['user']->id); ?>">
+                                                            href="#deleteRecordModal" data-userId="<?php echo e($member->id); ?>">
                                                             <i class="ri-delete-bin-fill align-bottom text-muted"></i>
                                                         </a>
                                                     </li>
@@ -144,15 +201,48 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-3">
-                            <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="#">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="#">
-                                    Next
-                                </a>
+                            <div class="col-sm-6">
+                                <div
+                                    class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                    <?php if($companyUsers->onFirstPage()): ?>
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Previous</span>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="page-item">
+                                            <a href="<?php echo e($companyUsers->appends(request()->except('page'))->previousPageUrl()); ?>"
+                                                class="page-link" id="page-prev">Previous</a>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Page Numbers -->
+                                    <span id="page-num" class="pagination">
+                                        <?php $__currentLoopData = $companyUsers->links()->elements[0]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php if($page == $companyUsers->currentPage()): ?>
+                                                <span class="page-item active"><span
+                                                        class="page-link"><?php echo e($page); ?></span></span>
+                                            <?php else: ?>
+                                                <a href="<?php echo e($companyUsers->appends(request()->except('page'))->url($page)); ?>"
+                                                    class="page-item">
+                                                    <span class="page-link"><?php echo e($page); ?></span>
+                                                </a>
+                                            <?php endif; ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </span>
+
+                                    <?php if($companyUsers->hasMorePages()): ?>
+                                        <div class="page-item">
+                                            <a href="<?php echo e($companyUsers->appends(request()->except('page'))->nextPageUrl()); ?>"
+                                                class="page-link" id="page-next">Next</a>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Next</span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                     <!-- Modal Edit Role for User -->
@@ -264,7 +354,8 @@
                                         <h4 class="fs-semibold">You are about to remove a user from this company?</h4>
                                         <p class="text-muted fs-14 mb-4 pt-1">Removing this user will detach their
                                             association with the company.</p>
-                                        <form id="deleteUserForm" action="<?php echo e(route('companies.roles.delete')); ?>??permission=Delete Company User&idcp=<?php echo e($company->id); ?>"
+                                        <form id="deleteUserForm"
+                                            action="<?php echo e(route('companies.roles.delete')); ?>??permission=Delete Company User&idcp=<?php echo e($company->id); ?>"
                                             method="POST">
                                             <?php echo csrf_field(); ?>
                                             <input type="hidden" name="user_id" id="userId">
@@ -372,13 +463,13 @@
 
         // Bersihkan elemen setelah modal hapus ditutup
         document.getElementById('deleteRecordModal').addEventListener('hidden.bs.modal', function() {
-        const modalBackdrop = document.querySelector('.modal-backdrop');
-        if (modalBackdrop) {
-            modalBackdrop.remove();
-        }
-        document.body.classList.remove('modal-open');
-        document.body.style.paddingRight = '';
-        document.body.style.overflow = '';
+            const modalBackdrop = document.querySelector('.modal-backdrop');
+            if (modalBackdrop) {
+                modalBackdrop.remove();
+            }
+            document.body.classList.remove('modal-open');
+            document.body.style.paddingRight = '';
+            document.body.style.overflow = '';
         });
     </script>
 <?php $__env->stopSection(); ?>

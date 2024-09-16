@@ -51,20 +51,38 @@
                 <div class="card-header">
                     <div class="row g-2">
                         <div class="col-md-3">
-                            <div class="search-box">
-                                <input type="text" class="form-control search" placeholder="Search for company...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
+                            <form action="{{ url()->current() }}" method="GET">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="search" class="form-control search bg-light border-light"
+                                        id="searchJob" value="{{ request('search') }}" placeholder="Search for members...">
+                                    <!-- Memastikan filter tetap dibawa ketika search dilakukan -->
+                                    <input type="hidden" name="sort_order" value="{{ request('sort_order') }}">
+                                    <input type="hidden" name="permission" value="Read Category Technology">
+                                    <input type="hidden" name="idcp" value="{{ $company->id }}">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
+                    
                         <div class="col-md-auto ms-auto">
                             <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted">Sort by: </span>
-                                <select class="form-control mb-0" data-choices data-choices-search-false
-                                    id="choices-single-default">
-                                    <option value="Owner">Owner</option>
-                                    <option value="Company">Company</option>
-                                    <option value="location">Location</option>
-                                </select>
+                                <span class="fw-bold">Urutkan Berdasarkan : </span>
+                                <form action="{{ url()->current() }}" method="GET" id="filterForm">
+                                    <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                    <input type="hidden" name="permission" value="Read Category Technology">
+                                    <input type="hidden" name="idcp" value="{{ $company->id }}">
+                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                    
+                                    <select class="form-control" style="cursor: pointer" name="sort_order" id="sortOrder"
+                                        onchange="this.form.submit()">
+                                        <option value="terbaru" {{ request('sort_order') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                                        <option value="terlama" {{ request('sort_order') == 'terlama' ? 'selected' : '' }}>Terlama</option>
+                                        <option value="A-Z" {{ request('sort_order') == 'A-Z' ? 'selected' : '' }}>A-Z</option>
+                                        <option value="Z-A" {{ request('sort_order') == 'Z-A' ? 'selected' : '' }}>Z-A</option>
+                                    </select>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -84,7 +102,7 @@
                                 <tbody>
                                     @foreach ($categories as $index => $category)
                                         <tr>
-                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $categories->firstItem() + $index }}</td>
                                             <td class="name">{{ $category->name }}</td>
                                             <td class="description">{{ $category->description }}</td>
                                             <td>
@@ -182,14 +200,42 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-3">
-                            <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="#">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="#">
-                                    Next
-                                </a>
+                            <div class="col-sm-6">
+                                <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                    @if ($categories->onFirstPage())
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Previous</span>
+                                        </div>
+                                    @else
+                                        <div class="page-item">
+                                            <a href="{{ $categories->appends(request()->except('page'))->previousPageUrl() }}"
+                                                class="page-link" id="page-prev">Previous</a>
+                                        </div>
+                                    @endif
+                            
+                                    <!-- Page Numbers -->
+                                    <span id="page-num" class="pagination">
+                                        @foreach ($categories->links()->elements[0] as $page => $url)
+                                            @if ($page == $categories->currentPage())
+                                                <span class="page-item active"><span class="page-link">{{ $page }}</span></span>
+                                            @else
+                                                <a href="{{ $categories->appends(request()->except('page'))->url($page) }}"
+                                                    class="page-item"><span class="page-link">{{ $page }}</span></a>
+                                            @endif
+                                        @endforeach
+                                    </span>
+                            
+                                    @if ($categories->hasMorePages())
+                                        <div class="page-item">
+                                            <a href="{{ $categories->appends(request()->except('page'))->nextPageUrl() }}"
+                                                class="page-link" id="page-next">Next</a>
+                                        </div>
+                                    @else
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Next</span>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>

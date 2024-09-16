@@ -50,23 +50,42 @@
                 <div class="card-header">
                     <div class="row g-2">
                         <div class="col-md-3">
-                            <div class="search-box">
-                                <input type="text" class="form-control search" placeholder="Search for company...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
+                            <form action="<?php echo e(url()->current()); ?>" method="GET">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="search" class="form-control search bg-light border-light"
+                                        id="searchJob" value="<?php echo e(request('search')); ?>" placeholder="Search for members...">
+                                    <!-- Memastikan filter tetap dibawa ketika search dilakukan -->
+                                    <input type="hidden" name="sort_order" value="<?php echo e(request('sort_order')); ?>">
+                                    <input type="hidden" name="permission" value="Read Company Role">
+                                    <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
+                    
                         <div class="col-md-auto ms-auto">
                             <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted">Sort by: </span>
-                                <select class="form-control mb-0" data-choices data-choices-search-false
-                                    id="choices-single-default">
-                                    <option value="Owner">Owner</option>
-                                    <option value="Company">Company</option>
-                                    <option value="location">Location</option>
-                                </select>
+                                <span class="fw-bold">Urutkan Berdasarkan : </span>
+                                <form action="<?php echo e(url()->current()); ?>" method="GET" id="filterForm">
+                                    <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                    <input type="hidden" name="permission" value="Read Company Role">
+                                    <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
+                                    <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+                    
+                                    <select class="form-control" style="cursor: pointer" name="sort_order" id="sortOrder"
+                                        onchange="this.form.submit()">
+                                        <option value="terbaru" <?php echo e(request('sort_order') == 'terbaru' ? 'selected' : ''); ?>>Terbaru</option>
+                                        <option value="terlama" <?php echo e(request('sort_order') == 'terlama' ? 'selected' : ''); ?>>Terlama</option>
+                                        <option value="A-Z" <?php echo e(request('sort_order') == 'A-Z' ? 'selected' : ''); ?>>A-Z</option>
+                                        <option value="Z-A" <?php echo e(request('sort_order') == 'Z-A' ? 'selected' : ''); ?>>Z-A</option>
+                                    </select>
+                                </form>
                             </div>
                         </div>
                     </div>
+                    
                 </div>
                 <div class="card-body">
                     <div>
@@ -81,9 +100,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                            
                                     <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
-                                            <td><?php echo e($index + 1); ?></td>
+                                            <td><?php echo e($roles->firstItem() + $index); ?></td>
                                             <td class="name"><?php echo e($role->name); ?></td>
                                             <td class="description"><?php echo e($role->description); ?></td>
                                             <td>
@@ -125,6 +145,7 @@
                                             <?php echo csrf_field(); ?>
                                             <input type="hidden" id="edit-role-id" name="role_id"
                                                 value="<?php echo e(old('id')); ?>" />
+                                            <input type="hidden" name="company" value="<?php echo e($company->id); ?>">
                                             <div class="modal-body">
                                                 <input type="hidden" id="edit-company-id" name="company_id"
                                                     value="<?php echo e($company->id); ?>" />
@@ -209,15 +230,44 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-3">
-                            <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="#">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="#">
-                                    Next
-                                </a>
+                            <div class="col-sm-6">
+                                <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                    <?php if($roles->onFirstPage()): ?>
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Previous</span>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="page-item">
+                                            <a href="<?php echo e($roles->appends(request()->except('page'))->previousPageUrl()); ?>"
+                                                class="page-link" id="page-prev">Previous</a>
+                                        </div>
+                                    <?php endif; ?>
+                            
+                                    <!-- Page Numbers -->
+                                    <span id="page-num" class="pagination">
+                                        <?php $__currentLoopData = $roles->links()->elements[0]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php if($page == $roles->currentPage()): ?>
+                                                <span class="page-item active"><span class="page-link"><?php echo e($page); ?></span></span>
+                                            <?php else: ?>
+                                                <a href="<?php echo e($roles->appends(request()->except('page'))->url($page)); ?>"
+                                                    class="page-item"><span class="page-link"><?php echo e($page); ?></span></a>
+                                            <?php endif; ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </span>
+                            
+                                    <?php if($roles->hasMorePages()): ?>
+                                        <div class="page-item">
+                                            <a href="<?php echo e($roles->appends(request()->except('page'))->nextPageUrl()); ?>"
+                                                class="page-link" id="page-next">Next</a>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Next</span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
                             </div>
+                            
                         </div>
                     </div>
                     <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -330,6 +380,7 @@ unset($__errorArgs, $__bag); ?>
                                             <form id="delete-form" method="POST" action="<?php echo e(route('roles.delete')); ?>?permission=Delete Company Role&idcp=<?php echo e($company->id); ?>">
                                                 <?php echo csrf_field(); ?>
                                                 <?php echo method_field('DELETE'); ?>
+                                                <input type="hidden" name="company" value="<?php echo e($company->id); ?>">
                                                 <input type="hidden" name="role_id" id="role-id-to-delete">
                                                 <button type="submit" class="btn btn-danger" id="delete-record">Yes,
                                                     Delete It!!</button>
