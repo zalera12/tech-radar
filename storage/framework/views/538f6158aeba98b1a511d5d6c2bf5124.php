@@ -51,24 +51,31 @@
                         <div class="col-md-3">
                             <form action="<?php echo e(url()->current()); ?>" method="GET">
                                 <div class="input-group mb-3">
-                                    <input type="text" name="search" class="form-control search bg-light border-light"
-                                        id="searchJob" value="<?php echo e(request('search')); ?>"
-                                        placeholder="Search for members...">
-                                    <!-- Hidden input untuk menjaga sort_order -->
+                                    <input type="text" name="search" class="form-control search bg-light border-light" id="searchJob" value="<?php echo e(request('search')); ?>" placeholder="Search for members...">
+                                    <!-- Memastikan filter tetap dibawa ketika search dilakukan -->
                                     <input type="hidden" name="sort_order" value="<?php echo e(request('sort_order')); ?>">
+                                    <input type="hidden" name="permission" value="Read Pending Company User">
+                                    <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
                                     <button class="btn btn-primary" type="submit">
                                         <i class="ri-search-line search-icon"></i>
                                     </button>
                                 </div>
                             </form>
-                                           
+                            
+                            
+                            
+                            
+
                         </div>
                         <div class="col-md-auto ms-auto">
                             <div class="d-flex align-items-center gap-2">
                                 <span class="fw-bold">Urutkan Berdasarkan : </span>
                                 <form action="<?php echo e(url()->current()); ?>" method="GET" id="filterForm">
-                                    <!-- Hidden input untuk menjaga search -->
+                                    <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                    <input type="hidden" name="permission" value="Read Pending Company User">
+                                    <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
                                     <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+                                
                                     <select class="form-control" style="cursor: pointer" name="sort_order" id="sortOrder" onchange="this.form.submit()">
                                         <option value="terbaru" <?php echo e(request('sort_order') == 'terbaru' ? 'selected' : ''); ?>>Terbaru</option>
                                         <option value="terlama" <?php echo e(request('sort_order') == 'terlama' ? 'selected' : ''); ?>>Terlama</option>
@@ -78,6 +85,7 @@
                                 </form>
                                 
                                 
+
                             </div>
                         </div>
                     </div>
@@ -88,51 +96,44 @@
                             <table class="table align-middle table-nowrap mb-0" id="pendingMemberTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="sort" data-sort="no" scope="col">No</th>
-                                        <th class="sort" data-sort="photo" scope="col">Photo</th>
-                                        <th class="sort" data-sort="name" scope="col">Name</th>
-                                        <th class="sort" data-sort="email" scope="col">Email</th>
-                                        <th class="sort" data-sort="role" scope="col">Role</th>
-                                        <th class="sort" data-sort="status" scope="col">Status</th>
-                                        <!-- Kolom Status -->
-                                        <th scope="col">Action</th>
+                                        <th>No</th>
+                                        <th>Photo</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $__currentLoopData = $pendingMembers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $member): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <tr data-id="<?php echo e($member['user']->id); ?>" data-company-id="<?php echo e($company->id); ?>"
-                                            data-role-id="<?php echo e($member['role']->id); ?>"
-                                            data-status="<?php echo e($member['status']); ?>">
-                                            <td><?php echo e($index + 1); ?></td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0">
-                                                        <img src="<?php echo e(asset($member['user']->photo ? 'storage/' . $member['user']->photo : '/build/images/users/user-dummy-img.jpg')); ?>"
-                                                            alt="User Photo"
-                                                            class="avatar-xxs rounded-circle object-fit-cover">
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="name"><?php echo e($member['user']->name); ?></td>
-                                            <td class="email"><?php echo e($member['user']->email); ?></td>
-                                            <td class="role"><?php echo e($member['role']->name); ?></td>
-                                            <td class="status"><?php echo e($member['status']); ?></td> <!-- Menampilkan Status -->
-                                            <td>
-                                                <ul class="list-inline hstack gap-2 mb-0">
-                                                    <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top"
-                                                        title="Edit Role">
-                                                        <a class="edit-item-btn" href="#editPendingMemberModal"
-                                                            data-bs-toggle="modal">
-                                                            <i class="ri-pencil-fill align-bottom text-muted"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </td>
-                                        </tr>
+                                    <tr data-id="<?php echo e($member->id); ?>" data-company-id="<?php echo e($company->id); ?>" data-role-id="<?php echo e($member->pivot->role_id); ?>" data-status="<?php echo e($member->pivot->status); ?>">
+                                        <td><?php echo e($pendingMembers->firstItem() + $index); ?></td> <!-- Adjust index for pagination -->
+                                        <td>
+                                            <img src="<?php echo e(asset($member->photo ? 'storage/' . $member->photo : '/build/images/users/user-dummy-img.jpg')); ?>" alt="User Photo" class="avatar-xxs rounded-circle object-fit-cover">
+                                        </td>
+                                        <td><?php echo e($member->name); ?></td>
+                                        <td><?php echo e($member->email); ?></td>
+                                        <td>
+                                            <?php 
+                                                $roleId = $member->pivot->role_id;
+                                                $role = App\Models\Role::find($roleId);
+                                            ?>
+                                            <?php echo e($role ? $role->name : 'N/A'); ?>
+
+                                        </td>
+                                        <td><?php echo e($member->pivot->status); ?></td>
+                                        <td>
+                                            <a href="#editPendingMemberModal" data-bs-toggle="modal">
+                                                <i class="ri-pencil-fill align-bottom text-muted"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tbody>
                             </table>
+                            
+                            
 
 
 
@@ -148,11 +149,45 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-3">
-                            <div class="pagination-wrap hstack gap-2">
-                                <?php echo e($pendingMembers->links()); ?>
+                            <div class="col-sm-6">
+                                <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                    <?php if($pendingMembers->onFirstPage()): ?>
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Previous</span>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="page-item">
+                                            <a href="<?php echo e($pendingMembers->appends(request()->except('page'))->previousPageUrl()); ?>" class="page-link" id="page-prev">Previous</a>
+                                        </div>
+                                    <?php endif; ?>
+                                
+                                    <!-- Page Numbers -->
+                                    <span id="page-num" class="pagination">
+                                        <?php $__currentLoopData = $pendingMembers->links()->elements[0]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php if($page == $pendingMembers->currentPage()): ?>
+                                                <span class="page-item active"><span class="page-link"><?php echo e($page); ?></span></span>
+                                            <?php else: ?>
+                                                <a href="<?php echo e($pendingMembers->appends(request()->except('page'))->url($page)); ?>" class="page-item"><span class="page-link"><?php echo e($page); ?></span></a>
+                                            <?php endif; ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </span>
+                                
+                                    <?php if($pendingMembers->hasMorePages()): ?>
+                                        <div class="page-item">
+                                            <a href="<?php echo e($pendingMembers->appends(request()->except('page'))->nextPageUrl()); ?>" class="page-link" id="page-next">Next</a>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Next</span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                
+                                
+                                
+                                
+                            </div><!-- end col -->
 
-                            </div>
-                            
                         </div>
                     </div>
                     <!-- Modal Edit Role for User -->

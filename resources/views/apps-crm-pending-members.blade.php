@@ -52,24 +52,31 @@
                         <div class="col-md-3">
                             <form action="{{ url()->current() }}" method="GET">
                                 <div class="input-group mb-3">
-                                    <input type="text" name="search" class="form-control search bg-light border-light"
-                                        id="searchJob" value="{{ request('search') }}"
-                                        placeholder="Search for members...">
-                                    <!-- Hidden input untuk menjaga sort_order -->
+                                    <input type="text" name="search" class="form-control search bg-light border-light" id="searchJob" value="{{ request('search') }}" placeholder="Search for members...">
+                                    <!-- Memastikan filter tetap dibawa ketika search dilakukan -->
                                     <input type="hidden" name="sort_order" value="{{ request('sort_order') }}">
+                                    <input type="hidden" name="permission" value="Read Pending Company User">
+                                    <input type="hidden" name="idcp" value="{{ $company->id }}">
                                     <button class="btn btn-primary" type="submit">
                                         <i class="ri-search-line search-icon"></i>
                                     </button>
                                 </div>
                             </form>
-                                           
+                            
+                            
+                            
+                            
+
                         </div>
                         <div class="col-md-auto ms-auto">
                             <div class="d-flex align-items-center gap-2">
                                 <span class="fw-bold">Urutkan Berdasarkan : </span>
                                 <form action="{{ url()->current() }}" method="GET" id="filterForm">
-                                    <!-- Hidden input untuk menjaga search -->
+                                    <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                    <input type="hidden" name="permission" value="Read Pending Company User">
+                                    <input type="hidden" name="idcp" value="{{ $company->id }}">
                                     <input type="hidden" name="search" value="{{ request('search') }}">
+                                
                                     <select class="form-control" style="cursor: pointer" name="sort_order" id="sortOrder" onchange="this.form.submit()">
                                         <option value="terbaru" {{ request('sort_order') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
                                         <option value="terlama" {{ request('sort_order') == 'terlama' ? 'selected' : '' }}>Terlama</option>
@@ -79,6 +86,7 @@
                                 </form>
                                 
                                 
+
                             </div>
                         </div>
                     </div>
@@ -89,51 +97,43 @@
                             <table class="table align-middle table-nowrap mb-0" id="pendingMemberTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="sort" data-sort="no" scope="col">No</th>
-                                        <th class="sort" data-sort="photo" scope="col">Photo</th>
-                                        <th class="sort" data-sort="name" scope="col">Name</th>
-                                        <th class="sort" data-sort="email" scope="col">Email</th>
-                                        <th class="sort" data-sort="role" scope="col">Role</th>
-                                        <th class="sort" data-sort="status" scope="col">Status</th>
-                                        <!-- Kolom Status -->
-                                        <th scope="col">Action</th>
+                                        <th>No</th>
+                                        <th>Photo</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($pendingMembers as $index => $member)
-                                        <tr data-id="{{ $member['user']->id }}" data-company-id="{{ $company->id }}"
-                                            data-role-id="{{ $member['role']->id }}"
-                                            data-status="{{ $member['status'] }}">
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0">
-                                                        <img src="{{ asset($member['user']->photo ? 'storage/' . $member['user']->photo : '/build/images/users/user-dummy-img.jpg') }}"
-                                                            alt="User Photo"
-                                                            class="avatar-xxs rounded-circle object-fit-cover">
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="name">{{ $member['user']->name }}</td>
-                                            <td class="email">{{ $member['user']->email }}</td>
-                                            <td class="role">{{ $member['role']->name }}</td>
-                                            <td class="status">{{ $member['status'] }}</td> <!-- Menampilkan Status -->
-                                            <td>
-                                                <ul class="list-inline hstack gap-2 mb-0">
-                                                    <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top"
-                                                        title="Edit Role">
-                                                        <a class="edit-item-btn" href="#editPendingMemberModal"
-                                                            data-bs-toggle="modal">
-                                                            <i class="ri-pencil-fill align-bottom text-muted"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </td>
-                                        </tr>
+                                    <tr data-id="{{ $member->id }}" data-company-id="{{ $company->id }}" data-role-id="{{ $member->pivot->role_id }}" data-status="{{ $member->pivot->status }}">
+                                        <td>{{ $pendingMembers->firstItem() + $index }}</td> <!-- Adjust index for pagination -->
+                                        <td>
+                                            <img src="{{ asset($member->photo ? 'storage/' . $member->photo : '/build/images/users/user-dummy-img.jpg') }}" alt="User Photo" class="avatar-xxs rounded-circle object-fit-cover">
+                                        </td>
+                                        <td>{{ $member->name }}</td>
+                                        <td>{{ $member->email }}</td>
+                                        <td>
+                                            <?php 
+                                                $roleId = $member->pivot->role_id;
+                                                $role = App\Models\Role::find($roleId);
+                                            ?>
+                                            {{ $role ? $role->name : 'N/A' }}
+                                        </td>
+                                        <td>{{ $member->pivot->status }}</td>
+                                        <td>
+                                            <a href="#editPendingMemberModal" data-bs-toggle="modal">
+                                                <i class="ri-pencil-fill align-bottom text-muted"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+                            
+                            
 
 
 
@@ -149,10 +149,45 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-3">
-                            <div class="pagination-wrap hstack gap-2">
-                                {{ $pendingMembers->links() }}
-                            </div>
-                            
+                            <div class="col-sm-6">
+                                <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                    @if ($pendingMembers->onFirstPage())
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Previous</span>
+                                        </div>
+                                    @else
+                                        <div class="page-item">
+                                            <a href="{{ $pendingMembers->appends(request()->except('page'))->previousPageUrl() }}" class="page-link" id="page-prev">Previous</a>
+                                        </div>
+                                    @endif
+                                
+                                    <!-- Page Numbers -->
+                                    <span id="page-num" class="pagination">
+                                        @foreach ($pendingMembers->links()->elements[0] as $page => $url)
+                                            @if ($page == $pendingMembers->currentPage())
+                                                <span class="page-item active"><span class="page-link">{{ $page }}</span></span>
+                                            @else
+                                                <a href="{{ $pendingMembers->appends(request()->except('page'))->url($page) }}" class="page-item"><span class="page-link">{{ $page }}</span></a>
+                                            @endif
+                                        @endforeach
+                                    </span>
+                                
+                                    @if ($pendingMembers->hasMorePages())
+                                        <div class="page-item">
+                                            <a href="{{ $pendingMembers->appends(request()->except('page'))->nextPageUrl() }}" class="page-link" id="page-next">Next</a>
+                                        </div>
+                                    @else
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Next</span>
+                                        </div>
+                                    @endif
+                                </div>
+                                
+                                
+                                
+                                
+                            </div><!-- end col -->
+
                         </div>
                     </div>
                     <!-- Modal Edit Role for User -->

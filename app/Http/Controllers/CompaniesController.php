@@ -113,83 +113,54 @@ class CompaniesController extends Controller
 
     public function pendingMemberCompanies(Request $request, Company $company)
     {
-        // Ambil user yang sedang login
         $user = auth()->user();
-    
-        // Ambil companies terkait user tersebut
         $companies = $user->companies;
-    
-        // Cari company yang spesifik berdasarkan ID
-        $companyId = $company->id;
-        $company = $companies->firstWhere('id', $companyId);
-    
-        // Ambil roles yang terkait dengan perusahaan
+        $company = $companies->firstWhere('id', $company->id);
         $roles = Role::whereHas('companiesPermissions', function ($query) use ($company) {
             $query->where('companies.id', $company->id);
         })->get();
     
-        // Periksa apakah company ditemukan
-        if ($company) {
-            // Ambil parameter search dan sort_order dari request
-            $search = $request->input('search');
-            $sortOrder = $request->input('sort_order', 'terbaru'); // Default ke 'terbaru' jika tidak ada
+        // Ambil nilai search dari request
+        $search = $request->input('search');
     
-            // Query untuk pending members
-            $pendingMembersQuery = $company->users()
-                ->wherePivot('status', 'WAITING') // Ambil hanya pengguna dengan status WAITING di pivot
-                ->when($search, function ($query) use ($search) {
-                    // Jika ada input search, filter berdasarkan nama pengguna
-                    $query->where('name', 'LIKE', '%' . $search . '%');
-                });
+        // Ambil nilai sort_order dari request, default ke 'terbaru'
+        $sort_order = $request->input('sort_order', 'terbaru');
     
-            // Sorting berdasarkan sort_order
-            switch ($sortOrder) {
-                case 'terbaru':
-                    $pendingMembersQuery->orderBy('created_at', 'desc');
-                    break;
-                case 'terlama':
-                    $pendingMembersQuery->orderBy('created_at', 'asc');
-                    break;
-                case 'A-Z':
-                    $pendingMembersQuery->orderBy('name', 'asc');
-                    break;
-                case 'Z-A':
-                    $pendingMembersQuery->orderBy('name', 'desc');
-                    break;
-            }
+        // Buat query untuk pending members
+        $pendingMembersQuery = $company->users()
+            ->wherePivot('status', 'WAITING') // Hanya ambil pengguna dengan status WAITING
+            ->when($search, function ($query) use ($search) {
+                // Filter berdasarkan nama jika ada input search
+                $query->where('name', 'LIKE', '%' . $search . '%');
+            });
     
-            // Dapatkan hasil dari query dengan pagination
-            $pendingMembersData = $pendingMembersQuery->paginate(10); // Menampilkan 10 item per halaman
-    
-            $pendingMembers = [];
-            // Loop melalui hasil query untuk menambah data role dan status ke array pendingMembers
-            foreach ($pendingMembersData as $user) {
-                // Ambil role ID dari pivot
-                $roleId = $user->pivot->role_id;
-    
-                // Ambil data role berdasarkan role ID
-                $role = Role::find($roleId);
-                // Tambahkan data user, role, dan status ke dalam array
-                $pendingMembers[] = [
-                    'user' => $user,
-                    'role' => $role,
-                    'status' => $user->pivot->status, // Tambahkan status
-                ];
-            }
-            dd($pendingMembers);
-    
-            // Return view dengan data yang dibutuhkan
-            return view('apps-crm-pending-members', [
-                'user' => $user,
-                'company' => $company,
-                'pendingMembers' => $pendingMembersData, // Gunakan hasil dari pagination query
-                'roles' => $roles,
-            ]);
+        // Terapkan logika sorting berdasarkan sort_order
+        if ($sort_order === 'terbaru') {
+            $pendingMembersQuery->orderBy('created_at', 'desc');
+        } elseif ($sort_order === 'terlama') {
+            $pendingMembersQuery->orderBy('created_at', 'asc');
+        } elseif ($sort_order === 'A-Z') {
+            $pendingMembersQuery->orderBy('name', 'asc');
+        } elseif ($sort_order === 'Z-A') {
+            $pendingMembersQuery->orderBy('name', 'desc');
         }
     
-        // Jika company tidak ditemukan, kembalikan response sesuai yang diinginkan, misal redirect atau pesan error
-        return redirect()->back()->with('error', 'Company not found');
+        // Paginate hasil query
+        $pendingMembers = $pendingMembersQuery->paginate(1);
+    
+        // Kembalikan ke view dengan data yang dibutuhkan
+        return view('apps-crm-pending-members', [
+            'user' => $user,
+            'company' => $company,
+            'pendingMembers' => $pendingMembers,
+            'roles' => $roles,
+            'sort_order' => $sort_order,
+        ]);
     }
+    
+    
+    
+  
     
     
 

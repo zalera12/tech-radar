@@ -134,7 +134,7 @@
                                                     </li>
                                                 <?php endif; ?>
                                             </ul>
-                                        </div>
+                                        </div> 
                                     </li>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>

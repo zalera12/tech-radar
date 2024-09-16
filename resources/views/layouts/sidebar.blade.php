@@ -134,7 +134,7 @@
                                                     </li>
                                                 @endif
                                             </ul>
-                                        </div>
+                                        </div> 
                                     </li>
                                 @endforeach
                             </ul>

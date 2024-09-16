@@ -27,6 +27,7 @@ class CheckPermission
 
         // Ambil company ID dari parameter route
         $companyId = request('idcp'); // Pastikan parameter ini ada di route
+
         // Jika companyId tidak ditemukan, redirect atau abort
         if (!$companyId) {
             return redirect()->back()->with('error', 'Company ID tidak ditemukan');
