@@ -19,28 +19,58 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="d-flex align-items-center flex-wrap gap-2">
-                        <div class="flex-grow-1">
-                            <button class="btn btn-secondary add-btn" data-bs-toggle="modal"
-                                data-bs-target="#addTehcnologyModal"><i class="ri-add-fill me-1 align-bottom"></i> Add
-                                Users</button>
+                    <div class="d-flex align-items-center gap-2 justify-content-between flex-md-row flex-column">
+
+                        <button class="btn btn-secondary add-btn" style="width: 260px;" data-bs-toggle="modal"
+                            data-bs-target="#addTehcnologyModal"><i class="ri-add-fill me-1 align-bottom"></i> Add
+                            Technologies</button>
+                        <div class="d-flex align-items-center gap-2" style="width: 260px;">
+                            <span class="fw-bold">Filter By : </span>
+                            <form action="{{ url()->current() }}" method="GET" id="filterForm">
+                                <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                <input type="hidden" name="permission" value="Read Technology">
+                                <input type="hidden" name="idcp" value="{{ $company->id }}">
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                <input type="hidden" name="filter" value="{{ request('filter') }}">
+                                <input type="hidden" name="filterQuadrant" value="{{ request('filterQuadrant') }}">
+                                <input type="hidden" name="filterRing" value="{{ request('filterRing') }}">
+                            
+                            
+                                <!-- Dropdown untuk filter By kategori -->
+                                <select class="form-control" name="filterCategory" onchange="this.form.submit()" style="cursor: pointer;width:150px;text-align:center; margin-left:10px;">
+                                    <option value="">All Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" {{ request('filterCategory') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                            
                         </div>
-                        <div class="flex-shrink-0">
-                            <div class="hstack text-nowrap gap-2">
-                                <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i
-                                        class="ri-delete-bin-2-line"></i></button>
-                                <button class="btn btn-primary"><i class="ri-filter-2-line me-1 align-bottom"></i>
-                                    Filters</button>
-                                <button class="btn btn-soft-success">Import</button>
-                                <button type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown"
-                                    aria-expanded="false" class="btn btn-soft-info"><i class="ri-more-2-fill"></i></button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                    <li><a class="dropdown-item" href="#">All</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Week</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Month</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Year</a></li>
-                                </ul>
-                            </div>
+                        <div class="d-flex align-items-center gap-2" style="width: 260px;">
+                            <span class="fw-bold">Filter By : </span>
+                            <form action="{{ url()->current() }}" method="GET" id="filterForm">
+                                <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                <input type="hidden" name="permission" value="Read Technology">
+                                <input type="hidden" name="idcp" value="{{ $company->id }}">
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                <input type="hidden" name="filter" value="{{ request('filter') }}">
+                                <input type="hidden" name="filterCategory" value="{{ request('filterCategory') }}">
+                                <input type="hidden" name="filterQuadrant" value="{{ request('filterQuadrant') }}">
+                                <input type="hidden" name="filterRing" value="{{ request('filterRing') }}">
+        
+                            
+                                <!-- Select untuk Ring (baru ditambahkan sesuai enum 'ring') -->
+                                <select class="form-control" name="filterRing" onchange="this.form.submit()" style="cursor: pointer;width:150px;text-align:center; margin-left:10px;">
+                                    <option value="">All Rings</option>
+                                    <option value="HOLD" {{ request('filterRing') == 'HOLD' ? 'selected' : '' }}>HOLD</option>
+                                    <option value="ADOPT" {{ request('filterRing') == 'ADOPT' ? 'selected' : '' }}>ADOPT</option>
+                                    <option value="ASSESS" {{ request('filterRing') == 'ASSESS' ? 'selected' : '' }}>ASSESS</option>
+                                    <option value="TRIAL" {{ request('filterRing') == 'TRIAL' ? 'selected' : '' }}>TRIAL</option>
+                                </select>
+                            </form>
+                            
                         </div>
                     </div>
                 </div>
@@ -50,27 +80,80 @@
         <div class="col-xxl-9">
             <div class="card" id="companyList">
                 <div class="card-header">
-                    <div class="row g-2">
-                        <div class="col-md-3">
-                            <div class="search-box">
-                                <input type="text" class="form-control search" placeholder="Search for company...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
+                    <div class="d-flex align-items-center gap-2 justify-content-between flex-md-row flex-column">
+
+                        
+                        <div class="" style="width: 260px;">
+                            <form action="{{ url()->current() }}" method="GET">
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control search bg-light border-light"
+                                        id="searchJob" value="{{ request('search') }}" placeholder="Search for technologies...">
+                                    <!-- Memastikan filter tetap dibawa ketika search dilakukan -->
+                                    <input type="hidden" name="permission" value="Read Technology">
+                                    <input type="hidden" name="idcp" value="{{ $company->id }}">
+                                    <input type="hidden" name="filterCategory" value="{{ request('filterCategory') }}">
+                                    <input type="hidden" name="filterQuadrant" value="{{ request('filterQuadrant') }}">
+                                    <input type="hidden" name="filterRing" value="{{ request('filterRing') }}">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </button>
+                                </div>
+                            </form>
+                            
                         </div>
-                        <div class="col-md-auto ms-auto">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted">Sort by: </span>
-                                <select class="form-control mb-0" data-choices data-choices-search-false
-                                    id="choices-single-default">
-                                    <option value="Owner">Owner</option>
-                                    <option value="Company">Company</option>
-                                    <option value="location">Location</option>
+                        <div class="d-flex align-items-center gap-2" style="width: 260px;">
+                            <span class="fw-bold">Filter By : </span>
+                            <form action="{{ url()->current() }}" method="GET" id="filterForm">
+                                <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                <input type="hidden" name="permission" value="Read Technology">
+                                <input type="hidden" name="idcp" value="{{ $company->id }}">
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                <input type="hidden" name="filter" value="{{ request('filter') }}">
+                                <input type="hidden" name="filterCategory" value="{{ request('filterCategory') }}">
+                                <input type="hidden" name="filterRing" value="{{ request('filterRing') }}">
+                            
+                                <!-- Filter Quadrant -->
+                                <select class="form-control" style="cursor: pointer;width:150px;text-align:center;margin-left:10px;" name="filterQuadrant" id="filterQuadrant" onchange="this.form.submit()">
+                                    <option value="">All Quadrant</option>
+                                    <option value="Techniques" {{ request('filterQuadrant') == 'Techniques' ? 'selected' : '' }}>Techniques</option>
+                                    <option value="Platforms" {{ request('filterQuadrant') == 'Platforms' ? 'selected' : '' }}>Platforms</option>
+                                    <option value="Tools" {{ request('filterQuadrant') == 'Tools' ? 'selected' : '' }}>Tools</option>
+                                    <option value="Language and Framework" {{ request('filterQuadrant') == 'Language and Framework' ? 'selected' : '' }}>Language and Framework</option>
                                 </select>
-                            </div>
+                        
+                            </form>
+                            
+                        </div>
+                        
+                        <div class="d-flex align-items-center gap-2" style="width: 260px;">
+                            <span class="fw-bold">Filter By : </span>
+                            <form action="{{ url()->current() }}" method="GET" id="filterForm">
+                                <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                <input type="hidden" name="permission" value="Read Technology">
+                                <input type="hidden" name="idcp" value="{{ $company->id }}">
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                <input type="hidden" name="filter" value="{{ request('filter') }}">
+                                <input type="hidden" name="filterCategory" value="{{ request('filterCategory') }}">
+                                <input type="hidden" name="filterQuadrant" value="{{ request('filterQuadrant') }}">
+                                <input type="hidden" name="filterRing" value="{{ request('filterRing') }}">
+
+
+                                <select class="form-control" style="cursor: pointer;width:150px;text-align:center;margin-left:10px;"
+                                    name="sort_order" id="sortOrder" onchange="this.form.submit()">
+                                    <option value="terbaru" {{ request('sort_order') == 'terbaru' ? 'selected' : '' }}>
+                                        Terbaru</option>
+                                    <option value="terlama" {{ request('sort_order') == 'terlama' ? 'selected' : '' }}>
+                                        Terlama</option>
+                                    <option value="A-Z" {{ request('sort_order') == 'A-Z' ? 'selected' : '' }}>A-Z
+                                    </option>
+                                    <option value="Z-A" {{ request('sort_order') == 'Z-A' ? 'selected' : '' }}>Z-A
+                                    </option>
+                                </select>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body mt-3">
                     <div>
                         <div class="table-responsive table-card mb-3">
                             <table class="table align-middle table-nowrap mb-0" id="technologiesTable">
@@ -89,7 +172,7 @@
                                 <tbody>
                                     @foreach ($technologies as $index => $technology)
                                         <tr>
-                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $technologies->firstItem() + $index }}</td>
                                             <td class="category">{{ $technology->category->name }}</td>
                                             <td class="user">{{ $technology->user->name }}</td>
                                             <td class="name">{{ $technology->name }}</td>
@@ -142,7 +225,9 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close" id="close-edit-modal"></button>
                                         </div>
-                                        <form action="/companies/technologies/edit?permission=Edit Technology&idcp={{ $company->id }}" method="POST" autocomplete="off" id="editTechnologyForm">
+                                        <form
+                                            action="/companies/technologies/edit?permission=Edit Technology&idcp={{ $company->id }}"
+                                            method="POST" autocomplete="off" id="editTechnologyForm">
                                             @csrf
                                             <input type="hidden" name="id" id="edit-technology-id">
                                             <input type="hidden" name="user_id" value="{{ $user->id }}">
@@ -157,7 +242,8 @@
                                                         </label>
                                                         <select class="form-select @error('category') is-invalid @enderror"
                                                             id="edit-category" name="category_id" required>
-                                                            <option value="" disabled selected>Select Category</option>
+                                                            <option value="" disabled selected>Select Category
+                                                            </option>
                                                             @foreach ($categories as $category)
                                                                 <option value="{{ $category->id }}">{{ $category->name }}
                                                                 </option>
@@ -271,14 +357,40 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-3">
-                            <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="#">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="#">
-                                    Next
-                                </a>
+                            <div class="col-sm-6">
+                                <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                    @if ($technologies->onFirstPage())
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Previous</span>
+                                        </div>
+                                    @else
+                                        <div class="page-item">
+                                            <a href="{{ $technologies->appends(request()->except('page'))->previousPageUrl() }}" class="page-link" id="page-prev">Previous</a>
+                                        </div>
+                                    @endif
+                                
+                                    <!-- Page Numbers -->
+                                    <span id="page-num" class="pagination">
+                                        @foreach ($technologies->links()->elements[0] as $page => $url)
+                                            @if ($page == $technologies->currentPage())
+                                                <span class="page-item active"><span class="page-link">{{ $page }}</span></span>
+                                            @else
+                                                <a href="{{ $technologies->appends(request()->except('page'))->url($page) }}" class="page-item"><span class="page-link">{{ $page }}</span></a>
+                                            @endif
+                                        @endforeach
+                                    </span>
+                                
+                                    @if ($technologies->hasMorePages())
+                                        <div class="page-item">
+                                            <a href="{{ $technologies->appends(request()->except('page'))->nextPageUrl() }}" class="page-link" id="page-next">Next</a>
+                                        </div>
+                                    @else
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Next</span>
+                                        </div>
+                                    @endif
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -291,7 +403,9 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                         id="close-add-modal"></button>
                                 </div>
-                                <form action="/companies/technologies/add?permission=Add Technology&idcp={{ $company->id }}" method="POST" autocomplete="off">
+                                <form
+                                    action="/companies/technologies/add?permission=Add Technology&idcp={{ $company->id }}"
+                                    method="POST" autocomplete="off">
                                     @csrf
                                     <input type="hidden" name="company_id" value="{{ $company->id }}">
                                     <input type="hidden" name="user_id" value="{{ $user->id }}">
@@ -466,35 +580,38 @@
                     const ring = this.getAttribute('data-ring');
                     const category = this.getAttribute('data-category');
                     const description = this.getAttribute('data-description');
-    
+
                     // Set input values
                     document.getElementById('edit-technology-id').value = id;
                     document.getElementById('edit-name').value = name;
                     const modalElement = document.getElementById('editTechnologyModal');
                     const modal = new bootstrap.Modal(modalElement);
                     modal.show();
-    
+
                     modalElement.addEventListener('shown.bs.modal', function() {
-                        const trixEditor = document.querySelector("trix-editor[input='edit-description']");
+                        const trixEditor = document.querySelector(
+                            "trix-editor[input='edit-description']");
                         if (trixEditor && trixEditor.editor) {
                             trixEditor.editor.loadHTML(description);
                         } else {
                             console.error('Trix editor not found or not ready.');
                         }
-                    }, { once: true });
-    
+                    }, {
+                        once: true
+                    });
+
                     // Select the correct option for category
                     const categorySelect = document.getElementById('edit-category');
                     for (let option of categorySelect.options) {
                         option.selected = option.value == category;
                     }
-    
+
                     // Select the correct option for quadrant
                     const quadrantSelect = document.getElementById('edit-quadrant');
                     for (let option of quadrantSelect.options) {
                         option.selected = option.value == quadrant;
                     }
-    
+
                     // Select the correct option for ring
                     const ringSelect = document.getElementById('edit-ring');
                     for (let option of ringSelect.options) {
@@ -502,15 +619,15 @@
                     }
                 });
             });
-    
+
             // Event listener for modal close to remove backdrop
-            document.getElementById('editTechnologyModal').addEventListener('hidden.bs.modal', function () {
+            document.getElementById('editTechnologyModal').addEventListener('hidden.bs.modal', function() {
                 document.body.classList.remove('modal-open');
                 document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
                     backdrop.remove();
                 });
             });
-    
+
             // Event listener for delete button
             document.querySelectorAll('.remove-item-btn').forEach(button => {
                 button.addEventListener('click', function() {
@@ -519,7 +636,7 @@
                 });
             });
         });
-    
+
         // Check if there's a success message in session
         @if (session('success_update'))
             Swal.fire({
@@ -530,7 +647,7 @@
                 timer: 1500
             });
         @endif
-    
+
         @if (session('success_delete'))
             Swal.fire({
                 icon: 'success',

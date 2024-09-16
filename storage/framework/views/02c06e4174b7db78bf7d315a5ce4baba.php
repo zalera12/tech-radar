@@ -18,28 +18,59 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="d-flex align-items-center flex-wrap gap-2">
-                        <div class="flex-grow-1">
-                            <button class="btn btn-secondary add-btn" data-bs-toggle="modal"
-                                data-bs-target="#addTehcnologyModal"><i class="ri-add-fill me-1 align-bottom"></i> Add
-                                Users</button>
+                    <div class="d-flex align-items-center gap-2 justify-content-between flex-md-row flex-column">
+
+                        <button class="btn btn-secondary add-btn" style="width: 260px;" data-bs-toggle="modal"
+                            data-bs-target="#addTehcnologyModal"><i class="ri-add-fill me-1 align-bottom"></i> Add
+                            Technologies</button>
+                        <div class="d-flex align-items-center gap-2" style="width: 260px;">
+                            <span class="fw-bold">Filter By : </span>
+                            <form action="<?php echo e(url()->current()); ?>" method="GET" id="filterForm">
+                                <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                <input type="hidden" name="permission" value="Read Technology">
+                                <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
+                                <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+                                <input type="hidden" name="filter" value="<?php echo e(request('filter')); ?>">
+                                <input type="hidden" name="filterQuadrant" value="<?php echo e(request('filterQuadrant')); ?>">
+                                <input type="hidden" name="filterRing" value="<?php echo e(request('filterRing')); ?>">
+                            
+                            
+                                <!-- Dropdown untuk filter By kategori -->
+                                <select class="form-control" name="filterCategory" onchange="this.form.submit()" style="cursor: pointer;width:150px;text-align:center; margin-left:10px;">
+                                    <option value="">All Category</option>
+                                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($category->id); ?>" <?php echo e(request('filterCategory') == $category->id ? 'selected' : ''); ?>>
+                                            <?php echo e($category->name); ?>
+
+                                        </option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                            </form>
+                            
                         </div>
-                        <div class="flex-shrink-0">
-                            <div class="hstack text-nowrap gap-2">
-                                <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i
-                                        class="ri-delete-bin-2-line"></i></button>
-                                <button class="btn btn-primary"><i class="ri-filter-2-line me-1 align-bottom"></i>
-                                    Filters</button>
-                                <button class="btn btn-soft-success">Import</button>
-                                <button type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown"
-                                    aria-expanded="false" class="btn btn-soft-info"><i class="ri-more-2-fill"></i></button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                    <li><a class="dropdown-item" href="#">All</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Week</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Month</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Year</a></li>
-                                </ul>
-                            </div>
+                        <div class="d-flex align-items-center gap-2" style="width: 260px;">
+                            <span class="fw-bold">Filter By : </span>
+                            <form action="<?php echo e(url()->current()); ?>" method="GET" id="filterForm">
+                                <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                <input type="hidden" name="permission" value="Read Technology">
+                                <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
+                                <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+                                <input type="hidden" name="filter" value="<?php echo e(request('filter')); ?>">
+                                <input type="hidden" name="filterCategory" value="<?php echo e(request('filterCategory')); ?>">
+                                <input type="hidden" name="filterQuadrant" value="<?php echo e(request('filterQuadrant')); ?>">
+                                <input type="hidden" name="filterRing" value="<?php echo e(request('filterRing')); ?>">
+        
+                            
+                                <!-- Select untuk Ring (baru ditambahkan sesuai enum 'ring') -->
+                                <select class="form-control" name="filterRing" onchange="this.form.submit()" style="cursor: pointer;width:150px;text-align:center; margin-left:10px;">
+                                    <option value="">All Rings</option>
+                                    <option value="HOLD" <?php echo e(request('filterRing') == 'HOLD' ? 'selected' : ''); ?>>HOLD</option>
+                                    <option value="ADOPT" <?php echo e(request('filterRing') == 'ADOPT' ? 'selected' : ''); ?>>ADOPT</option>
+                                    <option value="ASSESS" <?php echo e(request('filterRing') == 'ASSESS' ? 'selected' : ''); ?>>ASSESS</option>
+                                    <option value="TRIAL" <?php echo e(request('filterRing') == 'TRIAL' ? 'selected' : ''); ?>>TRIAL</option>
+                                </select>
+                            </form>
+                            
                         </div>
                     </div>
                 </div>
@@ -49,27 +80,80 @@
         <div class="col-xxl-9">
             <div class="card" id="companyList">
                 <div class="card-header">
-                    <div class="row g-2">
-                        <div class="col-md-3">
-                            <div class="search-box">
-                                <input type="text" class="form-control search" placeholder="Search for company...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
+                    <div class="d-flex align-items-center gap-2 justify-content-between flex-md-row flex-column">
+
+                        
+                        <div class="" style="width: 260px;">
+                            <form action="<?php echo e(url()->current()); ?>" method="GET">
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control search bg-light border-light"
+                                        id="searchJob" value="<?php echo e(request('search')); ?>" placeholder="Search for technologies...">
+                                    <!-- Memastikan filter tetap dibawa ketika search dilakukan -->
+                                    <input type="hidden" name="permission" value="Read Technology">
+                                    <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
+                                    <input type="hidden" name="filterCategory" value="<?php echo e(request('filterCategory')); ?>">
+                                    <input type="hidden" name="filterQuadrant" value="<?php echo e(request('filterQuadrant')); ?>">
+                                    <input type="hidden" name="filterRing" value="<?php echo e(request('filterRing')); ?>">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </button>
+                                </div>
+                            </form>
+                            
                         </div>
-                        <div class="col-md-auto ms-auto">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted">Sort by: </span>
-                                <select class="form-control mb-0" data-choices data-choices-search-false
-                                    id="choices-single-default">
-                                    <option value="Owner">Owner</option>
-                                    <option value="Company">Company</option>
-                                    <option value="location">Location</option>
+                        <div class="d-flex align-items-center gap-2" style="width: 260px;">
+                            <span class="fw-bold">Filter By : </span>
+                            <form action="<?php echo e(url()->current()); ?>" method="GET" id="filterForm">
+                                <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                <input type="hidden" name="permission" value="Read Technology">
+                                <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
+                                <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+                                <input type="hidden" name="filter" value="<?php echo e(request('filter')); ?>">
+                                <input type="hidden" name="filterCategory" value="<?php echo e(request('filterCategory')); ?>">
+                                <input type="hidden" name="filterRing" value="<?php echo e(request('filterRing')); ?>">
+                            
+                                <!-- Filter Quadrant -->
+                                <select class="form-control" style="cursor: pointer;width:150px;text-align:center;margin-left:10px;" name="filterQuadrant" id="filterQuadrant" onchange="this.form.submit()">
+                                    <option value="">All Quadrant</option>
+                                    <option value="Techniques" <?php echo e(request('filterQuadrant') == 'Techniques' ? 'selected' : ''); ?>>Techniques</option>
+                                    <option value="Platforms" <?php echo e(request('filterQuadrant') == 'Platforms' ? 'selected' : ''); ?>>Platforms</option>
+                                    <option value="Tools" <?php echo e(request('filterQuadrant') == 'Tools' ? 'selected' : ''); ?>>Tools</option>
+                                    <option value="Language and Framework" <?php echo e(request('filterQuadrant') == 'Language and Framework' ? 'selected' : ''); ?>>Language and Framework</option>
                                 </select>
-                            </div>
+                        
+                            </form>
+                            
+                        </div>
+                        
+                        <div class="d-flex align-items-center gap-2" style="width: 260px;">
+                            <span class="fw-bold">Filter By : </span>
+                            <form action="<?php echo e(url()->current()); ?>" method="GET" id="filterForm">
+                                <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
+                                <input type="hidden" name="permission" value="Read Technology">
+                                <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
+                                <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+                                <input type="hidden" name="filter" value="<?php echo e(request('filter')); ?>">
+                                <input type="hidden" name="filterCategory" value="<?php echo e(request('filterCategory')); ?>">
+                                <input type="hidden" name="filterQuadrant" value="<?php echo e(request('filterQuadrant')); ?>">
+                                <input type="hidden" name="filterRing" value="<?php echo e(request('filterRing')); ?>">
+
+
+                                <select class="form-control" style="cursor: pointer;width:150px;text-align:center;margin-left:10px;"
+                                    name="sort_order" id="sortOrder" onchange="this.form.submit()">
+                                    <option value="terbaru" <?php echo e(request('sort_order') == 'terbaru' ? 'selected' : ''); ?>>
+                                        Terbaru</option>
+                                    <option value="terlama" <?php echo e(request('sort_order') == 'terlama' ? 'selected' : ''); ?>>
+                                        Terlama</option>
+                                    <option value="A-Z" <?php echo e(request('sort_order') == 'A-Z' ? 'selected' : ''); ?>>A-Z
+                                    </option>
+                                    <option value="Z-A" <?php echo e(request('sort_order') == 'Z-A' ? 'selected' : ''); ?>>Z-A
+                                    </option>
+                                </select>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body mt-3">
                     <div>
                         <div class="table-responsive table-card mb-3">
                             <table class="table align-middle table-nowrap mb-0" id="technologiesTable">
@@ -88,7 +172,7 @@
                                 <tbody>
                                     <?php $__currentLoopData = $technologies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $technology): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
-                                            <td><?php echo e($index + 1); ?></td>
+                                            <td><?php echo e($technologies->firstItem() + $index); ?></td>
                                             <td class="category"><?php echo e($technology->category->name); ?></td>
                                             <td class="user"><?php echo e($technology->user->name); ?></td>
                                             <td class="name"><?php echo e($technology->name); ?></td>
@@ -141,7 +225,9 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close" id="close-edit-modal"></button>
                                         </div>
-                                        <form action="/companies/technologies/edit?permission=Edit Technology&idcp=<?php echo e($company->id); ?>" method="POST" autocomplete="off" id="editTechnologyForm">
+                                        <form
+                                            action="/companies/technologies/edit?permission=Edit Technology&idcp=<?php echo e($company->id); ?>"
+                                            method="POST" autocomplete="off" id="editTechnologyForm">
                                             <?php echo csrf_field(); ?>
                                             <input type="hidden" name="id" id="edit-technology-id">
                                             <input type="hidden" name="user_id" value="<?php echo e($user->id); ?>">
@@ -163,7 +249,8 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
                                                             id="edit-category" name="category_id" required>
-                                                            <option value="" disabled selected>Select Category</option>
+                                                            <option value="" disabled selected>Select Category
+                                                            </option>
                                                             <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                                 <option value="<?php echo e($category->id); ?>"><?php echo e($category->name); ?>
 
@@ -341,14 +428,40 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-3">
-                            <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="#">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="#">
-                                    Next
-                                </a>
+                            <div class="col-sm-6">
+                                <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                    <?php if($technologies->onFirstPage()): ?>
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Previous</span>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="page-item">
+                                            <a href="<?php echo e($technologies->appends(request()->except('page'))->previousPageUrl()); ?>" class="page-link" id="page-prev">Previous</a>
+                                        </div>
+                                    <?php endif; ?>
+                                
+                                    <!-- Page Numbers -->
+                                    <span id="page-num" class="pagination">
+                                        <?php $__currentLoopData = $technologies->links()->elements[0]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php if($page == $technologies->currentPage()): ?>
+                                                <span class="page-item active"><span class="page-link"><?php echo e($page); ?></span></span>
+                                            <?php else: ?>
+                                                <a href="<?php echo e($technologies->appends(request()->except('page'))->url($page)); ?>" class="page-item"><span class="page-link"><?php echo e($page); ?></span></a>
+                                            <?php endif; ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </span>
+                                
+                                    <?php if($technologies->hasMorePages()): ?>
+                                        <div class="page-item">
+                                            <a href="<?php echo e($technologies->appends(request()->except('page'))->nextPageUrl()); ?>" class="page-link" id="page-next">Next</a>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="page-item disabled">
+                                            <span class="page-link">Next</span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -361,7 +474,9 @@ unset($__errorArgs, $__bag); ?>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                         id="close-add-modal"></button>
                                 </div>
-                                <form action="/companies/technologies/add?permission=Add Technology&idcp=<?php echo e($company->id); ?>" method="POST" autocomplete="off">
+                                <form
+                                    action="/companies/technologies/add?permission=Add Technology&idcp=<?php echo e($company->id); ?>"
+                                    method="POST" autocomplete="off">
                                     <?php echo csrf_field(); ?>
                                     <input type="hidden" name="company_id" value="<?php echo e($company->id); ?>">
                                     <input type="hidden" name="user_id" value="<?php echo e($user->id); ?>">
@@ -607,35 +722,38 @@ unset($__errorArgs, $__bag); ?>
                     const ring = this.getAttribute('data-ring');
                     const category = this.getAttribute('data-category');
                     const description = this.getAttribute('data-description');
-    
+
                     // Set input values
                     document.getElementById('edit-technology-id').value = id;
                     document.getElementById('edit-name').value = name;
                     const modalElement = document.getElementById('editTechnologyModal');
                     const modal = new bootstrap.Modal(modalElement);
                     modal.show();
-    
+
                     modalElement.addEventListener('shown.bs.modal', function() {
-                        const trixEditor = document.querySelector("trix-editor[input='edit-description']");
+                        const trixEditor = document.querySelector(
+                            "trix-editor[input='edit-description']");
                         if (trixEditor && trixEditor.editor) {
                             trixEditor.editor.loadHTML(description);
                         } else {
                             console.error('Trix editor not found or not ready.');
                         }
-                    }, { once: true });
-    
+                    }, {
+                        once: true
+                    });
+
                     // Select the correct option for category
                     const categorySelect = document.getElementById('edit-category');
                     for (let option of categorySelect.options) {
                         option.selected = option.value == category;
                     }
-    
+
                     // Select the correct option for quadrant
                     const quadrantSelect = document.getElementById('edit-quadrant');
                     for (let option of quadrantSelect.options) {
                         option.selected = option.value == quadrant;
                     }
-    
+
                     // Select the correct option for ring
                     const ringSelect = document.getElementById('edit-ring');
                     for (let option of ringSelect.options) {
@@ -643,15 +761,15 @@ unset($__errorArgs, $__bag); ?>
                     }
                 });
             });
-    
+
             // Event listener for modal close to remove backdrop
-            document.getElementById('editTechnologyModal').addEventListener('hidden.bs.modal', function () {
+            document.getElementById('editTechnologyModal').addEventListener('hidden.bs.modal', function() {
                 document.body.classList.remove('modal-open');
                 document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
                     backdrop.remove();
                 });
             });
-    
+
             // Event listener for delete button
             document.querySelectorAll('.remove-item-btn').forEach(button => {
                 button.addEventListener('click', function() {
@@ -660,7 +778,7 @@ unset($__errorArgs, $__bag); ?>
                 });
             });
         });
-    
+
         // Check if there's a success message in session
         <?php if(session('success_update')): ?>
             Swal.fire({
@@ -671,7 +789,7 @@ unset($__errorArgs, $__bag); ?>
                 timer: 1500
             });
         <?php endif; ?>
-    
+
         <?php if(session('success_delete')): ?>
             Swal.fire({
                 icon: 'success',

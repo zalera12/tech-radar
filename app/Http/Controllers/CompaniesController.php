@@ -464,7 +464,7 @@ class CompaniesController extends Controller
         $category = Category::create([
             'name' => $request->name,
             'description' => $request->description,
-            'company_id' => $company->id,
+            'company_id' => $company->id
         ]);
 
         // Tentukan path untuk menyimpan file JSON
@@ -524,7 +524,8 @@ class CompaniesController extends Controller
         // Update file JSON untuk kategori terkait
         $this->updateCategoryJson($validated['category_id']);
 
-        return redirect('/companies/technologies/' . $request->company_id)->with('success', 'Technology added successfully.');
+        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id"
+ )->with('success', 'Technology added successfully.');
     }
 
     public function updateTechnologiesCompanies(Request $request)
@@ -546,7 +547,7 @@ class CompaniesController extends Controller
         // Update file JSON untuk kategori terkait
         $this->updateCategoryJson($technology->category_id);
 
-        return redirect('/companies/technologies/' . $request->company_id)->with('success', 'Technology updated successfully.');
+        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")->with('success', 'Technology updated successfully.');
     }
 
     public function deleteTechnologiesCompanies(Request $request)
@@ -558,7 +559,7 @@ class CompaniesController extends Controller
         // Update file JSON untuk kategori terkait
         $this->updateCategoryJson($categoryId);
 
-        return redirect('/companies/technologies/' . $request->company_id)->with('success', 'Technology deleted successfully.');
+        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")->with('success', 'Technology deleted successfully.');
     }
 
     public function editCategoryCompanies(Request $request)
@@ -594,14 +595,70 @@ class CompaniesController extends Controller
         return redirect("/companies/categories/$request->company_id?permission=Read Category Technology&idcp=$request->company_id")->with('success_delete', 'Category deleted successfully, and associated JSON file deleted.');
     }
 
-    public function technologiesCompanies(Company $company)
+    public function technologiesCompanies(Request $request, Company $company)
     {
         $user = auth()->user();
-        $technologies = Technology::with(['category', 'user'])
-            ->where('company_id', $company->id)
-            ->get();
+    
+        // Ambil filter dari request
+        $filterCategory = $request->input('filterCategory');
+        $filterRing = $request->input('filterRing');
+        $filterQuadrant = $request->input('filterQuadrant'); // Filter Quadrant
+        $search = $request->input('search');
+        $sortOrder = $request->input('sort_order'); // Ambil sorting dari request
+    
+        // Mulai query dengan memfilter berdasarkan company_id
+        $query = Technology::with(['category', 'user'])
+            ->where('company_id', $company->id);
+    
+        // Filter berdasarkan category_id jika ada
+        if ($filterCategory) {
+            $query->where('category_id', $filterCategory);
+        }
+    
+        // Filter berdasarkan ring jika ada
+        if ($filterRing) {
+            $query->where('ring', $filterRing);
+        }
+    
+        // Filter berdasarkan quadrant jika ada
+        if ($filterQuadrant) {
+            $query->where('quadrant', $filterQuadrant);
+        }
+    
+        // Filter berdasarkan search jika ada
+        if ($search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+    
+        // Tambahkan logika sorting
+        if ($sortOrder) {
+            switch ($sortOrder) {
+                case 'terbaru':
+                    $query->orderBy('created_at', 'desc'); // Sort by newest
+                    break;
+                case 'terlama':
+                    $query->orderBy('created_at', 'asc'); // Sort by oldest
+                    break;
+                case 'A-Z':
+                    $query->orderBy('name', 'asc'); // Sort by name A-Z
+                    break;
+                case 'Z-A':
+                    $query->orderBy('name', 'desc'); // Sort by name Z-A
+                    break;
+                default:
+                    $query->orderBy('created_at', 'desc'); // Default sorting
+            }
+        } else {
+            $query->orderBy('created_at', 'desc'); // Default sort by terbaru if no sort_order is set
+        }
+    
+        // Paginasi dengan 10 data per halaman
+        $technologies = $query->paginate(3);
+    
+        // Dapatkan semua kategori dari perusahaan
         $categories = $company->categories;
-
+    
+        // Kembalikan view dengan data yang diperlukan
         return view('apps-crm-technologies', [
             'technologies' => $technologies,
             'user' => $user,
@@ -609,6 +666,12 @@ class CompaniesController extends Controller
             'company' => $company,
         ]);
     }
+    
+    
+    
+    
+
+    
 
     // Menampilkan detail teknologi (Read detail)
     public function showTechnologiesCompanies($id)
