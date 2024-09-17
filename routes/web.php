@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompaniesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LogController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
@@ -83,6 +84,12 @@ Route::middleware(['web', 'auth'])->group(function () {
             ->middleware('check.permission:Read Pending Company User')->name('companies.pendingMembers');
         Route::put('/companies/pendingMember/update/{member}', [CompaniesController::class, 'updatePendingMember'])
             ->middleware('check.permission:Update Company User')->name('companies.pendingMember.update');
+
+        //Permission: Manage Log
+        Route::get('/companies/log/{company}', [LogController::class, 'index'])
+            ->middleware('check.permission:Read Change Log')->name('companies.changeLog');
+            Route::delete('/companies/logs/delete', [LogController::class, 'destroyLog'])->name('logs.destroy');
+
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

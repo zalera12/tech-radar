@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Company;
+use App\Models\Log;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\role_permissions;
@@ -14,7 +15,6 @@ use Exception;
 use Illuminate\Console\View\Components\Alert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\Uid\Ulid;
 
 class CompaniesController extends Controller
@@ -207,6 +207,13 @@ class CompaniesController extends Controller
         }
 
         // Tambahkan user ke perusahaan
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Add Company User"
+        ]);
+    
         $company->users()->attach($user->id, ['id' => Ulid::generate(), 'role_id' => $request->role_id, 'status' => 'ACCEPTED']);
 
         return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('add_success', 'user berhasil ditambahkan ke perusahaan');
@@ -229,6 +236,13 @@ class CompaniesController extends Controller
             'status' => $request->status,
         ]);
 
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Update Pending Company User"
+        ]);
+
         return redirect("/companies/pendingMember/$company->id?permission=Read Pending Company User&idcp=$company->id")->with('update_success', 'Pending member updated successfully');
     }
 
@@ -241,10 +255,17 @@ class CompaniesController extends Controller
         // Ambil user dan update role pada pivot table
         $user = User::findOrFail($request->id);
         $company = Company::where('id', $request->company_id)->first(); // Misal perusahaan terkait didapat dari user yang login
-
+    
         // Update role di pivot table
         $company->users()->updateExistingPivot($user->id, [
             'role_id' => $request->role_id,
+        ]);
+
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Edit Company User"
         ]);
 
         return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('success', 'User role updated successfully');
@@ -260,6 +281,13 @@ class CompaniesController extends Controller
 
         $user = User::findOrFail($request->user_id);
         $company = Company::findOrFail($request->company_id);
+
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Delete Company User"
+        ]);
 
         // Menghapus user dari perusahaan (detach)
         $user->companies()->detach($company->id);
@@ -379,6 +407,13 @@ class CompaniesController extends Controller
             'permission_id' => $permissionId, // Kosongkan permission_id dulu
         ]);
 
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Add Company Role"
+        ]);
+
         // Redirect ke halaman permissions
         return redirect("/companies/permissions/$companyId?permission=Read User permission&idcp=$companyId")->with('success_create', 'Role berhasil ditambahkan. Silakan isi permission untuk role yang baru.');
     }
@@ -395,6 +430,13 @@ class CompaniesController extends Controller
         Role::where('id', $roleId)->update($validated);
 
         // Redirect back with success message
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Edit Company Role"
+        ]);
+
 
         return redirect("/companies/roles/$request->company?permission=Read Company Role&idcp=$request->company")->with('success_update', 'Role updated successfully!');
     }
@@ -408,6 +450,12 @@ class CompaniesController extends Controller
         try {
             // Find role by ID and delete
             $role = Role::findOrFail($request->role_id);
+            Log::create([
+                'id' => Ulid::generate(),
+                'company_id' => $request->company_id,
+                'name' => $request->user,
+                'description' => "Delete Company Role"
+            ]);
             $role->delete();
 
             // Redirect back with success message
@@ -477,7 +525,12 @@ class CompaniesController extends Controller
 
         // Tulis data kosong ke file JSON
         File::put($filePath, json_encode([], JSON_PRETTY_PRINT));
-
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Add Category Technology"
+        ]);
         return redirect("/companies/categories/$company->id?permission=Read Category Technology&idcp=$company->id")->with('success_update', 'Category added successfully, and JSON file created.');
     }
     // Fungsi untuk memperbarui file JSON berdasarkan id_category
@@ -499,7 +552,7 @@ class CompaniesController extends Controller
 
         // Tentukan path file JSON berdasarkan id_category
         $filePath = public_path('files/' . $categoryId . '.json');
-
+        
         // Tulis data ke file JSON
         File::put($filePath, json_encode($formattedTechnologies, JSON_PRETTY_PRINT));
     }
@@ -523,7 +576,12 @@ class CompaniesController extends Controller
 
         // Update file JSON untuk kategori terkait
         $this->updateCategoryJson($validated['category_id']);
-
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Add Technology"
+        ]);
         return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id"
  )->with('success', 'Technology added successfully.');
     }
@@ -543,7 +601,12 @@ class CompaniesController extends Controller
         $technology = Technology::findOrFail($request->id);
 
         $technology->update($request->all());
-
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Edit Technology"
+        ]);
         // Update file JSON untuk kategori terkait
         $this->updateCategoryJson($technology->category_id);
 
@@ -554,8 +617,14 @@ class CompaniesController extends Controller
     {
         $technology = Technology::findOrFail($request->id);
         $categoryId = $technology->category_id;
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Delete Technology"
+        ]);
         $technology->delete();
-
+        
         // Update file JSON untuk kategori terkait
         $this->updateCategoryJson($categoryId);
 
@@ -574,6 +643,13 @@ class CompaniesController extends Controller
             'name' => $request->name,
             'description' => $request->description,
         ]);
+
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Edit Category Technology"
+        ]);
         return redirect("/companies/categories/$request->company_id?permission=Read Category Technology&idcp=$request->company_id")->with('success_update', 'Category updated successfully.');
     }
 
@@ -591,6 +667,13 @@ class CompaniesController extends Controller
         if (File::exists($filePath)) {
             File::delete($filePath);
         }
+
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Delete Category Technology"
+        ]);
 
         return redirect("/companies/categories/$request->company_id?permission=Read Category Technology&idcp=$request->company_id")->with('success_delete', 'Category deleted successfully, and associated JSON file deleted.');
     }
@@ -666,12 +749,6 @@ class CompaniesController extends Controller
             'company' => $company,
         ]);
     }
-    
-    
-    
-    
-
-    
 
     // Menampilkan detail teknologi (Read detail)
     public function showTechnologiesCompanies($id)
@@ -679,4 +756,6 @@ class CompaniesController extends Controller
         $technology = Technology::with(['category', 'company', 'user'])->findOrFail($id);
         return view('technologies.show', compact('technology'));
     }
+
+   
 }

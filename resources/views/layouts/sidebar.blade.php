@@ -132,6 +132,10 @@
                                                         <a href="/companies/pendingMember/{{ $company->id }}?permission=Read Pending Company User&idcp={{ $company->id }}"
                                                             class="nav-link">Pending Member</a>
                                                     </li>
+                                                    <li class="nav-item">
+                                                        <a href="/companies/log/{{ $company->id }}?permission=Read Change Log&idcp={{ $company->id }}"
+                                                            class="nav-link">Logs</a>
+                                                    </li>
                                                 @endif
                                             </ul>
                                         </div> 

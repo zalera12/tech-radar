@@ -150,6 +150,8 @@
                                             <div class="modal-body">
                                                 <input type="hidden" id="edit-company-id" name="company_id"
                                                     value="{{ $company->id }}" />
+                                                    <input type="hidden" name="user"
+                                            value="{{ $user->name }}" />
                                                 <div class="row g-3">
                                                     <div class="col-lg-12">
                                                         <label for="edit-name" class="form-label text-secondary mb-1">Role
@@ -258,6 +260,8 @@
                                     <div class="modal-body">
                                         <input type="hidden" id="id-field" name="company_id"
                                             value="{{ $company->id }}" />
+                                            <input type="hidden" name="user"
+                                            value="{{ $user->name }}" />
                                         <div class="row g-3">
                                             <div class="col-lg-12">
                                                 <label for="name" class="form-label text-secondary mb-1">Role Name
@@ -326,6 +330,8 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <input type="hidden" name="company" value="{{ $company->id }}">
+                                                <input type="hidden" name="company_id" value="{{ $company->id }}">
+                                                <input type="hidden" name="user" value="{{ $user->name}}">
                                                 <input type="hidden" name="role_id" id="role-id-to-delete">
                                                 <button type="submit" class="btn btn-danger" id="delete-record">Yes,
                                                     Delete It!!</button>

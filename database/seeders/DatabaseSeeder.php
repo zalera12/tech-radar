@@ -68,7 +68,8 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Read Technology', 'description' => 'Read Technology'],
             ['name' => 'Edit Technology', 'description' => 'Edit Technology'],
             ['name' => 'Delete Technology', 'description' => 'Delete Technology'],
-            ['name' => 'Read Change Log', 'description' => 'Add Change Log'],
+            ['name' => 'Read Change Log', 'description' => 'Read Change Log'],
+            ['name' => 'Delete Log', 'description' => 'Delete Log'],
             ['name' => 'Read Company Profile', 'description' => 'Read Company Profile'],
             ['name' => 'Waiting', 'description' => 'Waiting Acc from Owner'],
 

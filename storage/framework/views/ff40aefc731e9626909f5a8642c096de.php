@@ -76,6 +76,7 @@
                                                             action="/companies/delete/<?php echo e($company->id); ?>?permission=Delete Company&idcp=<?php echo e($company->id); ?>">
                                                             <?php echo csrf_field(); ?>
                                                             <input type="hidden" name="id" id="delete-company-id">
+                                                            <input type="hidden" name="user" value="<?php echo e($user->name); ?>">
                                                             <button type="submit" class="btn btn-danger"
                                                                 id="delete-record">Yes, Delete It!</button>
                                                         </form>
@@ -100,7 +101,7 @@
                                                 enctype="multipart/form-data" autocomplete="off" id="editCompanyForm">
                                                 <?php echo csrf_field(); ?>
                                                 <input type="hidden" name="id" value="<?php echo e($company->id); ?>">
-
+                                                <input type="hidden" name="user" value="<?php echo e($user->name); ?>">
                                                 <div class="modal-body">
                                                     <div class="row g-3">
                                                         <!-- Image Preview -->

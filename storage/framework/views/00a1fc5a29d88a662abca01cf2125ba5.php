@@ -132,6 +132,10 @@
                                                         <a href="/companies/pendingMember/<?php echo e($company->id); ?>?permission=Read Pending Company User&idcp=<?php echo e($company->id); ?>"
                                                             class="nav-link">Pending Member</a>
                                                     </li>
+                                                    <li class="nav-item">
+                                                        <a href="/companies/log/<?php echo e($company->id); ?>?permission=Read Change Log&idcp=<?php echo e($company->id); ?>"
+                                                            class="nav-link">Logs</a>
+                                                    </li>
                                                 <?php endif; ?>
                                             </ul>
                                         </div> 

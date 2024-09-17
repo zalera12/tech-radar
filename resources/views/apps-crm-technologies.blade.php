@@ -232,6 +232,7 @@
                                             <input type="hidden" name="id" id="edit-technology-id">
                                             <input type="hidden" name="user_id" value="{{ $user->id }}">
                                             <input type="hidden" name="company_id" value="{{ $company->id }}">
+                                            <input type="hidden" name="user" value="{{ $user->name }}">
 
                                             <div class="modal-body">
                                                 <div class="row g-3">
@@ -408,6 +409,7 @@
                                     method="POST" autocomplete="off">
                                     @csrf
                                     <input type="hidden" name="company_id" value="{{ $company->id }}">
+                                    <input type="hidden" name="user" value="{{ $user->name }}">
                                     <input type="hidden" name="user_id" value="{{ $user->id }}">
                                     <div class="modal-body">
                                         <div class="row g-3">
@@ -541,6 +543,7 @@
                                                 @csrf
                                                 <input type="hidden" name="id" id="delete-technology-id">
                                                 <input type="hidden" name="company_id" value="{{ $company->id }}">
+                                                <input type="hidden" name="user" value="{{ $user->name }}">
                                                 <button type="submit" class="btn btn-danger" id="delete-record">Yes,
                                                     Delete It!!</button>
                                             </form>

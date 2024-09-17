@@ -232,6 +232,7 @@
                                             <input type="hidden" name="id" id="edit-technology-id">
                                             <input type="hidden" name="user_id" value="<?php echo e($user->id); ?>">
                                             <input type="hidden" name="company_id" value="<?php echo e($company->id); ?>">
+                                            <input type="hidden" name="user" value="<?php echo e($user->name); ?>">
 
                                             <div class="modal-body">
                                                 <div class="row g-3">
@@ -479,6 +480,7 @@ unset($__errorArgs, $__bag); ?>
                                     method="POST" autocomplete="off">
                                     <?php echo csrf_field(); ?>
                                     <input type="hidden" name="company_id" value="<?php echo e($company->id); ?>">
+                                    <input type="hidden" name="user" value="<?php echo e($user->name); ?>">
                                     <input type="hidden" name="user_id" value="<?php echo e($user->id); ?>">
                                     <div class="modal-body">
                                         <div class="row g-3">
@@ -683,6 +685,7 @@ unset($__errorArgs, $__bag); ?>
                                                 <?php echo csrf_field(); ?>
                                                 <input type="hidden" name="id" id="delete-technology-id">
                                                 <input type="hidden" name="company_id" value="<?php echo e($company->id); ?>">
+                                                <input type="hidden" name="user" value="<?php echo e($user->name); ?>">
                                                 <button type="submit" class="btn btn-danger" id="delete-record">Yes,
                                                     Delete It!!</button>
                                             </form>

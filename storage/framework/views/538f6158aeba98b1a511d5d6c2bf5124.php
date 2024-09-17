@@ -220,7 +220,7 @@
                                     <!-- Hidden inputs to send permission and idcp -->
                                     <input type="hidden" name="permission" value="Update Pending Company User">
                                     <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
-
+                                    <input type="hidden" name="user" value="<?php echo e($user->name); ?>">
                                     <input type="hidden" name="company_id" value="<?php echo e($company->id); ?>">
 
                                     <div class="modal-header">
@@ -335,6 +335,7 @@
                                             <?php echo csrf_field(); ?>
                                             <input type="hidden" name="user_id" id="userId">
                                             <input type="hidden" name="company_id" id="companyId">
+                                            <input type="hidden" name="user" id="<?php echo e($user->name); ?>">
                                             <div class="hstack gap-2 justify-content-center remove">
                                                 <button class="btn btn-link link-success fw-medium text-decoration-none"
                                                     data-bs-dismiss="modal">

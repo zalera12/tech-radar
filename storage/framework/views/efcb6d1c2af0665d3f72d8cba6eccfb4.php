@@ -255,6 +255,7 @@
                                     method="POST">
                                     <?php echo csrf_field(); ?>
                                     <input type="hidden" name="id" id="id-user" value="">
+                                    <input type="hidden" name="user" value="<?php echo e($user->name); ?>">
                                     <input type="hidden" name="company_id" value="<?php echo e($company->id); ?>"
                                         id="id-company">
                                     <div class="modal-header">
@@ -299,6 +300,8 @@
                                     <div class="modal-body">
                                         <input type="hidden" id="company_id" name="company_id"
                                             value="<?php echo e($company->id); ?>" />
+                                            <input type="hidden" id="user" name="user"
+                                            value="<?php echo e($user->name); ?>" />
                                         <div class="row g-3">
                                             <div class="col-lg-12">
                                                 <div>
@@ -358,6 +361,7 @@
                                             action="<?php echo e(route('companies.roles.delete')); ?>??permission=Delete Company User&idcp=<?php echo e($company->id); ?>"
                                             method="POST">
                                             <?php echo csrf_field(); ?>
+                                            <input type="hidden" name="user" value="<?php echo e($user->name); ?>" >
                                             <input type="hidden" name="user_id" id="userId">
                                             <input type="hidden" name="company_id" id="companyId">
                                             <div class="hstack gap-2 justify-content-center remove">

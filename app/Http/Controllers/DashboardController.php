@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Log;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
@@ -183,6 +184,13 @@ class DashboardController extends Controller
     
         // Simpan perubahan
         $company->save();
+
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->id,
+            'name' => $request->user,
+            'description' => "Edit Company"
+        ]);
     
         // Redirect kembali dengan pesan sukses
         return redirect()->back()->with('success_update', 'Company updated successfully!');
@@ -196,6 +204,13 @@ class DashboardController extends Controller
         if ($company->image && Storage::exists($company->image)) {
             Storage::delete($company->image); // Hapus gambar dari storage
         }
+
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $company->id,
+            'name' => $request->user,
+            'description' => "Delete Company"
+        ]);
     
         // Hapus company dari database
         $company->delete();

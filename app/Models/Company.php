@@ -31,5 +31,9 @@ class Company extends Model
     public function technologies(){
         return $this->hasMany(Technology::class);
     }
+
+    public function logs(){
+        return $this->hasMany(Log::class);
+    }
 }
 

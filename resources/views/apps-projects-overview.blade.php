@@ -77,6 +77,7 @@
                                                             action="/companies/delete/{{ $company->id }}?permission=Delete Company&idcp={{ $company->id }}">
                                                             @csrf
                                                             <input type="hidden" name="id" id="delete-company-id">
+                                                            <input type="hidden" name="user" value="{{ $user->name }}">
                                                             <button type="submit" class="btn btn-danger"
                                                                 id="delete-record">Yes, Delete It!</button>
                                                         </form>
@@ -101,7 +102,7 @@
                                                 enctype="multipart/form-data" autocomplete="off" id="editCompanyForm">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $company->id }}">
-
+                                                <input type="hidden" name="user" value="{{ $user->name }}">
                                                 <div class="modal-body">
                                                     <div class="row g-3">
                                                         <!-- Image Preview -->

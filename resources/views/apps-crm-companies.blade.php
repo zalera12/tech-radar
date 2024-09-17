@@ -254,6 +254,7 @@
                                     method="POST">
                                     @csrf
                                     <input type="hidden" name="id" id="id-user" value="">
+                                    <input type="hidden" name="user" value="{{ $user->name }}">
                                     <input type="hidden" name="company_id" value="{{ $company->id }}"
                                         id="id-company">
                                     <div class="modal-header">
@@ -298,6 +299,8 @@
                                     <div class="modal-body">
                                         <input type="hidden" id="company_id" name="company_id"
                                             value="{{ $company->id }}" />
+                                            <input type="hidden" id="user" name="user"
+                                            value="{{ $user->name }}" />
                                         <div class="row g-3">
                                             <div class="col-lg-12">
                                                 <div>
@@ -356,6 +359,7 @@
                                             action="{{ route('companies.roles.delete') }}??permission=Delete Company User&idcp={{ $company->id }}"
                                             method="POST">
                                             @csrf
+                                            <input type="hidden" name="user" value="{{ $user->name }}" >
                                             <input type="hidden" name="user_id" id="userId">
                                             <input type="hidden" name="company_id" id="companyId">
                                             <div class="hstack gap-2 justify-content-center remove">
