@@ -382,10 +382,10 @@ endif;
 unset($__errorArgs, $__bag); ?>"
                                                             id="edit-ring" name="ring" required>
                                                             <option value="" disabled selected>Select Ring</option>
-                                                            <option value="HOLD">HOLD</option>
-                                                            <option value="ADOPT">ADOPT</option>
-                                                            <option value="ASSESS">ASSESS</option>
-                                                            <option value="TRIAL">TRIAL</option>
+                                                            <option value="hold">hold</option>
+                                                            <option value="adopt">adopt</option>
+                                                            <option value="assess">assess</option>
+                                                            <option value="trial">trial</option>
                                                         </select>
                                                         <?php $__errorArgs = ['ring'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -623,10 +623,10 @@ endif;
 unset($__errorArgs, $__bag); ?>"
                                                     id="ring" name="ring" required>
                                                     <option value="" disabled selected>Select Ring</option>
-                                                    <option value="HOLD">HOLD</option>
-                                                    <option value="ADOPT">ADOPT</option>
-                                                    <option value="ASSESS">ASSESS</option>
-                                                    <option value="TRIAL">TRIAL</option>
+                                                    <option value="hold">hold</option>
+                                                    <option value="adopt">adopt</option>
+                                                    <option value="assess">assess</option>
+                                                    <option value="trial">trial</option>
                                                 </select>
                                                 <?php $__errorArgs = ['ring'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');

@@ -545,7 +545,7 @@ class CompaniesController extends Controller
                 'name' => $tech->name,
                 'ring' => $tech->ring,
                 'quadrant' => $tech->quadrant,
-                'is_new' => $tech->is_new ? true : false,
+                'is_new' => $tech->is_new ? "TRUE" : "FALSE",
                 'description' => $tech->description,
             ];
         });
@@ -563,7 +563,7 @@ class CompaniesController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'quadrant' => 'required|string|in:Techniques,Platforms,Tools,Language and Framework',
-            'ring' => 'required|string|in:HOLD,ADOPT,ASSESS,TRIAL',
+            'ring' => 'required|string|in:hold,adopt,assess,trial',
             'category_id' => 'required|exists:categories,id',
             'company_id' => 'required|exists:companies,id',
             'user_id' => 'required|exists:users,id',
@@ -592,7 +592,7 @@ class CompaniesController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'quadrant' => 'required|string|in:Techniques,Platforms,Tools,Language and Framework',
-            'ring' => 'required|string|in:HOLD,ADOPT,ASSESS,TRIAL',
+            'ring' => 'required|string|in:hold,adopt,assess,trial',
             'category_id' => 'required|exists:categories,id',
             'company_id' => 'required|exists:companies,id',
             'user_id' => 'required|exists:users,id',

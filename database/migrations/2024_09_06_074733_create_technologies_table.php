@@ -37,7 +37,7 @@ return new class extends Migration
             $table->enum('quadrant', ['Techniques', 'Platforms', 'Tools', 'Language and Framework']);
 
             // Kolom 'ring' dengan tipe ENUM dengan opsi tertentu yang wajib diisi
-            $table->enum('ring', ['HOLD', 'ADOPT', 'ASSESS', 'TRIAL']);
+            $table->enum('ring', ['hold', 'adopt', 'assess', 'trial']);
 
             // Kolom 'created_at' dan 'updated_at' dengan timestamp
             $table->timestamps();

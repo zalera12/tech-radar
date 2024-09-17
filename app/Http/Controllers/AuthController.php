@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,13 @@ class AuthController extends Controller
             ]);
         }
         Auth::login($user);
+        Notification::create([
+            'id' => Ulid::generate(),
+            'title' => 'Berhasil Bergabung!',
+            'message' => 'Anda Berhasil Bergabung',
+            'user_id' => $user->id,
+            'is_read' => False      
+        ]);
         return redirect('/')->with('login_success', 'Temukan Perusahaan dan Teknologi Terbaru Sekarang!');
     }
 

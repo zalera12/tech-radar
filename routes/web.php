@@ -5,6 +5,7 @@ use App\Http\Controllers\CompaniesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LogController;
 use App\Models\Category;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -90,10 +91,17 @@ Route::middleware(['web', 'auth'])->group(function () {
             ->middleware('check.permission:Read Change Log')->name('companies.changeLog');
             Route::delete('/companies/logs/delete', [LogController::class, 'destroyLog'])->name('logs.destroy');
 
+ 
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+Route::post('/notifications/delete/{id}', function ($id) {
+    \App\Models\Notification::findOrFail($id)->delete();
+    return redirect()->back();
+})->name('deleteNotification');
+
 
 // Route di luar grup middleware
 Route::get('/testApi', function () {
@@ -111,3 +119,21 @@ Route::get('/loginAccount', function () {
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::post('/notifications/mark-as-read/{id}', function($id) {
+    $notification = Notification::find($id);
+    if ($notification && $notification->user_id == auth()->id()) {
+        $notification->is_read = true;
+        $notification->save();
+    }
+    return response()->json(['success' => true]);
+})->name('markAsRead');
+
+// Route untuk delete notifikasi
+Route::post('/notifications/delete/{id}', function($id) {
+    $notification = Notification::find($id);
+    if ($notification && $notification->user_id == auth()->id()) {
+        $notification->delete();
+    }
+    return redirect()->back();
+})->name('deleteNotification');

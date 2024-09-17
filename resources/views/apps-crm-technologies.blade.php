@@ -318,10 +318,10 @@
                                                         <select class="form-select @error('ring') is-invalid @enderror"
                                                             id="edit-ring" name="ring" required>
                                                             <option value="" disabled selected>Select Ring</option>
-                                                            <option value="HOLD">HOLD</option>
-                                                            <option value="ADOPT">ADOPT</option>
-                                                            <option value="ASSESS">ASSESS</option>
-                                                            <option value="TRIAL">TRIAL</option>
+                                                            <option value="hold">hold</option>
+                                                            <option value="adopt">adopt</option>
+                                                            <option value="assess">assess</option>
+                                                            <option value="trial">trial</option>
                                                         </select>
                                                         @error('ring')
                                                             <span class="invalid-feedback" role="alert">
@@ -488,10 +488,10 @@
                                                 <select class="form-select @error('ring') is-invalid @enderror"
                                                     id="ring" name="ring" required>
                                                     <option value="" disabled selected>Select Ring</option>
-                                                    <option value="HOLD">HOLD</option>
-                                                    <option value="ADOPT">ADOPT</option>
-                                                    <option value="ASSESS">ASSESS</option>
-                                                    <option value="TRIAL">TRIAL</option>
+                                                    <option value="hold">hold</option>
+                                                    <option value="adopt">adopt</option>
+                                                    <option value="assess">assess</option>
+                                                    <option value="trial">trial</option>
                                                 </select>
                                                 @error('ring')
                                                     <span class="invalid-feedback" role="alert">

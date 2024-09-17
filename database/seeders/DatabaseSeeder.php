@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Company;
+use App\Models\Notification;
 use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Symfony\Component\Uid\Ulid;
@@ -85,6 +86,8 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
+
+    
         
     }
 }
