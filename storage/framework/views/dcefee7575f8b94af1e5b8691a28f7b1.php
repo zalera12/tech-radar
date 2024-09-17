@@ -79,16 +79,6 @@
                         ->where('is_read', false)
                         ->count();
 
-                    // Jika tombol lonceng diklik (dengan parameter 'mark_all_read'), maka update semua notifikasi
-                    if (request()->has('mark_all_read')) {
-                        \App\Models\Notification::where('user_id', auth()->user()->id)
-                            ->where('is_read', false)
-                            ->update(['is_read' => true]);
-
-                        // Reload halaman setelah update
-                        return redirect()->back();
-                    }
-
                     // Mengambil semua notifikasi untuk user yang sedang login, urutkan dari yang terbaru
                     $notifications = \App\Models\Notification::where('user_id', auth()->user()->id)
                         ->orderBy('created_at', 'desc')
@@ -96,23 +86,19 @@
                 ?>
 
                 <div class="dropdown topbar-head-dropdown ms-1 header-item" id="notificationDropdown">
-                    <!-- Form untuk menangkap klik pada tombol lonceng -->
-                    <form action="" method="GET">
-                        <button type="submit" name="mark_all_read"
-                            class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
-                            id="page-header-notifications-dropdown" data-bs-toggle="dropdown"
-                            data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-                            <i class='bx bx-bell fs-22'></i>
-                            <?php if($newNotificationsCount > 0): ?>
-                                <span
-                                    class="position-absolute topbar-badge fs-10 translate-middle badge rounded-pill bg-danger">
-                                    <?php echo e($newNotificationsCount); ?>
+                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
+                        id="page-header-notifications-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                        aria-haspopup="true" aria-expanded="false" onclick="markAllAsRead()">
+                        <i class='bx bx-bell fs-22'></i>
+                        <?php if($newNotificationsCount > 0): ?>
+                            <span
+                                class="position-absolute topbar-badge fs-10 translate-middle badge rounded-pill bg-danger">
+                                <?php echo e($newNotificationsCount); ?>
 
-                                    <span class="visually-hidden">unread messages</span>
-                                </span>
-                            <?php endif; ?>
-                        </button>
-                    </form>
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        <?php endif; ?>
+                    </button>
 
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
                         aria-labelledby="page-header-notifications-dropdown">
@@ -166,10 +152,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
 
 
 
@@ -240,20 +222,23 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <script>
-    function markAsRead(notificationId) {
-        // Kirim AJAX request ke server untuk menandai notifikasi sebagai telah dibaca
-        fetch(`/notifications/${notificationId}/mark-as-read`, {
+    function markAllAsRead() {
+        // Kirim request AJAX untuk menandai semua notifikasi sebagai terbaca
+        fetch("<?php echo e(route('markAllNotificationsAsRead')); ?>", {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
-            }
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
         }).then(response => {
             if (response.ok) {
-                // Setelah berhasil, lakukan sesuatu, misalnya reload halaman atau update badge
-                location.reload();
+                // Jika berhasil, sembunyikan badge notifikasi baru
+                document.querySelector('.badge.bg-danger').style.display = 'none';
+            } else {
+                console.error('Gagal menandai notifikasi sebagai terbaca.');
             }
-        }).catch(error => console.error('Error:', error));
+        });
     }
 </script>
 <?php /**PATH E:\magang\test ui adminDashboard\Laravel\corporate\resources\views/layouts/topbar.blade.php ENDPATH**/ ?>

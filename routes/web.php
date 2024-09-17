@@ -97,6 +97,15 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
+Route::post('/notifications/mark-all-read', function () {
+    \App\Models\Notification::where('user_id', auth()->user()->id)
+        ->where('is_read', false)
+        ->update(['is_read' => true]);
+    
+    return response()->json(['message' => 'All notifications marked as read.']);
+})->name('markAllNotificationsAsRead');
+
+
 Route::post('/notifications/delete/{id}', function ($id) {
     \App\Models\Notification::findOrFail($id)->delete();
     return redirect()->back();

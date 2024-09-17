@@ -545,7 +545,7 @@ class CompaniesController extends Controller
                 'name' => $tech->name,
                 'ring' => $tech->ring,
                 'quadrant' => $tech->quadrant,
-                'is_new' => $tech->is_new ? "TRUE" : "FALSE",
+                'isNew' => $tech->is_new ? "TRUE" : "FALSE",
                 'description' => $tech->description,
             ];
         });
