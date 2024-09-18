@@ -312,7 +312,7 @@ unset($__errorArgs, $__bag); ?>
                     <div class="card-body">
                         <h5 class="card-title"><?php echo e($category->name); ?></h5>
                         <p class="card-text"><?php echo e($category->description); ?></p>
-                        <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/<?php echo e($category->id); ?>.json"
+                        <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/<?php echo e(strtoupper($category->name)); ?>.json"
                            class="btn btn-primary" target="_blank">View Radar</a>
                     </div>
                 </div>

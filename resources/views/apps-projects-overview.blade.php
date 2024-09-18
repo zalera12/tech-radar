@@ -285,7 +285,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $category->name }}</h5>
                         <p class="card-text">{{ $category->description }}</p>
-                        <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ $category->id }}.json"
+                        <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ strtoupper($category->name) }}.json"
                            class="btn btn-primary" target="_blank">View Radar</a>
                     </div>
                 </div>
