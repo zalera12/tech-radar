@@ -559,7 +559,7 @@ class CompaniesController extends Controller
                 'ring' => $tech->ring,
                 'quadrant' => $tech->quadrant,
                 'isNew' => $tech->is_new ? "TRUE" : "FALSE", // Mengubah ke "TRUE"/"FALSE"
-                'description' => $tech->description,
+                'description' => $tech->description ??  "-",
             ];
         });
     
