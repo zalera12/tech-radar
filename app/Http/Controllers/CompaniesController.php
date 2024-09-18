@@ -564,10 +564,10 @@ class CompaniesController extends Controller
             ];
         });
 
-        $category = Category::where('id',$categoryId)->get();
-    
+        $category = Category::where('id',$categoryId)->first();
+        
         // Tentukan path file JSON di direktori storage/app/public/files
-        $filePath = 'files/' . strtoupper(Str::slug($category->name, '-')) . '.json'; // Pastikan tidak ada 'public/' di sini
+        $filePath = 'files/' . strtoupper($category->name) . '.json'; // Pastikan tidak ada 'public/' di sini
     
         // Tulis data ke file JSON di storage menggunakan Storage facade
         Storage::disk('public')->put($filePath, json_encode($formattedTechnologies, JSON_PRETTY_PRINT));
