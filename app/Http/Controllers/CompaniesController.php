@@ -608,7 +608,7 @@ class CompaniesController extends Controller
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
-            'name' => $request->user_id, // Pastikan ini adalah data yang benar untuk log
+            'name' => $request->user, // Pastikan ini adalah data yang benar untuk log
             'description' => "Add Technology"
         ]);
     
@@ -641,7 +641,7 @@ class CompaniesController extends Controller
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
-            'name' => $request->user_id, // Pastikan ini adalah data yang benar untuk log
+            'name' => $request->user, // Pastikan ini adalah data yang benar untuk log
             'description' => "Edit Technology"
         ]);
     
@@ -666,7 +666,7 @@ class CompaniesController extends Controller
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
-            'name' => $request->user_id, // Pastikan ini adalah data yang benar untuk log
+            'name' => $request->user, // Pastikan ini adalah data yang benar untuk log
             'description' => "Delete Technology"
         ]);
     
@@ -677,11 +677,7 @@ class CompaniesController extends Controller
         $this->updateCategoryJson($categoryId);
     
         // Redirect ke halaman teknologi dengan pesan sukses
-        return redirect()->route('companies.technologies', [
-            'company' => $request->company_id,
-            'permission' => 'Read Technology',
-            'idcp' => $request->company_id
-        ])->with('success', 'Technology deleted successfully.');
+        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")->with('success', 'Technology updated successfully.');
     }
     
     
