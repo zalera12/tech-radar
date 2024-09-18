@@ -22,7 +22,7 @@
                     <div class="d-flex align-items-center flex-wrap gap-2">
                         <div class="flex-grow-1">
                             <button class="btn btn-secondary add-btn" data-bs-toggle="modal" data-bs-target="#showModal"><i
-                                    class="ri-add-fill me-1 align-bottom"></i> Add Users</button>
+                                    class="ri-add-fill me-1 align-bottom"></i> Add Role</button>
                         </div>
                         <div class="flex-shrink-0">
                             <div class="hstack text-nowrap gap-2">
