@@ -276,6 +276,24 @@
         </div>
         <!-- end col -->
     </div>
+    <div>
+        <h3 class="mt-3">All Categories In Our Company</h3>
+        <div class="row mt-3">
+            @foreach ($categories as $category)
+            <div class="col-md-3 mb-4">
+                <div class="card" style="height: 200px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $category->name }}</h5>
+                        <p class="card-text">{{ $category->description }}</p>
+                        <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ $category->id }}.json"
+                           class="btn btn-primary" target="_blank">View Radar</a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        
+    </div>
     <!-- end row -->
 @endsection
 @section('script')

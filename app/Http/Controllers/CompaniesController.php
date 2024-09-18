@@ -63,6 +63,7 @@ class CompaniesController extends Controller
                 'company' => $company,
                 'user' => $user,
                 'role' => $userrole,
+                'categories' => Category::where('company_id',$company->id)->get(),
                 'created_date' => Carbon::parse($company->created_at)->format('d F Y'),
                 'companyMembers' => $companyUsers,
             ]);

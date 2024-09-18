@@ -303,6 +303,24 @@ unset($__errorArgs, $__bag); ?>
         </div>
         <!-- end col -->
     </div>
+    <div>
+        <h3 class="mt-3">All Categories In Our Company</h3>
+        <div class="row mt-3">
+            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div class="col-md-3 mb-4">
+                <div class="card" style="height: 200px;">
+                    <div class="card-body">
+                        <h5 class="card-title"><?php echo e($category->name); ?></h5>
+                        <p class="card-text"><?php echo e($category->description); ?></p>
+                        <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/<?php echo e($category->id); ?>.json"
+                           class="btn btn-primary" target="_blank">View Radar</a>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        </div>
+        
+    </div>
     <!-- end row -->
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('script'); ?>
