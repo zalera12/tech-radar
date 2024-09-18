@@ -11,7 +11,7 @@
             Companies
         @endslot
         @slot('title')
-            Users
+            Role
         @endslot
     @endcomponent
 
