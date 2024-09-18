@@ -34,7 +34,7 @@ return new class extends Migration
             $table->boolean('is_new')->default(false);
             
             // Kolom 'quadrant' dengan tipe ENUM dengan opsi tertentu yang wajib diisi
-            $table->enum('quadrant', ['Techniques', 'Platforms', 'Tools', 'Language and Framework']);
+            $table->enum('quadrant', ['Techniques', 'Platforms', 'Tools', 'Languages and Frameworks']);
 
             // Kolom 'ring' dengan tipe ENUM dengan opsi tertentu yang wajib diisi
             $table->enum('ring', ['hold', 'adopt', 'assess', 'trial']);
