@@ -64,10 +64,10 @@
                                 <!-- Select untuk Ring (baru ditambahkan sesuai enum 'ring') -->
                                 <select class="form-control" name="filterRing" onchange="this.form.submit()" style="cursor: pointer;width:150px;text-align:center; margin-left:10px;">
                                     <option value="">All Rings</option>
-                                    <option value="HOLD" {{ request('filterRing') == 'HOLD' ? 'selected' : '' }}>HOLD</option>
-                                    <option value="ADOPT" {{ request('filterRing') == 'ADOPT' ? 'selected' : '' }}>ADOPT</option>
-                                    <option value="ASSESS" {{ request('filterRing') == 'ASSESS' ? 'selected' : '' }}>ASSESS</option>
-                                    <option value="TRIAL" {{ request('filterRing') == 'TRIAL' ? 'selected' : '' }}>TRIAL</option>
+                                    <option value="hold" {{ request('filterRing') == 'hold' ? 'selected' : '' }}>hold</option>
+                                    <option value="adopt" {{ request('filterRing') == 'adopt' ? 'selected' : '' }}>adopt</option>
+                                    <option value="assess" {{ request('filterRing') == 'assess' ? 'selected' : '' }}>assess</option>
+                                    <option value="trial" {{ request('filterRing') == 'trial' ? 'selected' : '' }}>trial</option>
                                 </select>
                             </form>
                             

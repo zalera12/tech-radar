@@ -64,10 +64,10 @@
                                 <!-- Select untuk Ring (baru ditambahkan sesuai enum 'ring') -->
                                 <select class="form-control" name="filterRing" onchange="this.form.submit()" style="cursor: pointer;width:150px;text-align:center; margin-left:10px;">
                                     <option value="">All Rings</option>
-                                    <option value="HOLD" <?php echo e(request('filterRing') == 'HOLD' ? 'selected' : ''); ?>>HOLD</option>
-                                    <option value="ADOPT" <?php echo e(request('filterRing') == 'ADOPT' ? 'selected' : ''); ?>>ADOPT</option>
-                                    <option value="ASSESS" <?php echo e(request('filterRing') == 'ASSESS' ? 'selected' : ''); ?>>ASSESS</option>
-                                    <option value="TRIAL" <?php echo e(request('filterRing') == 'TRIAL' ? 'selected' : ''); ?>>TRIAL</option>
+                                    <option value="hold" <?php echo e(request('filterRing') == 'hold' ? 'selected' : ''); ?>>hold</option>
+                                    <option value="adopt" <?php echo e(request('filterRing') == 'adopt' ? 'selected' : ''); ?>>adopt</option>
+                                    <option value="assess" <?php echo e(request('filterRing') == 'assess' ? 'selected' : ''); ?>>assess</option>
+                                    <option value="trial" <?php echo e(request('filterRing') == 'trial' ? 'selected' : ''); ?>>trial</option>
                                 </select>
                             </form>
                             

@@ -13,6 +13,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\View\Components\Alert;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Uid\Ulid;
@@ -493,7 +494,7 @@ class CompaniesController extends Controller
          }
  
          // Pagination
-         $categories = $categories->paginate(3); // Sesuaikan jumlah per halaman
+         $categories = $categories->paginate(10); // Sesuaikan jumlah per halaman
  
         return view('apps-crm-categories', [
             'categories' => $categories,
@@ -504,58 +505,77 @@ class CompaniesController extends Controller
 
     public function addCategoryCompanies(Request $request, Company $company)
     {
+        // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
-
+    
+        // Buat kategori baru
         $category = Category::create([
             'name' => $request->name,
             'description' => $request->description,
             'company_id' => $company->id
         ]);
-
-        // Tentukan path untuk menyimpan file JSON
-        $filePath = public_path('files/' . $category->id . '.json');
-
+    
+        // Tentukan path untuk menyimpan file JSON di direktori storage/files
+        $filePath = 'files/' . $category->id . '.json';
+    
         // Buat folder jika belum ada
-        if (!File::exists(public_path('files'))) {
-            File::makeDirectory(public_path('files'), 0755, true);
+        if (!Storage::disk('local')->exists('files')) {
+            Storage::disk('local')->makeDirectory('files');
         }
-
+    
         // Tulis data kosong ke file JSON
-        File::put($filePath, json_encode([], JSON_PRETTY_PRINT));
+        Storage::disk('local')->put($filePath, json_encode([], JSON_PRETTY_PRINT));
+    
+        // Buat entri log untuk pencatatan aktivitas penambahan kategori
         Log::create([
             'id' => Ulid::generate(),
-            'company_id' => $request->company_id,
+            'company_id' => $company->id,
             'name' => $request->user,
             'description' => "Add Category Technology"
         ]);
-        return redirect("/companies/categories/$company->id?permission=Read Category Technology&idcp=$company->id")->with('success_update', 'Category added successfully, and JSON file created.');
+    
+        // Redirect dengan pesan sukses
+        return redirect("/companies/categories/$company->id?permission=Read Category Technology&idcp=$company->id")
+            ->with('success_update', 'Category added successfully, and JSON file created.');
     }
+    
+    
     // Fungsi untuk memperbarui file JSON berdasarkan id_category
     private function updateCategoryJson($categoryId)
     {
         // Ambil semua teknologi yang memiliki category_id sesuai
         $technologies = Technology::where('category_id', $categoryId)->get(['name', 'ring', 'quadrant', 'is_new', 'description']);
-
-        // Ubah format 'is_new' menjadi true/false
+    
+        // Ubah format 'is_new' menjadi "TRUE"/"FALSE"
         $formattedTechnologies = $technologies->map(function ($tech) {
             return [
                 'name' => $tech->name,
                 'ring' => $tech->ring,
                 'quadrant' => $tech->quadrant,
-                'isNew' => $tech->is_new ? "TRUE" : "FALSE",
+                'isNew' => $tech->is_new ? "TRUE" : "FALSE", // Mengubah ke "TRUE"/"FALSE"
                 'description' => $tech->description,
             ];
         });
-
-        // Tentukan path file JSON berdasarkan id_category
-        $filePath = public_path('files/' . $categoryId . '.json');
-        
-        // Tulis data ke file JSON
-        File::put($filePath, json_encode($formattedTechnologies, JSON_PRETTY_PRINT));
+    
+        // Tentukan path file JSON di direktori storage/files
+        $filePath = 'files/' . $categoryId . '.json';
+    
+        // Tulis data ke file JSON di storage menggunakan Storage facade
+        Storage::disk('local')->put($filePath, json_encode($formattedTechnologies, JSON_PRETTY_PRINT));
+    
+        // Verifikasi apakah file berhasil ditulis
+        if (Storage::disk('local')->exists($filePath)) {
+            // Optional: log sukses atau lakukan tindakan lain
+            // Log::info("File JSON berhasil disimpan di storage untuk category: $categoryId");
+        } else {
+            // Optional: log jika terjadi error
+            // Log::error("Gagal menyimpan file JSON di storage untuk category: $categoryId");
+        }
     }
+    
 
     public function addTechnologiesCompanies(Request $request)
     {
@@ -568,26 +588,33 @@ class CompaniesController extends Controller
             'company_id' => 'required|exists:companies,id',
             'user_id' => 'required|exists:users,id',
         ]);
-
+    
+        // Generate ULID untuk id technology
         $validated['id'] = Ulid::generate();
-
+    
         // Buat technology baru
         Technology::create($validated);
-
-        // Update file JSON untuk kategori terkait
+    
+        // Update file JSON untuk kategori terkait dengan method updateCategoryJson
         $this->updateCategoryJson($validated['category_id']);
+    
+        // Buat log untuk penambahan teknologi
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user,
             'description' => "Add Technology"
         ]);
-        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id"
- )->with('success', 'Technology added successfully.');
+    
+        // Redirect dengan pesan sukses
+        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")
+            ->with('success', 'Technology added successfully.');
     }
+    
 
     public function updateTechnologiesCompanies(Request $request)
     {
+        // Validasi input request
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -597,39 +624,57 @@ class CompaniesController extends Controller
             'company_id' => 'required|exists:companies,id',
             'user_id' => 'required|exists:users,id',
         ]);
-
+    
+        // Temukan teknologi berdasarkan id
         $technology = Technology::findOrFail($request->id);
-
+    
+        // Update teknologi dengan data yang telah divalidasi
         $technology->update($request->all());
+    
+        // Buat log untuk mencatat aktivitas update
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user,
             'description' => "Edit Technology"
         ]);
+    
         // Update file JSON untuk kategori terkait
         $this->updateCategoryJson($technology->category_id);
-
-        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")->with('success', 'Technology updated successfully.');
+    
+        // Redirect ke halaman teknologi dengan pesan sukses
+        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")
+            ->with('success', 'Technology updated successfully.');
     }
+    
 
     public function deleteTechnologiesCompanies(Request $request)
     {
+        // Temukan teknologi berdasarkan ID
         $technology = Technology::findOrFail($request->id);
+    
+        // Ambil category_id sebelum teknologi dihapus
         $categoryId = $technology->category_id;
+    
+        // Buat log untuk mencatat aktivitas penghapusan teknologi
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user,
             'description' => "Delete Technology"
         ]);
+    
+        // Hapus teknologi
         $technology->delete();
         
-        // Update file JSON untuk kategori terkait
+        // Update file JSON untuk kategori terkait setelah penghapusan
         $this->updateCategoryJson($categoryId);
-
-        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")->with('success', 'Technology deleted successfully.');
+    
+        // Redirect ke halaman teknologi dengan pesan sukses
+        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")
+            ->with('success', 'Technology deleted successfully.');
     }
+    
 
     public function editCategoryCompanies(Request $request)
     {
@@ -736,7 +781,7 @@ class CompaniesController extends Controller
         }
     
         // Paginasi dengan 10 data per halaman
-        $technologies = $query->paginate(3);
+        $technologies = $query->paginate(50);
     
         // Dapatkan semua kategori dari perusahaan
         $categories = $company->categories;
