@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Console\View\Components\Alert;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Uid\Ulid;
 
@@ -520,7 +521,7 @@ class CompaniesController extends Controller
         ]);
     
         // Tentukan path untuk menyimpan file JSON di direktori storage/app/public/files
-        $filePath = 'files/' . $category->id . '.json';
+        $filePath = 'files/' .strtoupper($category->name). '.json';
     
         // Buat folder jika belum ada
         if (!Storage::disk('public')->exists('files')) {
@@ -562,9 +563,11 @@ class CompaniesController extends Controller
                 'description' => $tech->description ??  "-",
             ];
         });
+
+        $category = Category::where('id',$categoryId)->get();
     
         // Tentukan path file JSON di direktori storage/app/public/files
-        $filePath = 'files/' . $categoryId . '.json'; // Pastikan tidak ada 'public/' di sini
+        $filePath = 'files/' . strtoupper(Str::slug($category->name, '-')) . '.json'; // Pastikan tidak ada 'public/' di sini
     
         // Tulis data ke file JSON di storage menggunakan Storage facade
         Storage::disk('public')->put($filePath, json_encode($formattedTechnologies, JSON_PRETTY_PRINT));

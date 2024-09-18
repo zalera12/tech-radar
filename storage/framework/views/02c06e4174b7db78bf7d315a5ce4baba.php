@@ -352,7 +352,7 @@ unset($__errorArgs, $__bag); ?>"
                                                             <option value="Techniques">Techniques</option>
                                                             <option value="Platforms">Platforms</option>
                                                             <option value="Tools">Tools</option>
-                                                            <option value="Languages and Frameworks">Languages and Frameworks
+                                                            <option value="LanguageS and Frameworks">Languages and Frameworks
                                                             </option>
                                                         </select>
                                                         <?php $__errorArgs = ['quadrant'];
@@ -594,7 +594,7 @@ unset($__errorArgs, $__bag); ?>"
                                                     <option value="Techniques">Techniques</option>
                                                     <option value="Platforms">Platforms</option>
                                                     <option value="Tools">Tools</option>
-                                                    <option value="Language and Framework">Language and Framework</option>
+                                                    <option value="Languages and Frameworks">Languages and Frameworks</option>
                                                 </select>
                                                 <?php $__errorArgs = ['quadrant'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
