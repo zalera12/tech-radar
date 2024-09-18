@@ -110,7 +110,7 @@
                                     </div>
                                     <div class="col-auto dropdown-tabs">
                                         <span class="badge bg-light-subtle text-body fs-13">
-                                            <?php echo e($newNotificationsCount); ?> New
+                                            <?php echo e($newNotificationsCount); ?> Message
                                         </span>
                                     </div>
                                 </div>

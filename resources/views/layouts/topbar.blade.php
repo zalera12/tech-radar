@@ -109,7 +109,7 @@
                                     </div>
                                     <div class="col-auto dropdown-tabs">
                                         <span class="badge bg-light-subtle text-body fs-13">
-                                            {{ $newNotificationsCount }} New
+                                            {{ $newNotificationsCount }} Message
                                         </span>
                                     </div>
                                 </div>
