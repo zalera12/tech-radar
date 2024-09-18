@@ -589,7 +589,7 @@ class CompaniesController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'quadrant' => 'required|string|in:Techniques,Platforms,Tools,Language and Framework',
+            'quadrant' => 'required|string|in:Techniques,Platforms,Tools,Languages and Frameworks',
             'ring' => 'required|string|in:hold,adopt,assess,trial',
             'category_id' => 'required|exists:categories,id',
             'company_id' => 'required|exists:companies,id',
@@ -625,7 +625,7 @@ class CompaniesController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'quadrant' => 'required|string|in:Techniques,Platforms,Tools,Language and Framework',
+            'quadrant' => 'required|string|in:Techniques,Platforms,Tools,Languages and Frameworks',
             'ring' => 'required|string|in:hold,adopt,assess,trial',
             'category_id' => 'required|exists:categories,id',
             'company_id' => 'required|exists:companies,id',

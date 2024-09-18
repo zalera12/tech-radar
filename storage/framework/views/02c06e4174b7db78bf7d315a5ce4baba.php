@@ -118,7 +118,7 @@
                                     <option value="Techniques" <?php echo e(request('filterQuadrant') == 'Techniques' ? 'selected' : ''); ?>>Techniques</option>
                                     <option value="Platforms" <?php echo e(request('filterQuadrant') == 'Platforms' ? 'selected' : ''); ?>>Platforms</option>
                                     <option value="Tools" <?php echo e(request('filterQuadrant') == 'Tools' ? 'selected' : ''); ?>>Tools</option>
-                                    <option value="Language and Framework" <?php echo e(request('filterQuadrant') == 'Language and Framework' ? 'selected' : ''); ?>>Language and Framework</option>
+                                    <option value="Languages and Frameworks" <?php echo e(request('filterQuadrant') == 'Languages and Frameworks' ? 'selected' : ''); ?>>Languages and Frameworks</option>
                                 </select>
                         
                             </form>
@@ -352,7 +352,7 @@ unset($__errorArgs, $__bag); ?>"
                                                             <option value="Techniques">Techniques</option>
                                                             <option value="Platforms">Platforms</option>
                                                             <option value="Tools">Tools</option>
-                                                            <option value="Language and Framework">Language and Framework
+                                                            <option value="Languages and Frameworks">Languages and Frameworks
                                                             </option>
                                                         </select>
                                                         <?php $__errorArgs = ['quadrant'];

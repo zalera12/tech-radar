@@ -118,7 +118,7 @@
                                     <option value="Techniques" {{ request('filterQuadrant') == 'Techniques' ? 'selected' : '' }}>Techniques</option>
                                     <option value="Platforms" {{ request('filterQuadrant') == 'Platforms' ? 'selected' : '' }}>Platforms</option>
                                     <option value="Tools" {{ request('filterQuadrant') == 'Tools' ? 'selected' : '' }}>Tools</option>
-                                    <option value="Language and Framework" {{ request('filterQuadrant') == 'Language and Framework' ? 'selected' : '' }}>Language and Framework</option>
+                                    <option value="Languages and Frameworks" {{ request('filterQuadrant') == 'Languages and Frameworks' ? 'selected' : '' }}>Languages and Frameworks</option>
                                 </select>
                         
                             </form>
@@ -302,7 +302,7 @@
                                                             <option value="Techniques">Techniques</option>
                                                             <option value="Platforms">Platforms</option>
                                                             <option value="Tools">Tools</option>
-                                                            <option value="Language and Framework">Language and Framework
+                                                            <option value="LanguageS and Frameworks">Languages and Frameworks
                                                             </option>
                                                         </select>
                                                         @error('quadrant')
@@ -473,7 +473,7 @@
                                                     <option value="Techniques">Techniques</option>
                                                     <option value="Platforms">Platforms</option>
                                                     <option value="Tools">Tools</option>
-                                                    <option value="Language and Framework">Language and Framework</option>
+                                                    <option value="Languages and Frameworks">Languages and Frameworks</option>
                                                 </select>
                                                 @error('quadrant')
                                                     <span class="invalid-feedback" role="alert">
