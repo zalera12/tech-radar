@@ -35,12 +35,15 @@
                 <li class="menu-title"><span>@lang('translation.menu')</span></li>
                 <div class="menu-dropdown">
                     <ul class="nav nav-sm gap-3 flex-column">
-                        <a class="nav-item d-flex gap-2 align-items-center {{ request()->is('index') ? 'active text-primary' : '' }}" href="/index">
-                            <img src="{{ asset('/build/images/dashboard.png') }}" style="width: 25px;height:25px;border-radius:50%;">
-                            <span class="{{ request()->is('index') ? 'text-primary' : 'text-muted' }}">@lang('translation.dashboards')</span>
+                        <a class="nav-item d-flex gap-2 align-items-center {{ request()->is('index') ? 'active text-primary' : '' }}"
+                            href="/index">
+                            <img src="{{ asset('/build/images/dashboard.png') }}"
+                                style="width: 25px;height:25px;border-radius:50%;">
+                            <span
+                                class="{{ request()->is('index') ? 'text-primary' : 'text-muted' }}">@lang('translation.dashboards')</span>
                         </a>
                     </ul>
-                    
+
                 </div>
                 {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse" role="button"
@@ -62,16 +65,16 @@
                     </div>
                 </li> --}}
                 <li class="menu-title" style="margin-top: 10px;">
-                    <i class="ri-community-line"></i> <span>Perusahaan</span>
+                    <span>Perusahaan</span>
                 </li>
 
-                    {{-- Ambil data perusahaan yang terkait dengan user dengan status Accepted dari pivot --}}
-                    @php
-                        $user = auth()->user();
-                        $acceptedCompanies = $user->companies()->wherePivot('status', 'Accepted')->get();
-                    @endphp
+                {{-- Ambil data perusahaan yang terkait dengan user dengan status Accepted dari pivot --}}
+                @php
+                    $user = auth()->user();
+                    $acceptedCompanies = $user->companies()->wherePivot('status', 'Accepted')->get();
+                @endphp
 
-                    @if ($acceptedCompanies->isNotEmpty())
+                @if ($acceptedCompanies->isNotEmpty())
                     <div class="menu-dropdown" id="sidebarCompanies">
                         <ul class="nav nav-sm gap-3 flex-column">
                             @foreach ($acceptedCompanies as $company)
@@ -82,105 +85,108 @@
                                         ->where('company_id', $company->id)
                                         ->first()->pivot;
                                     $roleId = $pivot ? $pivot->role_id : null;
-                    
+
                                     // Mengambil role berdasarkan ID dari relasi roles
                                     $role = $roleId ? \App\Models\Role::find($roleId) : null;
-                    
+
                                     // Tentukan apakah dropdown harus aktif berdasarkan parameter URL
                                     $isExpanded = request('idcp') == $company->id ? 'show' : '';
                                     $ariaExpanded = request('idcp') == $company->id ? 'true' : 'false';
                                 @endphp
-                    
-                                <li class="nav-item" >
-                                    <a class="d-flex gap-2 align-items-center company-link" href="#collapse-{{ $company->id }}" data-bs-toggle="collapse" role="button" 
-                                        aria-expanded="{{ $ariaExpanded }}" aria-controls="collapse-{{ $company->id }}" id="text-sidebar">
-                                        <img src="{{ asset($company->image ? '/storage/'.$company->image : '/build/images/users/multi-user.jpg') }}" 
-                                             style="width: 25px;height:25px;border-radius:50%;">
-                                        
+
+                                <li class="nav-item">
+                                    <a class="d-flex gap-2 align-items-center company-link"
+                                        href="#collapse-{{ $company->id }}" data-bs-toggle="collapse" role="button"
+                                        aria-expanded="{{ $ariaExpanded }}" aria-controls="collapse-{{ $company->id }}"
+                                        id="text-sidebar">
+                                        <img src="{{ asset($company->image ? '/storage/' . $company->image : '/build/images/users/multi-user.jpg') }}"
+                                            style="width: 25px;height:25px;border-radius:50%;">
+
                                         <!-- Kondisi untuk memeriksa jika dropdown aktif, maka tambahkan kelas 'text-primary' untuk warna biru -->
-                                        <span class="{{ $ariaExpanded == 'true' ? 'text-primary' : 'text-muted' }}">{{ $company->name }}</span>
+                                        <span
+                                            class="{{ $ariaExpanded == 'true' ? 'text-primary' : 'text-muted' }}">{{ $company->name }}</span>
                                     </a>
-                                    
-                                    
-                                    <div class="collapse menu-dropdown {{ $isExpanded }}" id="collapse-{{ $company->id }}">
+
+
+                                    <div class="collapse menu-dropdown {{ $isExpanded }}"
+                                        id="collapse-{{ $company->id }}">
                                         <ul class="nav nav-sm flex-column">
                                             <!-- Link ke Main Page -->
                                             <li class="nav-item">
                                                 <a href="/companies/main/{{ $company->id }}?permission=Read Company Profile&idcp={{ $company->id }}"
-                                                   class="nav-link {{ request()->is('companies/main/'.$company->id) ? 'text-primary' : '' }}">
-                                                   Main Page
-                                                </a>
-                                            </li>
-                                            <!-- Link ke Technologies -->
-                                            <li class="nav-item">
-                                                <a href="/companies/technologies/{{ $company->id }}?permission=Read Technology&idcp={{ $company->id }}"
-                                                   class="nav-link {{ request()->is('companies/technologies/'.$company->id) ? 'text-primary' : '' }}">
-                                                   Technologies
+                                                    class="nav-link {{ request()->is('companies/main/' . $company->id) ? 'text-primary' : '' }}">
+                                                    Main Page
                                                 </a>
                                             </li>
                                             <!-- Link ke Categories -->
                                             <li class="nav-item">
                                                 <a href="/companies/categories/{{ $company->id }}?permission=Read Category Technology&idcp={{ $company->id }}"
-                                                   class="nav-link {{ request()->is('companies/categories/'.$company->id) ? 'text-primary' : '' }}">
-                                                   Categories
+                                                    class="nav-link {{ request()->is('companies/categories/' . $company->id) ? 'text-primary' : '' }}">
+                                                    Categories
+                                                </a>
+                                            </li>
+                                            <!-- Link ke Technologies -->
+                                            <li class="nav-item">
+                                                <a href="/companies/technologies/{{ $company->id }}?permission=Read Technology&idcp={{ $company->id }}"
+                                                    class="nav-link {{ request()->is('companies/technologies/' . $company->id) ? 'text-primary' : '' }}">
+                                                    Technologies
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/companies/users/{{ $company->id }}?permission=Read Company User&idcp={{ $company->id }}"
-                                                   class="nav-link {{ request()->is('companies/users/'.$company->id) ? 'text-primary' : '' }}">
-                                                   Users
+                                                    class="nav-link {{ request()->is('companies/users/' . $company->id) ? 'text-primary' : '' }}">
+                                                    Users
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/companies/roles/{{ $company->id }}?permission=Read Company Role&idcp={{ $company->id }}"
-                                                   class="nav-link {{ request()->is('companies/roles/'.$company->id) ? 'text-primary' : '' }}">
-                                                   Roles
+                                                    class="nav-link {{ request()->is('companies/roles/' . $company->id) ? 'text-primary' : '' }}">
+                                                    Roles
                                                 </a>
                                             </li>
                                             <!-- Link ke Permissions, hanya muncul jika role user adalah Owner -->
                                             @if ($role && $role->name === 'OWNER')
                                                 <li class="nav-item">
                                                     <a href="/companies/permissions/{{ $company->id }}?permission=Read User permission&idcp={{ $company->id }}"
-                                                       class="nav-link {{ request()->is('companies/permissions/'.$company->id) ? 'text-primary' : '' }}">
-                                                       Permissions
+                                                        class="nav-link {{ request()->is('companies/permissions/' . $company->id) ? 'text-primary' : '' }}">
+                                                        Permissions
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a href="/companies/pendingMember/{{ $company->id }}?permission=Read Pending Company User&idcp={{ $company->id }}"
-                                                       class="nav-link {{ request()->is('companies/pendingMember/'.$company->id) ? 'text-primary' : '' }}">
-                                                       Pending Member
+                                                        class="nav-link {{ request()->is('companies/pendingMember/' . $company->id) ? 'text-primary' : '' }}">
+                                                        Pending Member
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a href="/companies/log/{{ $company->id }}?permission=Read Change Log&idcp={{ $company->id }}"
-                                                       class="nav-link {{ request()->is('companies/log/'.$company->id) ? 'text-primary' : '' }}">
-                                                       Logs
+                                                        class="nav-link {{ request()->is('companies/log/' . $company->id) ? 'text-primary' : '' }}">
+                                                        Logs
                                                     </a>
                                                 </li>
                                             @endif
                                         </ul>
                                     </div>
-                                    
+
                                 </li>
                             @endforeach
                         </ul>
                     </div>
-                    
-                    @else
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                document.querySelector('.menu-link[href="#sidebarCompanies"]').addEventListener('click', function(
+                @else
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.querySelector('.menu-link[href="#sidebarCompanies"]').addEventListener('click', function(
                                 event) {
-                                    event.preventDefault(); // Mencegah dropdown muncul
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'No Company Linked',
-                                        text: 'You are not linked to any company.',
-                                    });
+                                event.preventDefault(); // Mencegah dropdown muncul
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'No Company Linked',
+                                    text: 'You are not linked to any company.',
                                 });
                             });
-                        </script>
-                    @endif
+                        });
+                    </script>
+                @endif
 
                 </li>
                 <!-- end Dashboard Menu -->

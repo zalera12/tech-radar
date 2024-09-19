@@ -14,6 +14,128 @@
                     <h4 class="fs-16 mb-1">Selamat Datang!, <?php echo e($user->name); ?>!</h4>
                     <p class="text-muted mb-0">Inilah perkembangan terbaru dari radar teknologi Anda hari ini</p>
                 </div>
+                <div class="flex-grow-1 mb-3 mt-4">
+                    <h4 class="fs-16 mb-1">Statistic</h4>
+                </div>
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <!-- card -->
+                        <div class="card card-animate">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Total Company
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-end justify-content-between mt-4">
+                                    <div>
+                                        <?php 
+                                            $totalCompany = $user->companies->count();
+                                        ?>
+                                        <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                                                data-target="<?php echo e($totalCompany); ?>">0</span> Company</h4>
+                                        <a href="" class="text-decoration-underline">View Detail</a>
+                                    </div>
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <span class="avatar-title bg-secondary-subtle rounded fs-3">
+                                            <i class='bx bxs-school text-secondary'></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div><!-- end card body -->
+                        </div><!-- end card -->
+                    </div><!-- end col -->
+
+                    <div class="col-xl-3 col-md-6">
+                        <!-- card -->
+                        <div class="card card-animate">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Technology</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-end justify-content-between mt-4">
+                                    <div>
+                                        <?php 
+                                            $totalTechnology = App\Models\Technology::where('user_id',$user->id)->count();
+                                        ?>
+                                        <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                                                data-target="<?php echo e($totalTechnology); ?>">0</span> Technology</h4>
+                                        <a href="" class="text-decoration-underline">View Detail</a>
+                                    </div>
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <span class="avatar-title bg-primary-subtle rounded fs-3">
+                                                <i class='bx bxl-windows text-primary'></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div><!-- end card body -->
+                        </div><!-- end card -->
+                    </div><!-- end col -->
+
+                    <div class="col-xl-3 col-md-6">
+                        <!-- card -->
+                        <div class="card card-animate">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Message</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-end justify-content-between mt-4">
+                                    <div>
+                                        <?php
+                                            $totalMessage = App\Models\Notification::where('user_id',$user->id)->count();   
+                                        ?>
+                                        <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                                                data-target="<?php echo e($totalMessage); ?>">0</span> Message </h4>
+                                        <a href="" class="text-decoration-underline">View Details</a>
+                                    </div>
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <span class="avatar-title bg-success-subtle rounded fs-3">
+                                            <i class='bx bx-message-dots text-success'></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div><!-- end card body -->
+                        </div><!-- end card -->
+                    </div><!-- end col -->
+
+                    <div class="col-xl-3 col-md-6">
+                        <!-- card -->
+                        <div class="card card-animate">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Role</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-end justify-content-between mt-4">
+                                    <div>
+                                        <?php
+                                            $totalRole = $user->roles->count();
+                                            
+                                        ?>
+                                        <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                                                data-target="<?php echo e($totalRole); ?>">0</span> Role </h4>
+                                        <a href="" class="text-decoration-underline">View Details</a>
+                                    </div>
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <span class="avatar-title bg-success-subtle rounded fs-3">
+                                            <i class='bx bxs-user-detail text-success'></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div><!-- end card body -->
+                        </div><!-- end card -->
+                    </div><!-- end col -->
+
+                
+                </div> <!-- end row-->
+
+
                 <div class="row mt-3">
                     <div class="col-lg-12">
                         <div class="card">
