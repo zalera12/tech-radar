@@ -16,6 +16,24 @@
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
     <style>
+        .company-link:hover span {
+            color: rgb(104, 124, 254) !important;
+        }
+
+        /* Hover efek */
+        .nav-item:hover span {
+            color: rgb(104, 124, 254) !important
+            /* Atau gunakan warna primary dari Bootstrap */
+        }
+
+        /* Kondisi saat link aktif */
+        .nav-item.active span {
+            color: rgb(104, 124, 254) !important
+            /* Gunakan warna primary */
+        }
+
+
+
         trix-editor {
             background-color: white;
             /* Mengatur background editor */
@@ -133,12 +151,12 @@
 
     <?php if(session('error')): ?>
         Swal.fire({
-                title: 'Gagal!',
-                text: "<?php echo e(session('error')); ?>",
-                icon: 'error',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Oke',
-            })
+            title: 'Gagal!',
+            text: "<?php echo e(session('error')); ?>",
+            icon: 'error',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Oke',
+        })
     <?php endif; ?>
 </script>
 </body>
