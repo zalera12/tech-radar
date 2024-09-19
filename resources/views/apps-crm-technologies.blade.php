@@ -77,7 +77,7 @@
             </div>
         </div>
         <!--end col-->
-        <div class="col-xxl-9">
+        <div class="">
             <div class="card" id="companyList">
                 <div class="card-header">
                     <div class="d-flex align-items-center gap-2 justify-content-between flex-md-row flex-column">

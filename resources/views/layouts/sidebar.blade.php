@@ -34,19 +34,11 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span>@lang('translation.menu')</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link" href="/index" role="button">
                         <i class="ri-dashboard-2-line"></i> <span>@lang('translation.dashboards')</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarDashboards">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="/index" class="nav-link">Main Dashboard</a>
-                            </li>
-                        </ul>
-                    </div>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarAuth">
                         <i class="ri-account-circle-line"></i> <span>Your Acount</span>
@@ -64,12 +56,10 @@
                             </li>
                         </ul>
                     </div>
+                </li> --}}
+                <li class="menu-title">
+                    <i class="ri-community-line"></i> <span>Perusahaan</span>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarCompanies" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarCompanies">
-                        <i class="ri-community-line"></i> <span>Companies</span>
-                    </a>
 
                     {{-- Ambil data perusahaan yang terkait dengan user dengan status Accepted dari pivot --}}
                     @php
@@ -78,8 +68,8 @@
                     @endphp
 
                     @if ($acceptedCompanies->isNotEmpty())
-                        <div class="collapse menu-dropdown" id="sidebarCompanies">
-                            <ul class="nav nav-sm flex-column">
+                        <div class="menu-dropdown" id="sidebarCompanies">
+                            <ul class="nav nav-sm gap-3 flex-column">
                                 @foreach ($acceptedCompanies as $company)
                                     @php
                                         // Mengambil ID role dari pivot
@@ -94,9 +84,12 @@
                                     @endphp
 
                                     <li class="nav-item">
-                                        <a href="#collapse-{{ $company->id }}" class="nav-link"
+                                        <a href="#collapse-{{ $company->id }}" class="d-flex gap-2 align-items-center"
                                             data-bs-toggle="collapse" role="button" aria-expanded="false"
-                                            aria-controls="collapse-{{ $company->id }}">{{ $company->name }}</a>
+                                            aria-controls="collapse-{{ $company->id }}">
+                                            <img src="{{ asset($data->image ? '/storage/'.$data->image : '/build/images/users/multi-user.jpg') }}" style="width: 25px;height:25px;border-radius:50%;">
+                                            <span class="text-muted">{{ $company->name }}</span>
+                                        </a>
                                         <div class="collapse menu-dropdown" id="collapse-{{ $company->id }}">
                                             <ul class="nav nav-sm flex-column">
                                                 <!-- Link ke Main Page -->

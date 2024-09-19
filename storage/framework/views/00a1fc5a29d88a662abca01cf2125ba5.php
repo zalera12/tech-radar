@@ -34,42 +34,14 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span><?php echo app('translator')->get('translation.menu'); ?></span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link" href="/index" role="button">
                         <i class="ri-dashboard-2-line"></i> <span><?php echo app('translator')->get('translation.dashboards'); ?></span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarDashboards">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="/index" class="nav-link">Main Dashboard</a>
-                            </li>
-                        </ul>
-                    </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarAuth">
-                        <i class="ri-account-circle-line"></i> <span>Your Acount</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sidebarAuth">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="/auth-profile" class="nav-link"><?php echo app('translator')->get('translation.profile'); ?>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="javascript:void(0);" onclick="confirmLogout(event)"
-                                    class="nav-link"><?php echo app('translator')->get('translation.logout'); ?>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                
+                <li class="menu-title">
+                    <i class="ri-community-line"></i> <span>Perusahaan</span>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarCompanies" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarCompanies">
-                        <i class="ri-community-line"></i> <span>Companies</span>
-                    </a>
 
                     
                     <?php
@@ -78,8 +50,8 @@
                     ?>
 
                     <?php if($acceptedCompanies->isNotEmpty()): ?>
-                        <div class="collapse menu-dropdown" id="sidebarCompanies">
-                            <ul class="nav nav-sm flex-column">
+                        <div class="menu-dropdown" id="sidebarCompanies">
+                            <ul class="nav nav-sm gap-3 flex-column">
                                 <?php $__currentLoopData = $acceptedCompanies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $company): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <?php
                                         // Mengambil ID role dari pivot
@@ -94,9 +66,12 @@
                                     ?>
 
                                     <li class="nav-item">
-                                        <a href="#collapse-<?php echo e($company->id); ?>" class="nav-link"
+                                        <a href="#collapse-<?php echo e($company->id); ?>" class="d-flex gap-2 align-items-center"
                                             data-bs-toggle="collapse" role="button" aria-expanded="false"
-                                            aria-controls="collapse-<?php echo e($company->id); ?>"><?php echo e($company->name); ?></a>
+                                            aria-controls="collapse-<?php echo e($company->id); ?>">
+                                            <img src="<?php echo e(asset($data->image ? '/storage/'.$data->image : '/build/images/users/multi-user.jpg')); ?>" style="width: 25px;height:25px;border-radius:50%;">
+                                            <span class="text-muted"><?php echo e($company->name); ?></span>
+                                        </a>
                                         <div class="collapse menu-dropdown" id="collapse-<?php echo e($company->id); ?>">
                                             <ul class="nav nav-sm flex-column">
                                                 <!-- Link ke Main Page -->
