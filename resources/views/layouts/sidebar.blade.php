@@ -107,43 +107,60 @@
                                             <!-- Link ke Main Page -->
                                             <li class="nav-item">
                                                 <a href="/companies/main/{{ $company->id }}?permission=Read Company Profile&idcp={{ $company->id }}"
-                                                    class="nav-link">Main Page</a>
+                                                   class="nav-link {{ request()->is('companies/main/'.$company->id) ? 'text-primary' : '' }}">
+                                                   Main Page
+                                                </a>
                                             </li>
                                             <!-- Link ke Technologies -->
                                             <li class="nav-item">
                                                 <a href="/companies/technologies/{{ $company->id }}?permission=Read Technology&idcp={{ $company->id }}"
-                                                    class="nav-link">Technologies</a>
+                                                   class="nav-link {{ request()->is('companies/technologies/'.$company->id) ? 'text-primary' : '' }}">
+                                                   Technologies
+                                                </a>
                                             </li>
                                             <!-- Link ke Categories -->
                                             <li class="nav-item">
                                                 <a href="/companies/categories/{{ $company->id }}?permission=Read Category Technology&idcp={{ $company->id }}"
-                                                    class="nav-link">Categories</a>
+                                                   class="nav-link {{ request()->is('companies/categories/'.$company->id) ? 'text-primary' : '' }}">
+                                                   Categories
+                                                </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/companies/users/{{ $company->id }}?permission=Read Company User&idcp={{ $company->id }}"
-                                                    class="nav-link">Users</a>
+                                                   class="nav-link {{ request()->is('companies/users/'.$company->id) ? 'text-primary' : '' }}">
+                                                   Users
+                                                </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/companies/roles/{{ $company->id }}?permission=Read Company Role&idcp={{ $company->id }}"
-                                                    class="nav-link">Roles</a>
+                                                   class="nav-link {{ request()->is('companies/roles/'.$company->id) ? 'text-primary' : '' }}">
+                                                   Roles
+                                                </a>
                                             </li>
                                             <!-- Link ke Permissions, hanya muncul jika role user adalah Owner -->
                                             @if ($role && $role->name === 'OWNER')
                                                 <li class="nav-item">
                                                     <a href="/companies/permissions/{{ $company->id }}?permission=Read User permission&idcp={{ $company->id }}"
-                                                        class="nav-link">Permissions</a>
+                                                       class="nav-link {{ request()->is('companies/permissions/'.$company->id) ? 'text-primary' : '' }}">
+                                                       Permissions
+                                                    </a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a href="/companies/pendingMember/{{ $company->id }}?permission=Read Pending Company User&idcp={{ $company->id }}"
-                                                        class="nav-link">Pending Member</a>
+                                                       class="nav-link {{ request()->is('companies/pendingMember/'.$company->id) ? 'text-primary' : '' }}">
+                                                       Pending Member
+                                                    </a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a href="/companies/log/{{ $company->id }}?permission=Read Change Log&idcp={{ $company->id }}"
-                                                        class="nav-link">Logs</a>
+                                                       class="nav-link {{ request()->is('companies/log/'.$company->id) ? 'text-primary' : '' }}">
+                                                       Logs
+                                                    </a>
                                                 </li>
                                             @endif
                                         </ul>
-                                    </div> 
+                                    </div>
+                                    
                                 </li>
                             @endforeach
                         </ul>

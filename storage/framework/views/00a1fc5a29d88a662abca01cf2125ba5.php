@@ -89,43 +89,60 @@
                                             <!-- Link ke Main Page -->
                                             <li class="nav-item">
                                                 <a href="/companies/main/<?php echo e($company->id); ?>?permission=Read Company Profile&idcp=<?php echo e($company->id); ?>"
-                                                    class="nav-link">Main Page</a>
+                                                   class="nav-link <?php echo e(request()->is('companies/main/'.$company->id) ? 'text-primary' : ''); ?>">
+                                                   Main Page
+                                                </a>
                                             </li>
                                             <!-- Link ke Technologies -->
                                             <li class="nav-item">
                                                 <a href="/companies/technologies/<?php echo e($company->id); ?>?permission=Read Technology&idcp=<?php echo e($company->id); ?>"
-                                                    class="nav-link">Technologies</a>
+                                                   class="nav-link <?php echo e(request()->is('companies/technologies/'.$company->id) ? 'text-primary' : ''); ?>">
+                                                   Technologies
+                                                </a>
                                             </li>
                                             <!-- Link ke Categories -->
                                             <li class="nav-item">
                                                 <a href="/companies/categories/<?php echo e($company->id); ?>?permission=Read Category Technology&idcp=<?php echo e($company->id); ?>"
-                                                    class="nav-link">Categories</a>
+                                                   class="nav-link <?php echo e(request()->is('companies/categories/'.$company->id) ? 'text-primary' : ''); ?>">
+                                                   Categories
+                                                </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/companies/users/<?php echo e($company->id); ?>?permission=Read Company User&idcp=<?php echo e($company->id); ?>"
-                                                    class="nav-link">Users</a>
+                                                   class="nav-link <?php echo e(request()->is('companies/users/'.$company->id) ? 'text-primary' : ''); ?>">
+                                                   Users
+                                                </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/companies/roles/<?php echo e($company->id); ?>?permission=Read Company Role&idcp=<?php echo e($company->id); ?>"
-                                                    class="nav-link">Roles</a>
+                                                   class="nav-link <?php echo e(request()->is('companies/roles/'.$company->id) ? 'text-primary' : ''); ?>">
+                                                   Roles
+                                                </a>
                                             </li>
                                             <!-- Link ke Permissions, hanya muncul jika role user adalah Owner -->
                                             <?php if($role && $role->name === 'OWNER'): ?>
                                                 <li class="nav-item">
                                                     <a href="/companies/permissions/<?php echo e($company->id); ?>?permission=Read User permission&idcp=<?php echo e($company->id); ?>"
-                                                        class="nav-link">Permissions</a>
+                                                       class="nav-link <?php echo e(request()->is('companies/permissions/'.$company->id) ? 'text-primary' : ''); ?>">
+                                                       Permissions
+                                                    </a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a href="/companies/pendingMember/<?php echo e($company->id); ?>?permission=Read Pending Company User&idcp=<?php echo e($company->id); ?>"
-                                                        class="nav-link">Pending Member</a>
+                                                       class="nav-link <?php echo e(request()->is('companies/pendingMember/'.$company->id) ? 'text-primary' : ''); ?>">
+                                                       Pending Member
+                                                    </a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a href="/companies/log/<?php echo e($company->id); ?>?permission=Read Change Log&idcp=<?php echo e($company->id); ?>"
-                                                        class="nav-link">Logs</a>
+                                                       class="nav-link <?php echo e(request()->is('companies/log/'.$company->id) ? 'text-primary' : ''); ?>">
+                                                       Logs
+                                                    </a>
                                                 </li>
                                             <?php endif; ?>
                                         </ul>
-                                    </div> 
+                                    </div>
+                                    
                                 </li>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
