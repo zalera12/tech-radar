@@ -87,7 +87,7 @@
                                         <a href="#collapse-{{ $company->id }}" class="d-flex gap-2 align-items-center"
                                             data-bs-toggle="collapse" role="button" aria-expanded="false"
                                             aria-controls="collapse-{{ $company->id }}">
-                                            <img src="{{ asset($data->image ? '/storage/'.$data->image : '/build/images/users/multi-user.jpg') }}" style="width: 25px;height:25px;border-radius:50%;">
+                                            <img src="{{ asset($company->image ? '/storage/'.$company->image : '/build/images/users/multi-user.jpg') }}" style="width: 25px;height:25px;border-radius:50%;">
                                             <span class="text-muted">{{ $company->name }}</span>
                                         </a>
                                         <div class="collapse menu-dropdown" id="collapse-{{ $company->id }}">
