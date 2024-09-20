@@ -77,7 +77,8 @@
                                                             action="/companies/delete/{{ $company->id }}?permission=Delete Company&idcp={{ $company->id }}">
                                                             @csrf
                                                             <input type="hidden" name="id" id="delete-company-id">
-                                                            <input type="hidden" name="user" value="{{ $user->name }}">
+                                                            <input type="hidden" name="user"
+                                                                value="{{ $user->name }}">
                                                             <button type="submit" class="btn btn-danger"
                                                                 id="delete-record">Yes, Delete It!</button>
                                                         </form>
@@ -98,8 +99,10 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
-                                            <form action="/companies/edit/{{ $company->id }}?permission=Edit Company&idcp={{ $company->id }}" method="POST"
-                                                enctype="multipart/form-data" autocomplete="off" id="editCompanyForm">
+                                            <form
+                                                action="/companies/edit/{{ $company->id }}?permission=Edit Company&idcp={{ $company->id }}"
+                                                method="POST" enctype="multipart/form-data" autocomplete="off"
+                                                id="editCompanyForm">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $company->id }}">
                                                 <input type="hidden" name="user" value="{{ $user->name }}">
@@ -115,7 +118,8 @@
                                                         <!-- Input for new image -->
                                                         <div class="col-lg-12">
                                                             <label for="image"
-                                                                class="form-label text-secondary mb-1">Company Image</label>
+                                                                class="form-label text-secondary mb-1">Company
+                                                                Image</label>
                                                             <input type="file" class="form-control" id="image"
                                                                 name="image" accept="image/*"
                                                                 onchange="previewImage(event)">
@@ -181,7 +185,7 @@
             <div class="tab-content text-muted">
                 <div class="tab-pane fade show active" id="project-overview" role="tabpanel">
                     <div class="row">
-                        <div class="col-xl-9 col-lg-8">
+                        <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="text-muted">
@@ -194,25 +198,28 @@
                                                 <div class="col-lg-3 col-sm-6">
                                                     <div>
                                                         <p class="mb-2 text-uppercase fw-medium">Create Date :</p>
-                                                        <h5 class="fs-15 mb-0">15 Sep, 2021</h5>
+                                                        <h5 class="fs-15 mb-0">
+                                                            {{ \Carbon\Carbon::parse($company->created_at)->format('d F Y') }}
+                                                        </h5>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-sm-6">
                                                     <div>
-                                                        <p class="mb-2 text-uppercase fw-medium">Due Date :</p>
-                                                        <h5 class="fs-15 mb-0">29 Dec, 2021</h5>
+                                                        <p class="mb-2 text-uppercase fw-medium">Code Company :</p>
+                                                        <div class="badge bg-success fs-12">{{ $company->code }}</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-sm-6">
                                                     <div>
-                                                        <p class="mb-2 text-uppercase fw-medium">Priority :</p>
-                                                        <div class="badge bg-danger fs-12">High</div>
+                                                        <p class="mb-2 text-uppercase fw-medium">Total Members :</p>
+                                                        <div class="badge bg-danger fs-12">{{ $company->users->count() }}
+                                                            orang</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-sm-6">
                                                     <div>
                                                         <p class="mb-2 text-uppercase fw-medium">Status :</p>
-                                                        <div class="badge bg-warning fs-12">Inprogress</div>
+                                                        <div class="badge bg-warning fs-12">Public</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -224,75 +231,87 @@
                                 <!-- end card body -->
                             </div>
                             <!-- end card -->
-
-
                         </div>
-                        <!-- ene col -->
-                        <div class="col-xl-3 col-lg-4">
-                            <!-- end card -->
-
-                            <div class="card">
-                                <div class="card-header align-items-center d-flex border-bottom-dashed">
-                                    <h4 class="card-title mb-0 flex-grow-1">Members</h4>
-                                </div>
-
-                                <div class="card-body">
-                                    <div data-simplebar style="height: auto;" class="mx-n3 px-3">
-                                        <div class="vstack gap-3">
-                                            @foreach ($companyMembers as $member)
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-xs flex-shrink-0 me-3">
-                                                        <img src="{{ asset($member['user']->photo ? 'storage/' . $member['user']->photo : '/build/images/users/user-dummy-img.jpg') }}"
-                                                            alt="" class="img-fluid rounded-circle">
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <h5 class="fs-13 mb-0"><a href="#"
-                                                                class="text-body d-block">{{ $member['user']->name }}</a>
-                                                        </h5>
-                                                    </div>
-                                                    <div class="flex-shrink-0">
-                                                        <div class="d-flex align-items-center gap-1">
-                                                            <span
-                                                                class="badge bg-success-subtle text-success">{{ $member['role']->name }}</span>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                        <!-- end list -->
-                                    </div>
-                                </div>
-                                <!-- end card body -->
-                            </div>
-                            <!-- end card -->
-                        </div>
-                        <!-- end col -->
                     </div>
-                    <!-- end row -->
                 </div>
-
             </div>
         </div>
-        <!-- end col -->
     </div>
     <div>
-        <h3 class="mt-3">All Categories In Our Company</h3>
+        <h3 class="mt-3">All Categories</h3>
         <div class="row mt-3">
-            @foreach ($categories as $category)
-            <div class="col-md-3 mb-4">
-                <div class="card" style="height: 200px;">
+            @foreach ($categories as $index => $category)
+                <!-- Menggunakan modulus untuk menghindari out of bounds -->
+                <div class="card border card-border-dark">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">{{ strtoupper($category->name) }}</h6>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">{{ $category->name }}</h5>
                         <p class="card-text">{{ $category->description }}</p>
-                        <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ strtoupper($category->name) }}.json"
-                           class="btn btn-primary" target="_blank">View Radar</a>
+                        <div class="text-end">
+                            <a href="javascript:void(0);"
+                                class="link-primary fw-medium d-flex justify-content-end gap-2 align-items-center">
+                                <i class='bx bx-radar fs-4'></i>
+                                <span>View Radar</span>
+                                <i class="ri-arrow-right-line align-middle"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
             @endforeach
         </div>
-        
+    </div>
+    <div>
+        <h3 class="mt-3">Members</h3>
+        <div class="row mt-3">
+            <?php
+            $colors = ['dark'];
+            $users = $company->users()->take(6)->get();
+            ?>
+            @foreach ($users as $index => $user)
+                <div class="card team-box">
+                    <div class="team-cover"> <img src="build/images/small/img-9.jpg" alt="" class="img-fluid">
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row align-items-center team-row">
+                            <div class="col-lg-4 col">
+                                <div class="team-profile-img">
+                                    <div class="avatar-lg img-thumbnail rounded-circle flex-shrink-0"><img
+                                            src="build/images/users/avatar-2.jpg" alt=""
+                                            class="member-img img-fluid d-block rounded-circle"></div>
+                                    <div class="team-content"> <a class="member-name" data-bs-toggle="offcanvas"
+                                            href="#member-overview" aria-controls="member-overview">
+                                            <h5 class="fs-16 mb-1">{{ $user->name }}</h5>
+                                        </a>
+                                        <?php
+                                        $roleId = $user->pivot->role_id;
+                                        $role = App\Models\Role::where('id', $roleId)->first();
+                                        ?>
+                                        <p class="text-muted member-designation mb-0">{{ $role->name }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col">
+                                <div class="row text-muted text-center">
+                                    <div class="col-6 border-end border-end-dashed">
+                                        <h5 class="mb-1 projects-num">225</h5>
+                                        <p class="text-muted mb-0">Projects</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="mb-1 tasks-num">197</h5>
+                                        <p class="text-muted mb-0">Tasks</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col">
+                                <div class="text-end"> <a href="pages-profile" class="btn btn-light view-btn">View
+                                        Profile</a> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
     <!-- end row -->
 @endsection
@@ -320,8 +339,8 @@
             reader.readAsDataURL(event.target.files[0]);
         }
 
-        @if(session('success_update'))
-        Swal.fire({
+        @if (session('success_update'))
+            Swal.fire({
                 icon: 'success',
                 title: 'Success!',
                 text: "{{ session('success_update') }}",

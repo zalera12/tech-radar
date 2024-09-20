@@ -58,20 +58,20 @@
                             <table class="table align-middle table-nowrap mb-0" id="permissionTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col">Role Name</th>
-                                        <?php $__currentLoopData = $permissions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $permission): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <th scope="col"><?php echo e($permission->name); ?></th>
+                                        <th scope="col">Permission Name</th>
+                                        <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <th scope="col"><?php echo e($role->name); ?></th>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php $__currentLoopData = $permissions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $permission): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
-                                            <!-- Column Role Name -->
-                                            <td><?php echo e($role->name); ?></td>
-
-                                            <!-- Permission Checkboxes -->
-                                            <?php $__currentLoopData = $permissions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $permission): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <!-- Column Permission Name -->
+                                            <td><?php echo e($permission->name); ?></td>
+                            
+                                            <!-- Role Checkboxes -->
+                                            <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <?php
                                                     // Check if the role is connected to the permission for the specific company
                                                     $isConnected = $rolePermissions
@@ -85,12 +85,11 @@
                                                         method="POST">
                                                         <?php echo csrf_field(); ?>
                                                         <input type="hidden" name="role_id" value="<?php echo e($role->id); ?>">
-                                                        <input type="hidden" name="permission_id"
-                                                            value="<?php echo e($permission->id); ?>">
+                                                        <input type="hidden" name="permission_id" value="<?php echo e($permission->id); ?>">
                                                         <input type="hidden" name="company_id" value="<?php echo e($company->id); ?>">
                                                         <input type="hidden" name="is_connected"
                                                             value="<?php echo e($isConnected ? 1 : 2); ?>">
-
+                            
                                                         <input type="checkbox" class="form-check-input"
                                                             <?php echo e($isConnected ? 'checked' : ''); ?>
 
@@ -102,7 +101,7 @@
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tbody>
                             </table>
-
+                            
                             <!-- Optional: Alert Messages -->
                             <?php if(session('success')): ?>
                                 <script>

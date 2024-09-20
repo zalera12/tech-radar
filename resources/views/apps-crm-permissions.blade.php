@@ -59,20 +59,20 @@
                             <table class="table align-middle table-nowrap mb-0" id="permissionTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col">Role Name</th>
-                                        @foreach ($permissions as $permission)
-                                            <th scope="col">{{ $permission->name }}</th>
+                                        <th scope="col">Permission Name</th>
+                                        @foreach ($roles as $role)
+                                            <th scope="col">{{ $role->name }}</th>
                                         @endforeach
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($roles as $role)
+                                    @foreach ($permissions as $permission)
                                         <tr>
-                                            <!-- Column Role Name -->
-                                            <td>{{ $role->name }}</td>
-
-                                            <!-- Permission Checkboxes -->
-                                            @foreach ($permissions as $permission)
+                                            <!-- Column Permission Name -->
+                                            <td>{{ $permission->name }}</td>
+                            
+                                            <!-- Role Checkboxes -->
+                                            @foreach ($roles as $role)
                                                 @php
                                                     // Check if the role is connected to the permission for the specific company
                                                     $isConnected = $rolePermissions
@@ -86,12 +86,11 @@
                                                         method="POST">
                                                         @csrf
                                                         <input type="hidden" name="role_id" value="{{ $role->id }}">
-                                                        <input type="hidden" name="permission_id"
-                                                            value="{{ $permission->id }}">
+                                                        <input type="hidden" name="permission_id" value="{{ $permission->id }}">
                                                         <input type="hidden" name="company_id" value="{{ $company->id }}">
                                                         <input type="hidden" name="is_connected"
                                                             value="{{ $isConnected ? 1 : 2 }}">
-
+                            
                                                         <input type="checkbox" class="form-check-input"
                                                             {{ $isConnected ? 'checked' : '' }}
                                                             onclick="this.form.submit()">
@@ -102,7 +101,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
+                            
                             <!-- Optional: Alert Messages -->
                             @if (session('success'))
                                 <script>

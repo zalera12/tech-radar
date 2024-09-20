@@ -136,7 +136,7 @@
                 </div> <!-- end row-->
 
 
-                <div class="row mt-3">
+                <div class="row mt-1">
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-body">
@@ -186,7 +186,7 @@
                                 </div>
                             </div>
                         </div>
-                        <h4 class="mt-2" style="margin-bottom: 30px;">List Perusahaan Yang Terkait Dengan Anda</h4>
+                        <h4 class="mt-2" style="margin-bottom: 20px;">List Perusahaan Yang Terkait Dengan Anda</h4>
                         <div class="row">
                             <div class="col-xxl-9">
                                 <?php if($dataCompanies->isNotEmpty()): ?>
