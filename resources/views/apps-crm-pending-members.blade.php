@@ -218,7 +218,7 @@
                                     @method('PUT')
 
                                     <!-- Hidden inputs to send permission and idcp -->
-                                    <input type="hidden" name="permission" value="Update Pending Company User">
+                                    <input type="hidden" name="permission" value="Acc Company User">
                                     <input type="hidden" name="idcp" value="{{ $company->id }}">
                                     <input type="hidden" name="user" value="{{ $user->name }}">
                                     <input type="hidden" name="company_id" value="{{ $company->id }}">

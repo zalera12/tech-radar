@@ -12,7 +12,8 @@
             <div class="h-100">
                 <div class="flex-grow-1">
                     <h4 class="fs-16 mb-1">Welcome, <?php echo e($user->name); ?>!</h4>
-                    <p class="text-muted mb-0">Explore the most recent insights and updates from your Tech Radar, keeping you ahead in today's fast-evolving landscape.</p>
+                    <p class="text-muted mb-0">Explore the most recent insights and updates from your Tech Radar, keeping
+                        you ahead in today's fast-evolving landscape.</p>
                 </div>
                 <div class="flex-grow-1 mb-3 mt-4">
                     <h4 class="fs-16 mb-1">Statistic</h4>
@@ -30,8 +31,8 @@
                                 </div>
                                 <div class="d-flex align-items-end justify-content-between mt-4">
                                     <div>
-                                        <?php 
-                                            $totalCompany = $user->companies->count();
+                                        <?php
+                                        $totalCompany = $user->companies->count();
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="<?php echo e($totalCompany); ?>">0</span> Company</h4>
@@ -53,13 +54,14 @@
                             <div class="card-body">
                                 <div class="d-flex align-items-center">
                                     <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Technology</p>
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Technology
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-end justify-content-between mt-4">
                                     <div>
-                                        <?php 
-                                            $totalTechnology = App\Models\Technology::where('user_id',$user->id)->count();
+                                        <?php
+                                        $totalTechnology = App\Models\Technology::where('user_id', $user->id)->count();
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="<?php echo e($totalTechnology); ?>">0</span> Technology</h4>
@@ -67,7 +69,7 @@
                                     </div>
                                     <div class="avatar-sm flex-shrink-0">
                                         <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                                <i class='bx bxl-windows text-primary'></i>
+                                            <i class='bx bxl-windows text-primary'></i>
                                         </span>
                                     </div>
                                 </div>
@@ -87,7 +89,7 @@
                                 <div class="d-flex align-items-end justify-content-between mt-4">
                                     <div>
                                         <?php
-                                            $totalMessage = App\Models\Notification::where('user_id',$user->id)->count();   
+                                        $totalMessage = App\Models\Notification::where('user_id', $user->id)->count();
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="<?php echo e($totalMessage); ?>">0</span> Message </h4>
@@ -115,8 +117,8 @@
                                 <div class="d-flex align-items-end justify-content-between mt-4">
                                     <div>
                                         <?php
-                                            $totalRole = $user->roles->count();
-                                            
+                                        $totalRole = $user->roles->count();
+                                        
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="<?php echo e($totalRole); ?>">0</span> Role </h4>
@@ -132,7 +134,7 @@
                         </div><!-- end card -->
                     </div><!-- end col -->
 
-                
+
                 </div> <!-- end row-->
 
 
@@ -140,12 +142,15 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between button-container">
-                                    <button class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#JoinCompanyModal">
+                                <div
+                                    class="d-flex flex-column flex-md-row align-items-center justify-content-between button-container">
+                                    <button class="btn btn-primary btn-custom" data-bs-toggle="modal"
+                                        data-bs-target="#JoinCompanyModal">
                                         <i class="ri-add-line align-bottom me-1"></i>Join a company
                                     </button>
-                                    
-                                    <button class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#CreateJobModal">
+
+                                    <button class="btn btn-primary btn-custom" data-bs-toggle="modal"
+                                        data-bs-target="#CreateJobModal">
                                         <i class="ri-add-line align-bottom me-1"></i>Create a company
                                     </button>
                                 </div>
@@ -154,35 +159,42 @@
                                     <div class=" col-md-6">
                                         <form action="/" method="GET">
                                             <div class="input-group mb-3">
-                                                <input type="text" name="search" class="form-control search bg-light border-light" 
-                                                       id="searchJob" value="<?php echo e(request('search')); ?>" 
-                                                       placeholder="Search for companies...">
-                                                <input type="hidden" name="sort_order" value="<?php echo e(request('sort_order')); ?>">
+                                                <input type="text" name="search"
+                                                    class="form-control search bg-light border-light" id="searchJob"
+                                                    value="<?php echo e(request('search')); ?>" placeholder="Search for companies...">
+                                                <input type="hidden" name="sort_order"
+                                                    value="<?php echo e(request('sort_order')); ?>">
                                                 <button class="btn btn-primary" type="submit">
                                                     <i class="ri-search-line search-icon"></i>
                                                 </button>
                                             </div>
                                         </form>
-                                        
-                                        
+
+
                                     </div>
-                                   
-                                        <div class="col-md-6">
-                                            <form id="filterForm" action="/" method="GET">
-                                                <div class="input-light">
-                                                    <select class="form-control" data-choices data-choices-search-false
-                                                            name="sort_order" id="sortOrder" onchange="this.form.submit()">
-                                                        <option value="terbaru" <?php echo e(request('sort_order') == 'terbaru' ? 'selected' : ''); ?>>Terbaru</option>
-                                                        <option value="terlama" <?php echo e(request('sort_order') == 'terlama' ? 'selected' : ''); ?>>Terlama</option>
-                                                        <option value="A-Z" <?php echo e(request('sort_order') == 'A-Z' ? 'selected' : ''); ?>>A-Z</option>
-                                                        <option value="Z-A" <?php echo e(request('sort_order') == 'Z-A' ? 'selected' : ''); ?>>Z-A</option>
-                                                    </select>
-                                                    <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
-                                                </div>
-                                            </form>
-                                            
-                                        </div>
-                                
+
+                                    <div class="col-md-6">
+                                        <form id="filterForm" action="/" method="GET">
+                                            <div class="input-light">
+                                                <select class="form-control" data-choices data-choices-search-false
+                                                    name="sort_order" id="sortOrder" onchange="this.form.submit()">
+                                                    <option value="terbaru"
+                                                        <?php echo e(request('sort_order') == 'terbaru' ? 'selected' : ''); ?>>Terbaru
+                                                    </option>
+                                                    <option value="terlama"
+                                                        <?php echo e(request('sort_order') == 'terlama' ? 'selected' : ''); ?>>Terlama
+                                                    </option>
+                                                    <option value="A-Z"
+                                                        <?php echo e(request('sort_order') == 'A-Z' ? 'selected' : ''); ?>>A-Z</option>
+                                                    <option value="Z-A"
+                                                        <?php echo e(request('sort_order') == 'Z-A' ? 'selected' : ''); ?>>Z-A</option>
+                                                </select>
+                                                <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+                                            </div>
+                                        </form>
+
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -190,64 +202,74 @@
                         <div class="row">
                             <div class="">
                                 <?php if($dataCompanies->isNotEmpty()): ?>
-                                <div id="job-list">
-                                    <?php $__currentLoopData = $dataCompanies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <div class="card joblist-card">
-                                        <div class="card-body">
-                                            <div class="d-flex mb-4 align-items-center">
-                                                <div class="avatar-md">
-                                                    <div class="avatar-title bg-light rounded"> 
-                                                        <img src="<?php echo e(asset($data->image ? '/storage/'.$data->image : '/build/images/users/multi-user.jpg')); ?>" alt="" class="companyLogo-img" style="width: 60px;height:60px"> 
+                                    <div id="job-list">
+                                        <?php $__currentLoopData = $dataCompanies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <div class="card joblist-card">
+                                                <div class="card-body">
+                                                    <div class="d-flex mb-4 align-items-center">
+                                                        <div class="avatar-md">
+                                                            <div class="avatar-title bg-light rounded">
+                                                                <img src="<?php echo e(asset($data->image ? '/storage/' . $data->image : '/build/images/users/multi-user.jpg')); ?>"
+                                                                    alt="" class="companyLogo-img"
+                                                                    style="width: 60px;height:60px">
+                                                            </div>
+                                                        </div>
+                                                        <div class="ms-3 flex-grow-1">
+                                                            <img src="build/images/small/img-8.jpg" alt=""
+                                                                class="d-none cover-img">
+                                                            <a href="#!">
+                                                                <h5 class="job-title"><?php echo e($data->name); ?></h5>
+                                                            </a>
+                                                            <!-- Menghapus title kedua dan tombol bookmark -->
+                                                        </div>
+                                                    </div>
+                                                    <p class="text-muted job-description">
+                                                        <?php echo $data->description; ?>
+
+                                                    </p>
+                                                </div>
+                                                <div class="card-footer border-top-dashed">
+                                                    <div
+                                                        class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                                                        <div><i
+                                                                class="ri-user-3-line align-bottom me-1"></i><?php echo e(count($data->users)); ?>
+
+                                                            orang</div>
+                                                        <div>
+                                                            <i class="ri-window-line align-bottom me-1"></i>
+                                                            <?php
+                                                            $totalTechnologies = App\Models\Technology::where('company_id', $data->id)->count();
+                                                            ?>
+                                                            <?php echo e($totalTechnologies); ?> Technologies
+                                                        </div>
+                                                        <div><i class="ri-time-line align-bottom me-1"></i>
+                                                            <span
+                                                                class="job-postdate"><?php echo e(\Carbon\Carbon::parse($data->created_at)->format('d F Y')); ?></span>
+                                                        </div>
+                                                        <div>
+                                                            <a href="/companies/main/<?php echo e($data->id); ?>?permission=Read Company Profile&idcp=<?php echo e($data->id); ?>"
+                                                                class="btn btn-primary viewjob-list">View More
+                                                                <i class="ri-arrow-right-line align-bottom ms-1"></i>
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="ms-3 flex-grow-1"> 
-                                                    <img src="build/images/small/img-8.jpg" alt="" class="d-none cover-img"> 
-                                                    <a href="#!">
-                                                        <h5 class="job-title"><?php echo e($data->name); ?></h5>
-                                                    </a>
-                                                    <!-- Menghapus title kedua dan tombol bookmark -->
-                                                </div>
                                             </div>
-                                            <p class="text-muted job-description">
-                                                <?php echo $data->description; ?>
-
-                                            </p>
-                                        </div>
-                                        <div class="card-footer border-top-dashed">
-                                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                                                <div><i class="ri-user-3-line align-bottom me-1"></i><?php echo e(count($data->users)); ?> orang</div>
-                                                <div>
-                                                    <i class="ri-window-line align-bottom me-1"></i>
-                                                    <?php 
-                                                        $totalTechnologies = App\Models\Technology::where('company_id',$data->id)->count();
-                                                    ?>
-                                                    <?php echo e($totalTechnologies); ?> Technologies
-                                                </div>
-                                                <div><i class="ri-time-line align-bottom me-1"></i> 
-                                                    <span class="job-postdate"><?php echo e(\Carbon\Carbon::parse($data->created_at)->format('d F Y')); ?></span>
-                                                </div>
-                                                <div>
-                                                    <a href="/companies/main/<?php echo e($data->id); ?>?permission=Read Company Profile&idcp=<?php echo e($data->id); ?>" class="btn btn-primary viewjob-list">View More 
-                                                        <i class="ri-arrow-right-line align-bottom ms-1"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </div>
-                                    
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                </div>      
                                 <?php else: ?>
-                                    <div id="job-list" style="display: flex;align-items:center;justify-content:center;margin-block:80px;gap:15px;flex-direction:column">
+                                    <div id="job-list"
+                                        style="display: flex;align-items:center;justify-content:center;margin-block:80px;gap:15px;flex-direction:column">
                                         <img src="/build/images/warning.png" width="150px">
                                         <h5>You are not connected to any companies!</h5>
                                     </div>
                                 <?php endif; ?>
-                              
+
                                 <div class="row g-0 justify-content-end mb-4" id="pagination-element">
                                     <!-- end col -->
                                     <div class="col-sm-6">
-                                        <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                        <div
+                                            class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
                                             <!-- Previous Page Link -->
                                             <?php if($dataCompanies->onFirstPage()): ?>
                                                 <div class="page-item disabled">
@@ -255,25 +277,30 @@
                                                 </div>
                                             <?php else: ?>
                                                 <div class="page-item">
-                                                    <a href="<?php echo e($dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->previousPageUrl()); ?>" class="page-link" id="page-prev">Previous</a>
+                                                    <a href="<?php echo e($dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->previousPageUrl()); ?>"
+                                                        class="page-link" id="page-prev">Previous</a>
                                                 </div>
                                             <?php endif; ?>
-                                        
+
                                             <!-- Page Numbers -->
                                             <span id="page-num" class="pagination">
                                                 <?php $__currentLoopData = $dataCompanies->links()->elements[0]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <?php if($page == $dataCompanies->currentPage()): ?>
-                                                        <span class="page-item active"><span class="page-link"><?php echo e($page); ?></span></span>
+                                                        <span class="page-item active"><span
+                                                                class="page-link"><?php echo e($page); ?></span></span>
                                                     <?php else: ?>
-                                                        <a href="<?php echo e($dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->url($page)); ?>" class="page-item"><span class="page-link"><?php echo e($page); ?></span></a>
+                                                        <a href="<?php echo e($dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->url($page)); ?>"
+                                                            class="page-item"><span
+                                                                class="page-link"><?php echo e($page); ?></span></a>
                                                     <?php endif; ?>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </span>
-                                        
+
                                             <!-- Next Page Link -->
                                             <?php if($dataCompanies->hasMorePages()): ?>
                                                 <div class="page-item">
-                                                    <a href="<?php echo e($dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->nextPageUrl()); ?>" class="page-link" id="page-next">Next</a>
+                                                    <a href="<?php echo e($dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->nextPageUrl()); ?>"
+                                                        class="page-link" id="page-next">Next</a>
                                                 </div>
                                             <?php else: ?>
                                                 <div class="page-item disabled">
@@ -281,9 +308,6 @@
                                                 </div>
                                             <?php endif; ?>
                                         </div>
-                                        
-                                        
-                                        
                                     </div><!-- end col -->
                                 </div>
                             </div>
@@ -295,7 +319,8 @@
                     aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content border-0">
-                            <form id="createjob-form" action="/companies/add" method="POST" enctype="multipart/form-data">
+                            <form id="createjob-form" action="/companies/add" method="POST"
+                                enctype="multipart/form-data">
                                 <?php echo csrf_field(); ?>
                                 <div class="modal-body">
                                     <div class="row g-3">
@@ -315,7 +340,7 @@
                                                         </div>
                                                         <div class="flex-shrink-0">
                                                             <div class="d-flex gap-3 align-items-center">
-                                                          
+
                                                                 <button type="button" class="btn-close btn-close-white"
                                                                     id="close-jobListModal" data-bs-dismiss="modal"
                                                                     aria-label="Close"></button>
@@ -361,7 +386,7 @@ $message = $__bag->first($__errorArgs[0]); ?>
                                                     <strong><?php echo e($message); ?></strong>
                                                 </span>
                                             </div>
-                                            <?php unset($message);
+                                        <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
@@ -376,11 +401,12 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" name="status" aria-label="Default select example">
-                                                <option selected class="text-muted">Select a status</option>
+unset($__errorArgs, $__bag); ?>"
+                                                name="status" aria-label="Default select example">
+                                                <option value="" disabled selected>Select a status</option>
                                                 <option value="private">private</option>
                                                 <option value="public">public</option>
-                                              </select>
+                                            </select>
                                             <?php $__errorArgs = ['status'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -395,16 +421,19 @@ endif;
 unset($__errorArgs, $__bag); ?>
                                         </div>
                                         <div class="mb-4">
-                                            <label for="description" class="form-label text-black" style="font-weight:600;">Description
+                                            <label for="description" class="form-label text-black"
+                                                style="font-weight:600;">Description
                                             </label>
-                                            <input id="description" name="description" type="hidden" class="<?php $__errorArgs = ['description'];
+                                            <input id="description" name="description" type="hidden"
+                                                class="<?php $__errorArgs = ['description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" value="<?php echo e(old('description')); ?>">
+unset($__errorArgs, $__bag); ?>"
+                                                value="<?php echo e(old('description')); ?>">
                                             <trix-editor input="description"></trix-editor>
                                             <?php $__errorArgs = ['description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -422,7 +451,8 @@ unset($__errorArgs, $__bag); ?>
 
                                         <div class="mb-4">
                                             <label for="image" class="form-label text-black mb-1">Company Logo</label>
-                                            <input type="file" class="form-control <?php $__errorArgs = ['image'];
+                                            <input type="file"
+                                                class="form-control <?php $__errorArgs = ['image'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -444,69 +474,87 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <div class="hstack gap-2 justify-content-end">
                                         <button type="button" class="btn btn-light"
                                             data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-success" id="add-btn">Add Company</button>
+                                        <button type="submit" class="btn btn-success" id="add-btn">Add
+                                            Company</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="JoinCompanyModal" tabindex="-1" aria-labelledby="joinCompanyLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content border-0">
-                            <form id="join-company-form" action="<?php echo e(route('company-users.join')); ?>" method="POST">
-                                <?php echo csrf_field(); ?>
-                                <div class="modal-body">
-                                    <div class="text-center mb-4">
-                                        <h5 class="modal-title" id="joinCompanyLabel">Join Company</h5>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="company_code" class="form-label">Company Code</label>
-                                        <input type="text" class="form-control <?php $__errorArgs = ['company_code'];
+            </div> <!-- end .h-100-->
+        </div> <!-- end col -->
+        <div class="modal fade" id="JoinCompanyModal" tabindex="-1" aria-labelledby="joinCompanyLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0">
+                    <form id="join-company-form" action="<?php echo e(route('company-users.join')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <div class="modal-body">
+                            <div class="text-center mb-4">
+                                <h5 class="modal-title" id="joinCompanyLabel">Join Company</h5>
+                            </div>
+                            <div class="mb-4">
+                                <label for="company_code" class="form-label">Company Code</label>
+                                <input type="text" class="form-control <?php $__errorArgs = ['company_code'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                                               id="company_code" name="company_code" placeholder="Enter company code" required>
-                                        <?php $__errorArgs = ['company_code'];
+unset($__errorArgs, $__bag); ?>"
+                                    id="company_code" name="company_code" placeholder="Enter company code" required>
+                                <?php $__errorArgs = ['company_code'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong><?php echo e($message); ?></strong>
-                                            </span>
-                                        <?php unset($message);
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong><?php echo e($message); ?></strong>
+                                    </span>
+                                <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-success">Join</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Join</button>
+                        </div>
+                    </form>
                 </div>
-                
-            </div> <!-- end .h-100-->
+            </div>
+        </div>
 
 
-        </div> <!-- end col -->
     </div>
+
+    
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('script'); ?>
+    <!-- apexcharts -->
+    <script src="<?php echo e(URL::asset('build/libs/apexcharts/apexcharts.min.js')); ?>"></script>
+    <script src="<?php echo e(URL::asset('build/libs/jsvectormap/js/jsvectormap.min.js')); ?>"></script>
+    <script src="<?php echo e(URL::asset('build/libs/jsvectormap/maps/world-merc.js')); ?>"></script>
+    <script src="<?php echo e(URL::asset('build/libs/swiper/swiper-bundle.min.js')); ?>"></script>
+    <!-- dashboard init -->
+    <script src="<?php echo e(URL::asset('build/js/pages/dashboard-ecommerce.init.js')); ?>"></script>
+    <script src="<?php echo e(URL::asset('build/js/app.js')); ?>"></script>
     <script>
+        document.getElementById('sortOrder').addEventListener('change', function() {
+            // Submit form filter ketika dropdown berubah
+            document.getElementById('filterForm').submit();
+        });
+
         // Cek jika ada session berhasil
         <?php if(session('login_success')): ?>
             Swal.fire({
@@ -525,22 +573,35 @@ unset($__errorArgs, $__bag); ?>
                 confirmButtonText: 'Oke',
             });
         <?php endif; ?>
-    </script>
-<?php $__env->stopSection(); ?>
-<?php $__env->startSection('script'); ?>
-    <!-- apexcharts -->
-    <script src="<?php echo e(URL::asset('build/libs/apexcharts/apexcharts.min.js')); ?>"></script>
-    <script src="<?php echo e(URL::asset('build/libs/jsvectormap/js/jsvectormap.min.js')); ?>"></script>
-    <script src="<?php echo e(URL::asset('build/libs/jsvectormap/maps/world-merc.js')); ?>"></script>
-    <script src="<?php echo e(URL::asset('build/libs/swiper/swiper-bundle.min.js')); ?>"></script>
-    <!-- dashboard init -->
-    <script src="<?php echo e(URL::asset('build/js/pages/dashboard-ecommerce.init.js')); ?>"></script>
-    <script src="<?php echo e(URL::asset('build/js/app.js')); ?>"></script>
-    <script>
-         document.getElementById('sortOrder').addEventListener('change', function () {
-        // Submit form filter ketika dropdown berubah
-        document.getElementById('filterForm').submit();
-    });
+
+        <?php if(session('request_sent_successfully')): ?>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "<?php echo e(session('request_sent_successfully')); ?>",
+                confirmButtonText: 'Oke',
+            });
+        <?php endif; ?>
+
+        <?php if(session('company_already_joined')): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: "<?php echo e(session('company_already_joined')); ?>",
+                confirmButtonText: 'Oke',
+            });
+        <?php endif; ?>
+
+        <?php if(session('request_already_sent')): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: "<?php echo e(session('request_already_sent')); ?>",
+                confirmButtonText: 'Oke',
+            });
+        <?php endif; ?>
+
+
     </script>
 <?php $__env->stopSection(); ?>
 

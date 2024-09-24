@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Log;
+use App\Models\Notification;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\role_permissions;
@@ -84,10 +85,8 @@ class CompaniesController extends Controller
         $company = $companies->firstWhere('id', $companyId);
     
         // Ambil roles yang terkait dengan perusahaan ini (melalui pivot company_users)
-        $roles = Role::whereHas('companies', function ($query) use ($company) {
-            $query->where('companies.id', $company->id);
-        })->get();
-    
+        $roles = $company->roles->unique('id'); 
+        
         // Ambil nilai search dan role dari request
         $search = $request->input('search');
         $roleFilter = $request->input('role_id'); // Ganti ke 'role_id'
@@ -232,6 +231,17 @@ class CompaniesController extends Controller
         // Ambil pending member dan update role serta status
         $member = User::findOrFail($memberId);
         $company = Company::where('id', $request->company_id)->first();
+        $role = Role::where('id',$request->role_id)->first()->name;
+
+        if($request->status == 'ACCEPTED'){
+            Notification::create([
+                'id' => Ulid::generate(),
+                'title' => 'Permintaan Bergabung Diterima!',
+                'message' => "Selamat! Permintaan Anda untuk bergabung dengan ".$company->name." telah disetujui. Anda sekarang menjadi bagian dari perusahaan sebagai ".$role.".",
+                'user_id' => $member->id,
+                'is_read' => false,
+            ]);
+        }
 
         // Update role dan status
         $company->users()->updateExistingPivot($member->id, [

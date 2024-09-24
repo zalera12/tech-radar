@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->longText('description')->nullable();
             $table->string('image')->nullable();
-            $table->string('status');
+            $table->enum('status', ['private', 'public']);
             $table->string('code', 255)->unique();
             $table->timestamps();
         });

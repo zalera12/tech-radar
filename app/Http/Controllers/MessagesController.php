@@ -15,7 +15,7 @@ class MessagesController extends Controller
 
         // Mengambil notifikasi dengan pagination (misalnya 10 per halaman)
         $notifications = Notification::where('user_id', auth()->user()->id)
-            ->paginate(1);
+            ->paginate(10);
 
         return view('apps-crm-messages', [
             'title' => 'messages',

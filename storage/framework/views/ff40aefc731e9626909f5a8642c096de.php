@@ -308,80 +308,215 @@ unset($__errorArgs, $__bag); ?>
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class=" fw-medium text-muted text-truncate mb-0"> Total Employess
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <?php
+                            $totalEmployess = $company->users->count();
+                            ?>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                                    data-target="<?php echo e($totalEmployess); ?>">0</span> Employee</h4>
+                            <a href="/companies/users/<?php echo e($company->id); ?>?permission=Read Company User&idcp=<?php echo e($company->id); ?>"
+                                class="text-decoration-underline">View All</a>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-secondary-subtle rounded fs-3">
+                                <i class='bx bxs-user text-secondary'></i>
+                            </span>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+        <div class="col-xl-3 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class=" fw-medium text-muted text-truncate mb-0">Total Roles</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <?php
+                            $roles = $company->roles->unique('id'); // Ganti 'name' dengan atribut yang ingin di-unique
+                            $totalRoles = $roles->count();
+                            ?>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                                    data-target="<?php echo e($totalRoles); ?>">0</span> Role</h4>
+                            <a href="/companies/roles/<?php echo e($company->id); ?>?permission=Read Company Role&idcp=<?php echo e($company->id); ?>"
+                                class="text-decoration-underline">View All</a>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-primary-subtle rounded fs-3">
+                                <i class='bx bxs-user-detail text-primary'></i>
+                            </span>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+        <div class="col-xl-3 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class=" fw-medium text-muted text-truncate mb-0">Total Categories</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <?php
+                            $totalCategories = $company->categories->count();
+                            ?>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                                    data-target="<?php echo e($totalCategories); ?>">0</span> Category</h4>
+                            <a href="/companies/categories/<?php echo e($company->id); ?>?permission=Read Category Technology&idcp=<?php echo e($company->id); ?>"
+                                class="text-decoration-underline">View All</a>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-success-subtle rounded fs-3">
+                                <i class='bx bxs-book-content text-success'></i>
+                            </span>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+        <div class="col-xl-3 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class=" fw-medium text-muted text-truncate mb-0">Total Technologies</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <?php
+                            $totalTechnologies = $company->technologies->count();
+                            
+                            ?>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                                    data-target="<?php echo e($totalTechnologies); ?>">0</span> Technologies </h4>
+                            <a href="/companies/technologies/<?php echo e($company->id); ?>?permission=Read Technology&idcp=<?php echo e($company->id); ?>"
+                                class="text-decoration-underline">View All</a>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-success-subtle rounded fs-3">
+                                <i class="ri-window-line text-success"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+
+    </div> <!-- end row-->
     <div>
         <h4 class="mt-1">All Categories</h4>
         <div class="row mt-3">
             <?php
             $categories = $company->categories;
             ?>
-            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <button type="button" class="btn-close float-end fs-11" aria-label="Close"></button>
-                            <h6 class="card-title mb-0"><?php echo e($category->name); ?></h6>
-                        </div>
-                        <div class="card-body" style="height: 135px">
-                            <p class="card-text text-muted mb-0"><?php echo e($category->description); ?></p>
-                        </div>
-                        <div class="card-footer">
-                            <a href="" class="link-success float-end">View Radar <i
-                                    class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i></a>
-                            <p class="text-muted mb-0"> <?php echo e(\Carbon\Carbon::parse($category->created_at)->format('d F Y')); ?>
+            <?php if($categories->isNotEmpty()): ?>
+                <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="float-end">
+                                    <i class="ri-window-line align-bottom me-1"></i>
+                                    <?php
+                                    $totalTechnologies = App\Models\Technology::where('company_id', $company->id)
+                                        ->where('category_id', $category->id)
+                                        ->count();
+                                    ?>
+                                    <?php echo e($totalTechnologies); ?> Technologies
+                                </div>
+                                <h6 class="card-title mb-0"><?php echo e($category->name); ?></h6>
+                            </div>
+                            <div class="card-body" style="height: 135px">
+                                <p class="card-text text-muted mb-0"><?php echo e($category->description); ?></p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="" class="link-success float-end">View Radar <i
+                                        class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i></a>
+                                <p class="text-muted mb-0">
+                                    <?php echo e(\Carbon\Carbon::parse($category->created_at)->format('d F Y')); ?>
 
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php else: ?>
+                <div id="job-list"
+                    style="display: flex;align-items:center;justify-content:center;margin-block:50px;gap:15px;flex-direction:column">
+                    <img src="/build/images/warning.png" width="80px">
+                    <h5>There are no categories in this company!</h5>
                 </div>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php endif; ?>
         </div>
     </div>
     <div>
-        <h3 class="mt-3">Members</h3>
+        <div class="d-flex align-items-center justify-content-between mt-1">
+            <h4 class="">Employees</h4>
+            <a href="/companies/users/<?php echo e($company->id); ?>?permission=Read Company User&idcp=<?php echo e($company->id); ?>"
+                class="d-flex align-items-center">
+                <span style="font-size: 17px">see all</span>
+                <i class="ri-arrow-right-s-line" style="font-size: 20px"></i>
+            </a>
+        </div>
         <div class="row mt-3">
             <?php
-            $colors = ['dark'];
-            $users = $company->users()->take(6)->get();
+            $employess = $company->users;
             ?>
-            <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <div class="card team-box">
-                    <div class="team-cover"> <img src="build/images/small/img-9.jpg" alt="" class="img-fluid">
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="row align-items-center team-row">
-                            <div class="col-lg-4 col">
-                                <div class="team-profile-img">
-                                    <div class="avatar-lg img-thumbnail rounded-circle flex-shrink-0"><img
-                                            src="build/images/users/avatar-2.jpg" alt=""
-                                            class="member-img img-fluid d-block rounded-circle"></div>
-                                    <div class="team-content"> <a class="member-name" data-bs-toggle="offcanvas"
-                                            href="#member-overview" aria-controls="member-overview">
-                                            <h5 class="fs-16 mb-1"><?php echo e($user->name); ?></h5>
-                                        </a>
-                                        <?php
-                                        $roleId = $user->pivot->role_id;
-                                        $role = App\Models\Role::where('id', $roleId)->first();
-                                        ?>
-                                        <p class="text-muted member-designation mb-0"><?php echo e($role->name); ?></p>
-                                    </div>
-                                </div>
+            <?php $__currentLoopData = $employess; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="col-xl-4">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h6 class="card-title mb-0">Our Employee</h6>
+                        </div>
+                        <div class="card-body p-4 text-center">
+                            <div class="mx-auto avatar-md mb-3">
+                                <img src="<?php echo e(asset($employee->photo ? 'storage/' . $employee->photo : '/build/images/users/user-dummy-img.jpg')); ?>"
+                                    alt="user-img" class="img-thumbnail rounded-circle mb-1"
+                                    style="width: 70px;height:70px" />
                             </div>
-                            <div class="col-lg-4 col">
-                                <div class="row text-muted text-center">
-                                    <div class="col-6 border-end border-end-dashed">
-                                        <h5 class="mb-1 projects-num">225</h5>
-                                        <p class="text-muted mb-0">Projects</p>
-                                    </div>
-                                    <div class="col-6">
-                                        <h5 class="mb-1 tasks-num">197</h5>
-                                        <p class="text-muted mb-0">Tasks</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col">
-                                <div class="text-end"> <a href="pages-profile" class="btn btn-light view-btn">View
-                                        Profile</a> </div>
-                            </div>
+                            <h5 class="card-title mb-1"><?php echo e($employee->name); ?></h5>
+                            <?php
+                            $role = $user
+                                ->roles()
+                                ->wherePivot('company_id', $company->id)
+                                ->first();
+                            ?>
+                            <p class="text-muted mb-0 fw-medium" style="font-size: 12px;"><?php echo e($role->name); ?></p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <i class="ri-window-line align-bottom me-1"></i>
+                            <?php
+                            $totalTechnologies = App\Models\Technology::where('company_id', $company->id)
+                                ->where('user_id', $employee->id)
+                                ->count();
+                            ?>
+                            <?php echo e($totalTechnologies); ?> Technologies
                         </div>
                     </div>
                 </div>

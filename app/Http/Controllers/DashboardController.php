@@ -20,13 +20,13 @@ class DashboardController extends Controller
         $user = auth()->user();
         $search = $request->input('search');
         $sortOrder = $request->input('sort_order');
-    
-        $companies = $user->companies()
+
+        $companies = $user
+            ->companies()
             ->wherePivot('status', 'Accepted')
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%");
+                    $q->where('name', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%");
                 });
             })
             ->when($sortOrder, function ($query, $sortOrder) {
@@ -41,14 +41,14 @@ class DashboardController extends Controller
                 }
             })
             ->paginate(3);
-    
+
         return view('index', [
             'dataCompanies' => $companies,
             'user' => $user,
             'search' => $search,
             'sortOrder' => $sortOrder,
         ]);
-    }    
+    }
     public function profile()
     {
         return view('pages-profile', [
@@ -69,28 +69,28 @@ class DashboardController extends Controller
             'name' => 'required',
             'photo' => 'nullable|image|file|max:1024', // Nullable untuk memungkinkan tanpa upload gambar
         ]);
-    
+
         // Cek apakah user mengupload gambar baru
         if ($request->hasFile('photo')) {
             // Hapus gambar lama jika ada
             if ($user->photo && Storage::exists($user->photo)) {
                 Storage::delete($user->photo);
             }
-    
+
             // Simpan gambar baru
             $validated['photo'] = $request->file('photo')->store('folder_images');
         } else {
             // Jika tidak ada gambar baru yang diupload, tetap gunakan gambar lama
             $validated['photo'] = $request->input('old_photo');
         }
-    
+
         // Update user dengan data yang telah divalidasi
         $user->update($validated);
-    
+
         // Redirect kembali dengan pesan sukses
         return redirect('/auth-profile')->with('success_update', 'Data berhasil diubah');
     }
-    
+
     public function addCompanies(Request $request)
     {
         // Validasi input
@@ -124,11 +124,10 @@ class DashboardController extends Controller
         Notification::create([
             'id' => Ulid::generate(),
             'title' => 'Perusahaan Berhasil Didirikan!',
-            'message' => "Selamat, perusahaan Anda, ".$validatedData['name'].", telah berhasil didirikan. Kini, Anda dapat memanfaatkan Tech Radar untuk melacak teknologi, memantau tren terbaru, dan mengelola inovasi. Mulailah menjelajahi fitur yang tersedia untuk perusahaan Anda!",
+            'message' => 'Selamat, perusahaan Anda, ' . $validatedData['name'] . ', telah berhasil didirikan. Kini, Anda dapat memanfaatkan Tech Radar untuk melacak teknologi, memantau tren terbaru, dan mengelola inovasi. Mulailah menjelajahi fitur yang tersedia untuk perusahaan Anda!',
             'user_id' => auth()->user()->id,
             'is_read' => false,
         ]);
-        
 
         // Mendapatkan role dan permission IDs
         $ownerRole = Role::where('name', 'OWNER')->first();
@@ -175,27 +174,27 @@ class DashboardController extends Controller
             'status' => 'required|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-    
+
         // Ambil data company yang akan di-edit
         $company = Company::findOrFail($id);
-    
+
         // Cek apakah user mengupload gambar baru
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada
             if ($company->image && Storage::exists($company->image)) {
                 Storage::delete($company->image);
             }
-    
+
             // Simpan gambar baru
             $path = $request->file('image')->store('folder_images', 'public');
             $company->image = $path;
         }
-    
+
         // Update nama dan deskripsi
         $company->name = $request->input('name');
         $company->status = $request->input('status');
         $company->description = $request->input('description');
-    
+
         // Simpan perubahan
         $company->save();
 
@@ -203,13 +202,13 @@ class DashboardController extends Controller
             'id' => Ulid::generate(),
             'company_id' => $request->id,
             'name' => $request->user,
-            'description' => "Mengubah nama perusahaan menjadi ".$request->input('name')
+            'description' => 'Mengubah nama perusahaan menjadi ' . $request->input('name'),
         ]);
-    
+
         // Redirect kembali dengan pesan sukses
         return redirect()->back()->with('success_update', 'Company updated successfully!');
     }
-    
+
     public function deleteCompanies(Request $request, Company $company)
     {
         // Optional: Cek otorisasi jika perlu
@@ -223,17 +222,16 @@ class DashboardController extends Controller
             'id' => Ulid::generate(),
             'company_id' => $company->id,
             'name' => $request->user,
-            'description' => "Delete Company"
+            'description' => 'Delete Company',
         ]);
-    
+
         // Hapus company dari database
         $company->delete();
-    
+
         // Redirect ke halaman utama dengan pesan sukses
         return redirect('/')->with('success_delete', 'Company deleted successfully.');
     }
-    
-    
+
     private function generateUniqueCode()
     {
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
@@ -256,6 +254,7 @@ class DashboardController extends Controller
 
         // Step 1: Cari company berdasarkan code
         $company = Company::where('code', $request->company_code)->first();
+        
 
         // Step 2: Ambil ID dari user yang sedang login
         $user = Auth::user();
@@ -268,12 +267,12 @@ class DashboardController extends Controller
 
         // Cek jika user sudah ada dengan status ACCEPTED
         if ($existingCompanyUser && $existingCompanyUser->pivot->status === 'ACCEPTED') {
-            return redirect()->back()->with('error', 'Anda sudah bergabung dengan company ini.');
+            return redirect()->back()->with('company_already_joined', 'You have already joined this company.');
         }
 
         // Cek jika user sudah ada dengan status WAITING
         if ($existingCompanyUser && $existingCompanyUser->pivot->status === 'WAITING') {
-            return redirect()->back()->with('error', 'Anda sudah mengirimkan permintaan bergabung. Tunggu persetujuan dari owner.');
+            return redirect()->back()->with('request_already_sent', 'You have already sent a join request. Please wait for the owner approval.');
         }
 
         // Step 4: Ambil ID role dengan nama "Pending Member"
@@ -293,7 +292,58 @@ class DashboardController extends Controller
             'status' => 'WAITING',
         ]);
 
+        // Ambil permission berdasarkan nama
+        $permission = Permission::where("name", "Acc Company User")->first();
+
+        if ($permission) {
+            $rolesWithPermission = $company->roles
+                ->filter(function ($role) use ($permission) {
+                    return $role->permissions->contains('id', $permission->id);
+                })
+                ->unique('id');
+            // Periksa jika ada role yang ditemukan sebelum mencari user
+            if ($rolesWithPermission->isNotEmpty()) {
+                // Ambil user yang memiliki role-role tersebut di company
+                $userIdsWithRoles = User::whereHas('roles', function ($query) use ($rolesWithPermission) {
+                    $query->whereIn('role_id', $rolesWithPermission->pluck('id'));
+                })
+                    ->whereHas('companies', function ($query) use ($company) {
+                        $query->where('company_id', $company->id);
+                    })
+                    ->pluck('id'); // Ambil hanya ID user
+
+                // Periksa jika ada user yang ditemukan sebelum mengirim notifikasi
+                if ($userIdsWithRoles->isNotEmpty()) {
+                    foreach ($userIdsWithRoles as $userId) {
+                        // Ambil data user berdasarkan ID
+                            Notification::create([
+                                'id' => Ulid::generate(),
+                                'title' => 'Permintaan Bergabung dari Pengguna Baru!',
+                                'message' => 'Pengguna bernama ' . $user->name . ' telah mengajukan permintaan untuk bergabung dengan perusahaan ' . $company->name . '. Silakan tinjau permintaan tersebut.',
+                                'user_id' => $userId,
+                                'is_read' => false,
+                            ]);
+                    }
+                } else {
+                    // Handle jika tidak ada user dengan role yang sesuai
+                }
+            } else {
+                // Handle jika tidak ada role yang ditemukan
+            }
+        } else {
+            // Handle jika permission tidak ditemukan
+            $userIdsWithRoles = collect(); // Kosongkan jika tidak ada permission
+        }
+
+        Notification::create([
+            'id' => Ulid::generate(),
+            'title' => 'Permintaan Bergabung Berhasil Dikirim!',
+            'message' => 'Anda telah mengirimkan permintaan untuk bergabung dengan ' . $company->name . '. Harap tunggu hingga permintaan Anda diproses.',
+            'user_id' => $user->id,
+            'is_read' => false,
+        ]);
+
         // Redirect dengan pesan sukses
-        return redirect('/index')->with('success', 'Anda telah berhasil mengirim permintaan untuk bergabung dengan perusahaan.');
+        return redirect('/index')->with('request_sent_successfully', 'You have successfully sent a request to join the company.');
     }
 }

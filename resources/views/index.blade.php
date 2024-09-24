@@ -13,7 +13,8 @@
             <div class="h-100">
                 <div class="flex-grow-1">
                     <h4 class="fs-16 mb-1">Welcome, {{ $user->name }}!</h4>
-                    <p class="text-muted mb-0">Explore the most recent insights and updates from your Tech Radar, keeping you ahead in today's fast-evolving landscape.</p>
+                    <p class="text-muted mb-0">Explore the most recent insights and updates from your Tech Radar, keeping
+                        you ahead in today's fast-evolving landscape.</p>
                 </div>
                 <div class="flex-grow-1 mb-3 mt-4">
                     <h4 class="fs-16 mb-1">Statistic</h4>
@@ -31,8 +32,8 @@
                                 </div>
                                 <div class="d-flex align-items-end justify-content-between mt-4">
                                     <div>
-                                        <?php 
-                                            $totalCompany = $user->companies->count();
+                                        <?php
+                                        $totalCompany = $user->companies->count();
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="{{ $totalCompany }}">0</span> Company</h4>
@@ -54,13 +55,14 @@
                             <div class="card-body">
                                 <div class="d-flex align-items-center">
                                     <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Technology</p>
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Technology
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-end justify-content-between mt-4">
                                     <div>
-                                        <?php 
-                                            $totalTechnology = App\Models\Technology::where('user_id',$user->id)->count();
+                                        <?php
+                                        $totalTechnology = App\Models\Technology::where('user_id', $user->id)->count();
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="{{ $totalTechnology }}">0</span> Technology</h4>
@@ -68,7 +70,7 @@
                                     </div>
                                     <div class="avatar-sm flex-shrink-0">
                                         <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                                <i class='bx bxl-windows text-primary'></i>
+                                            <i class='bx bxl-windows text-primary'></i>
                                         </span>
                                     </div>
                                 </div>
@@ -88,7 +90,7 @@
                                 <div class="d-flex align-items-end justify-content-between mt-4">
                                     <div>
                                         <?php
-                                            $totalMessage = App\Models\Notification::where('user_id',$user->id)->count();   
+                                        $totalMessage = App\Models\Notification::where('user_id', $user->id)->count();
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="{{ $totalMessage }}">0</span> Message </h4>
@@ -116,8 +118,8 @@
                                 <div class="d-flex align-items-end justify-content-between mt-4">
                                     <div>
                                         <?php
-                                            $totalRole = $user->roles->count();
-                                            
+                                        $totalRole = $user->roles->count();
+                                        
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="{{ $totalRole }}">0</span> Role </h4>
@@ -133,7 +135,7 @@
                         </div><!-- end card -->
                     </div><!-- end col -->
 
-                
+
                 </div> <!-- end row-->
 
 
@@ -141,12 +143,15 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between button-container">
-                                    <button class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#JoinCompanyModal">
+                                <div
+                                    class="d-flex flex-column flex-md-row align-items-center justify-content-between button-container">
+                                    <button class="btn btn-primary btn-custom" data-bs-toggle="modal"
+                                        data-bs-target="#JoinCompanyModal">
                                         <i class="ri-add-line align-bottom me-1"></i>Join a company
                                     </button>
-                                    
-                                    <button class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#CreateJobModal">
+
+                                    <button class="btn btn-primary btn-custom" data-bs-toggle="modal"
+                                        data-bs-target="#CreateJobModal">
                                         <i class="ri-add-line align-bottom me-1"></i>Create a company
                                     </button>
                                 </div>
@@ -155,35 +160,42 @@
                                     <div class=" col-md-6">
                                         <form action="/" method="GET">
                                             <div class="input-group mb-3">
-                                                <input type="text" name="search" class="form-control search bg-light border-light" 
-                                                       id="searchJob" value="{{ request('search') }}" 
-                                                       placeholder="Search for companies...">
-                                                <input type="hidden" name="sort_order" value="{{ request('sort_order') }}">
+                                                <input type="text" name="search"
+                                                    class="form-control search bg-light border-light" id="searchJob"
+                                                    value="{{ request('search') }}" placeholder="Search for companies...">
+                                                <input type="hidden" name="sort_order"
+                                                    value="{{ request('sort_order') }}">
                                                 <button class="btn btn-primary" type="submit">
                                                     <i class="ri-search-line search-icon"></i>
                                                 </button>
                                             </div>
                                         </form>
-                                        
-                                        
+
+
                                     </div>
-                                   
-                                        <div class="col-md-6">
-                                            <form id="filterForm" action="/" method="GET">
-                                                <div class="input-light">
-                                                    <select class="form-control" data-choices data-choices-search-false
-                                                            name="sort_order" id="sortOrder" onchange="this.form.submit()">
-                                                        <option value="terbaru" {{ request('sort_order') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
-                                                        <option value="terlama" {{ request('sort_order') == 'terlama' ? 'selected' : '' }}>Terlama</option>
-                                                        <option value="A-Z" {{ request('sort_order') == 'A-Z' ? 'selected' : '' }}>A-Z</option>
-                                                        <option value="Z-A" {{ request('sort_order') == 'Z-A' ? 'selected' : '' }}>Z-A</option>
-                                                    </select>
-                                                    <input type="hidden" name="search" value="{{ request('search') }}">
-                                                </div>
-                                            </form>
-                                            
-                                        </div>
-                                
+
+                                    <div class="col-md-6">
+                                        <form id="filterForm" action="/" method="GET">
+                                            <div class="input-light">
+                                                <select class="form-control" data-choices data-choices-search-false
+                                                    name="sort_order" id="sortOrder" onchange="this.form.submit()">
+                                                    <option value="terbaru"
+                                                        {{ request('sort_order') == 'terbaru' ? 'selected' : '' }}>Terbaru
+                                                    </option>
+                                                    <option value="terlama"
+                                                        {{ request('sort_order') == 'terlama' ? 'selected' : '' }}>Terlama
+                                                    </option>
+                                                    <option value="A-Z"
+                                                        {{ request('sort_order') == 'A-Z' ? 'selected' : '' }}>A-Z</option>
+                                                    <option value="Z-A"
+                                                        {{ request('sort_order') == 'Z-A' ? 'selected' : '' }}>Z-A</option>
+                                                </select>
+                                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                            </div>
+                                        </form>
+
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -191,63 +203,72 @@
                         <div class="row">
                             <div class="">
                                 @if ($dataCompanies->isNotEmpty())
-                                <div id="job-list">
-                                    @foreach ($dataCompanies as $data)
-                                    <div class="card joblist-card">
-                                        <div class="card-body">
-                                            <div class="d-flex mb-4 align-items-center">
-                                                <div class="avatar-md">
-                                                    <div class="avatar-title bg-light rounded"> 
-                                                        <img src="{{ asset($data->image ? '/storage/'.$data->image : '/build/images/users/multi-user.jpg') }}" alt="" class="companyLogo-img" style="width: 60px;height:60px"> 
+                                    <div id="job-list">
+                                        @foreach ($dataCompanies as $data)
+                                            <div class="card joblist-card">
+                                                <div class="card-body">
+                                                    <div class="d-flex mb-4 align-items-center">
+                                                        <div class="avatar-md">
+                                                            <div class="avatar-title bg-light rounded">
+                                                                <img src="{{ asset($data->image ? '/storage/' . $data->image : '/build/images/users/multi-user.jpg') }}"
+                                                                    alt="" class="companyLogo-img"
+                                                                    style="width: 60px;height:60px">
+                                                            </div>
+                                                        </div>
+                                                        <div class="ms-3 flex-grow-1">
+                                                            <img src="build/images/small/img-8.jpg" alt=""
+                                                                class="d-none cover-img">
+                                                            <a href="#!">
+                                                                <h5 class="job-title">{{ $data->name }}</h5>
+                                                            </a>
+                                                            <!-- Menghapus title kedua dan tombol bookmark -->
+                                                        </div>
+                                                    </div>
+                                                    <p class="text-muted job-description">
+                                                        {!! $data->description !!}
+                                                    </p>
+                                                </div>
+                                                <div class="card-footer border-top-dashed">
+                                                    <div
+                                                        class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                                                        <div><i
+                                                                class="ri-user-3-line align-bottom me-1"></i>{{ count($data->users) }}
+                                                            orang</div>
+                                                        <div>
+                                                            <i class="ri-window-line align-bottom me-1"></i>
+                                                            <?php
+                                                            $totalTechnologies = App\Models\Technology::where('company_id', $data->id)->count();
+                                                            ?>
+                                                            {{ $totalTechnologies }} Technologies
+                                                        </div>
+                                                        <div><i class="ri-time-line align-bottom me-1"></i>
+                                                            <span
+                                                                class="job-postdate">{{ \Carbon\Carbon::parse($data->created_at)->format('d F Y') }}</span>
+                                                        </div>
+                                                        <div>
+                                                            <a href="/companies/main/{{ $data->id }}?permission=Read Company Profile&idcp={{ $data->id }}"
+                                                                class="btn btn-primary viewjob-list">View More
+                                                                <i class="ri-arrow-right-line align-bottom ms-1"></i>
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="ms-3 flex-grow-1"> 
-                                                    <img src="build/images/small/img-8.jpg" alt="" class="d-none cover-img"> 
-                                                    <a href="#!">
-                                                        <h5 class="job-title">{{ $data->name }}</h5>
-                                                    </a>
-                                                    <!-- Menghapus title kedua dan tombol bookmark -->
-                                                </div>
                                             </div>
-                                            <p class="text-muted job-description">
-                                                {!! $data->description !!}
-                                            </p>
-                                        </div>
-                                        <div class="card-footer border-top-dashed">
-                                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                                                <div><i class="ri-user-3-line align-bottom me-1"></i>{{ count($data->users) }} orang</div>
-                                                <div>
-                                                    <i class="ri-window-line align-bottom me-1"></i>
-                                                    <?php 
-                                                        $totalTechnologies = App\Models\Technology::where('company_id',$data->id)->count();
-                                                    ?>
-                                                    {{ $totalTechnologies }} Technologies
-                                                </div>
-                                                <div><i class="ri-time-line align-bottom me-1"></i> 
-                                                    <span class="job-postdate">{{ \Carbon\Carbon::parse($data->created_at)->format('d F Y') }}</span>
-                                                </div>
-                                                <div>
-                                                    <a href="/companies/main/{{ $data->id }}?permission=Read Company Profile&idcp={{ $data->id }}" class="btn btn-primary viewjob-list">View More 
-                                                        <i class="ri-arrow-right-line align-bottom ms-1"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        @endforeach
                                     </div>
-                                    
-                                    @endforeach
-                                </div>      
                                 @else
-                                    <div id="job-list" style="display: flex;align-items:center;justify-content:center;margin-block:80px;gap:15px;flex-direction:column">
+                                    <div id="job-list"
+                                        style="display: flex;align-items:center;justify-content:center;margin-block:80px;gap:15px;flex-direction:column">
                                         <img src="/build/images/warning.png" width="150px">
                                         <h5>You are not connected to any companies!</h5>
                                     </div>
                                 @endif
-                              
+
                                 <div class="row g-0 justify-content-end mb-4" id="pagination-element">
                                     <!-- end col -->
                                     <div class="col-sm-6">
-                                        <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                        <div
+                                            class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
                                             <!-- Previous Page Link -->
                                             @if ($dataCompanies->onFirstPage())
                                                 <div class="page-item disabled">
@@ -255,25 +276,30 @@
                                                 </div>
                                             @else
                                                 <div class="page-item">
-                                                    <a href="{{ $dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->previousPageUrl() }}" class="page-link" id="page-prev">Previous</a>
+                                                    <a href="{{ $dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->previousPageUrl() }}"
+                                                        class="page-link" id="page-prev">Previous</a>
                                                 </div>
                                             @endif
-                                        
+
                                             <!-- Page Numbers -->
                                             <span id="page-num" class="pagination">
                                                 @foreach ($dataCompanies->links()->elements[0] as $page => $url)
                                                     @if ($page == $dataCompanies->currentPage())
-                                                        <span class="page-item active"><span class="page-link">{{ $page }}</span></span>
+                                                        <span class="page-item active"><span
+                                                                class="page-link">{{ $page }}</span></span>
                                                     @else
-                                                        <a href="{{ $dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->url($page) }}" class="page-item"><span class="page-link">{{ $page }}</span></a>
+                                                        <a href="{{ $dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->url($page) }}"
+                                                            class="page-item"><span
+                                                                class="page-link">{{ $page }}</span></a>
                                                     @endif
                                                 @endforeach
                                             </span>
-                                        
+
                                             <!-- Next Page Link -->
                                             @if ($dataCompanies->hasMorePages())
                                                 <div class="page-item">
-                                                    <a href="{{ $dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->nextPageUrl() }}" class="page-link" id="page-next">Next</a>
+                                                    <a href="{{ $dataCompanies->appends(['search' => request('search'), 'sort_order' => request('sort_order')])->nextPageUrl() }}"
+                                                        class="page-link" id="page-next">Next</a>
                                                 </div>
                                             @else
                                                 <div class="page-item disabled">
@@ -281,9 +307,6 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        
-                                        
-                                        
                                     </div><!-- end col -->
                                 </div>
                             </div>
@@ -295,7 +318,8 @@
                     aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content border-0">
-                            <form id="createjob-form" action="/companies/add" method="POST" enctype="multipart/form-data">
+                            <form id="createjob-form" action="/companies/add" method="POST"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-body">
                                     <div class="row g-3">
@@ -315,7 +339,7 @@
                                                         </div>
                                                         <div class="flex-shrink-0">
                                                             <div class="d-flex gap-3 align-items-center">
-                                                          
+
                                                                 <button type="button" class="btn-close btn-close-white"
                                                                     id="close-jobListModal" data-bs-dismiss="modal"
                                                                     aria-label="Close"></button>
@@ -350,16 +374,17 @@
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             </div>
-                                            @enderror
+                                        @enderror
                                         <div class="mb-4">
                                             <label for="status" class="form-label text-black mb-1">status
                                                 <span style="color:var(--error)">*</span>
                                             </label>
-                                            <select class="form-select  @error('status') is-invalid @enderror" name="status" aria-label="Default select example">
-                                                <option selected class="text-muted">Select a status</option>
+                                            <select class="form-select  @error('status') is-invalid @enderror"
+                                                name="status" aria-label="Default select example">
+                                                <option value="" disabled selected>Select a status</option>
                                                 <option value="private">private</option>
                                                 <option value="public">public</option>
-                                              </select>
+                                            </select>
                                             @error('status')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -367,9 +392,12 @@
                                             @enderror
                                         </div>
                                         <div class="mb-4">
-                                            <label for="description" class="form-label text-black" style="font-weight:600;">Description
+                                            <label for="description" class="form-label text-black"
+                                                style="font-weight:600;">Description
                                             </label>
-                                            <input id="description" name="description" type="hidden" class="@error('description') is-invalid @enderror" value="{{ old('description') }}">
+                                            <input id="description" name="description" type="hidden"
+                                                class="@error('description') is-invalid @enderror"
+                                                value="{{ old('description') }}">
                                             <trix-editor input="description"></trix-editor>
                                             @error('description')
                                                 <span class="invalid-feedback" role="alert">
@@ -380,7 +408,8 @@
 
                                         <div class="mb-4">
                                             <label for="image" class="form-label text-black mb-1">Company Logo</label>
-                                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="image"
+                                            <input type="file"
+                                                class="form-control @error('image') is-invalid @enderror" id="image"
                                                 name="image">
                                             @error('image')
                                                 <span class="invalid-feedback" role="alert">
@@ -388,74 +417,57 @@
                                                 </span>
                                             @enderror
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <div class="hstack gap-2 justify-content-end">
                                         <button type="button" class="btn btn-light"
                                             data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-success" id="add-btn">Add Company</button>
+                                        <button type="submit" class="btn btn-success" id="add-btn">Add
+                                            Company</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="JoinCompanyModal" tabindex="-1" aria-labelledby="joinCompanyLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content border-0">
-                            <form id="join-company-form" action="{{ route('company-users.join') }}" method="POST">
-                                @csrf
-                                <div class="modal-body">
-                                    <div class="text-center mb-4">
-                                        <h5 class="modal-title" id="joinCompanyLabel">Join Company</h5>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="company_code" class="form-label">Company Code</label>
-                                        <input type="text" class="form-control @error('company_code') is-invalid @enderror" 
-                                               id="company_code" name="company_code" placeholder="Enter company code" required>
-                                        @error('company_code')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-success">Join</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                
             </div> <!-- end .h-100-->
-
-
         </div> <!-- end col -->
-    </div>
-    <script>
-        // Cek jika ada session berhasil
-        @if (session('login_success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Welcome!',
-                text: "{{ session('login_success') }}",
-                confirmButtonText: 'Oke',
-            });
-        @endif
+        <div class="modal fade" id="JoinCompanyModal" tabindex="-1" aria-labelledby="joinCompanyLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0">
+                    <form id="join-company-form" action="{{ route('company-users.join') }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="text-center mb-4">
+                                <h5 class="modal-title" id="joinCompanyLabel">Join Company</h5>
+                            </div>
+                            <div class="mb-4">
+                                <label for="company_code" class="form-label">Company Code</label>
+                                <input type="text" class="form-control @error('company_code') is-invalid @enderror"
+                                    id="company_code" name="company_code" placeholder="Enter company code" required>
+                                @error('company_code')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Join</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-        @if (session('add_success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: "{{ session('add_success') }}",
-                confirmButtonText: 'Oke',
-            });
-        @endif
-    </script>
+
+    </div>
+
+    
 @endsection
 @section('script')
     <!-- apexcharts -->
@@ -467,9 +479,57 @@
     <script src="{{ URL::asset('build/js/pages/dashboard-ecommerce.init.js') }}"></script>
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
     <script>
-         document.getElementById('sortOrder').addEventListener('change', function () {
-        // Submit form filter ketika dropdown berubah
-        document.getElementById('filterForm').submit();
-    });
+        document.getElementById('sortOrder').addEventListener('change', function() {
+            // Submit form filter ketika dropdown berubah
+            document.getElementById('filterForm').submit();
+        });
+
+        // Cek jika ada session berhasil
+        @if(session('login_success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Welcome!',
+                text: "{{ session('login_success') }}",
+                confirmButtonText: 'Oke',
+            });
+        @endif
+
+        @if(session('add_success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "{{ session('add_success') }}",
+                confirmButtonText: 'Oke',
+            });
+        @endif
+
+        @if(session('request_sent_successfully'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "{{ session('request_sent_successfully') }}",
+                confirmButtonText: 'Oke',
+            });
+        @endif
+
+        @if(session('company_already_joined'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: "{{ session('company_already_joined') }}",
+                confirmButtonText: 'Oke',
+            });
+        @endif
+
+        @if(session('request_already_sent'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: "{{ session('request_already_sent') }}",
+                confirmButtonText: 'Oke',
+            });
+        @endif
+
+
     </script>
 @endsection
