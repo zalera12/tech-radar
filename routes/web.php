@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompaniesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\MessagesController;
 use App\Models\Category;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Route;
@@ -12,7 +13,10 @@ use Laravel\Socialite\Facades\Socialite;
 Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/index', [DashboardController::class, 'index']);
+    Route::get('/message', [MessagesController::class, 'index']);
     Route::get('/auth-profile', [DashboardController::class, 'profile']);
+    Route::get('/auth-profile', [DashboardController::class, 'profile']);
+
     Route::get('/auth-profile-settings', [DashboardController::class, 'profileSettings']);
     Route::post('/auth-profile/edit/{user}', [DashboardController::class, 'profileEdit']);
     Route::post('/companies/add', [DashboardController::class, 'addCompanies']);
@@ -89,9 +93,7 @@ Route::middleware(['web', 'auth'])->group(function () {
         //Permission: Manage Log
         Route::get('/companies/log/{company}', [LogController::class, 'index'])
             ->middleware('check.permission:Read Change Log')->name('companies.changeLog');
-            Route::delete('/companies/logs/delete', [LogController::class, 'destroyLog'])->name('logs.destroy');
-
- 
+            Route::delete('/companies/logs/delete', [LogController::class, 'destroyLog'])->name('logs.destroy'); 
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -104,6 +106,8 @@ Route::post('/notifications/mark-all-read', function () {
     
     return response()->json(['message' => 'All notifications marked as read.']);
 })->name('markAllNotificationsAsRead');
+
+Route::delete('/message/delete', [MessagesController::class, 'deleteNotification']);
 
 
 Route::post('/notifications/delete/{id}', function ($id) {
@@ -119,7 +123,7 @@ Route::get('/testApi', function () {
 })->name('apiTest');
 
 Route::get('/testHome', function () {
-    return view('testHome');
+    return view('index2');
 })->name('testHome');
 
 Route::get('/loginAccount', function () {

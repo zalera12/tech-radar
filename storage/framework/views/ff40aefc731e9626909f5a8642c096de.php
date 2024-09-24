@@ -1,5 +1,6 @@
 <?php $__env->startSection('title'); ?>
-    <?php echo app('translator')->get('translation.overview'); ?>
+    <?php echo e($company->name); ?>
+
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
     <div class="row">
@@ -23,10 +24,11 @@
                                         <div>
                                             <h4 class="fw-bold"><?php echo e($company->name); ?></h4>
                                             <div class="hstack gap-3 flex-wrap">
-                                                <div>Create Date : <span class="fw-medium"><?php echo e($created_date); ?></span></div>
+                                                <div class="fw-medium">Create Date : <span
+                                                        class=""><?php echo e($created_date); ?></span></div>
                                                 <div class="vr"></div>
-                                                <div>Your role in this company : <span
-                                                        class="fw-medium"><?php echo e($role->name); ?></span></div>
+                                                <div class="fw-medium">Your role in this company : <span
+                                                        class=""><?php echo e($role->name); ?></span></div>
                                             </div>
                                         </div>
                                     </div>
@@ -117,7 +119,7 @@
                                                         <!-- Input for new image -->
                                                         <div class="col-lg-12">
                                                             <label for="image"
-                                                                class="form-label text-secondary mb-1">Company
+                                                                class="form-label text-black mb-1">Company
                                                                 Image</label>
                                                             <input type="file" class="form-control" id="image"
                                                                 name="image" accept="image/*"
@@ -126,7 +128,7 @@
                                                         <!-- Input for company name -->
                                                         <div class="col-lg-12">
                                                             <label for="name"
-                                                                class="form-label text-secondary mb-1">Company Name</label>
+                                                                class="form-label text-black mb-1">Company Name</label>
                                                             <input type="text"
                                                                 class="form-control <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -151,9 +153,46 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                                                         </div>
+                                                        <div class="col-lg-12">
+                                                            <label for="status"
+                                                                class="form-label text-black mb-1">status
+                                                                <span style="color:var(--error)">*</span>
+                                                            </label>
+                                                            <select
+                                                                class="form-select  <?php $__errorArgs = ['status'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                                                name="status" aria-label="Default select example">
+                                                                <option selected class="text-muted">Select a status
+                                                                </option>
+                                                                <option value="private"
+                                                                    <?php echo e($company->status == 'private' ? 'selected' : ''); ?>>
+                                                                    private</option>
+                                                                <option value="public"
+                                                                    <?php echo e($company->status == 'public' ? 'selected' : ''); ?>>
+                                                                    public</option>
+                                                            </select>
+                                                            <?php $__errorArgs = ['status'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong><?php echo e($message); ?></strong>
+                                                                </span>
+                                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                                                        </div>
                                                         <!-- Input for company description -->
                                                         <div class="col-lg-12">
-                                                            <label for="description" class="form-label text-secondary"
+                                                            <label for="description" class="form-label text-black"
                                                                 style="font-weight:600;">Description
                                                                 <span style="color: var(--error);">*</span>
                                                             </label>
@@ -224,7 +263,8 @@ unset($__errorArgs, $__bag); ?>
                                             <div class="row gy-3">
                                                 <div class="col-lg-3 col-sm-6">
                                                     <div>
-                                                        <p class="mb-2 text-uppercase fw-medium">Create Date :</p>
+                                                        <p class="mb-2 fw-medium" style="font-size: 14px;">Create Date :
+                                                        </p>
                                                         <h5 class="fs-15 mb-0">
                                                             <?php echo e(\Carbon\Carbon::parse($company->created_at)->format('d F Y')); ?>
 
@@ -233,13 +273,15 @@ unset($__errorArgs, $__bag); ?>
                                                 </div>
                                                 <div class="col-lg-3 col-sm-6">
                                                     <div>
-                                                        <p class="mb-2 text-uppercase fw-medium">Code Company :</p>
+                                                        <p class="mb-2 fw-medium" style="font-size: 14px;">Code Company :
+                                                        </p>
                                                         <div class="badge bg-success fs-12"><?php echo e($company->code); ?></div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-sm-6">
                                                     <div>
-                                                        <p class="mb-2 text-uppercase fw-medium">Total Members :</p>
+                                                        <p class="mb-2 fw-medium" style="font-size: 14px;">Total Members :
+                                                        </p>
                                                         <div class="badge bg-danger fs-12"><?php echo e($company->users->count()); ?>
 
                                                             orang</div>
@@ -247,8 +289,8 @@ unset($__errorArgs, $__bag); ?>
                                                 </div>
                                                 <div class="col-lg-3 col-sm-6">
                                                     <div>
-                                                        <p class="mb-2 text-uppercase fw-medium">Status :</p>
-                                                        <div class="badge bg-warning fs-12">Public</div>
+                                                        <p class="mb-2 fw-medium" style="font-size: 14px;">Status :</p>
+                                                        <div class="badge bg-warning fs-12"><?php echo e($company->status); ?></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -267,23 +309,27 @@ unset($__errorArgs, $__bag); ?>
         </div>
     </div>
     <div>
-        <h3 class="mt-3">All Categories</h3>
+        <h4 class="mt-1">All Categories</h4>
         <div class="row mt-3">
-            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <!-- Menggunakan modulus untuk menghindari out of bounds -->
-                <div class="card border card-border-dark">
-                    <div class="card-header">
-                        <h6 class="card-title mb-0"><?php echo e(strtoupper($category->name)); ?></h6>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text"><?php echo e($category->description); ?></p>
-                        <div class="text-end">
-                            <a href="javascript:void(0);"
-                                class="link-primary fw-medium d-flex justify-content-end gap-2 align-items-center">
-                                <i class='bx bx-radar fs-4'></i>
-                                <span>View Radar</span>
-                                <i class="ri-arrow-right-line align-middle"></i>
-                            </a>
+            <?php
+            $categories = $company->categories;
+            ?>
+            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <button type="button" class="btn-close float-end fs-11" aria-label="Close"></button>
+                            <h6 class="card-title mb-0"><?php echo e($category->name); ?></h6>
+                        </div>
+                        <div class="card-body" style="height: 135px">
+                            <p class="card-text text-muted mb-0"><?php echo e($category->description); ?></p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="" class="link-success float-end">View Radar <i
+                                    class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i></a>
+                            <p class="text-muted mb-0"> <?php echo e(\Carbon\Carbon::parse($category->created_at)->format('d F Y')); ?>
+
+                            </p>
                         </div>
                     </div>
                 </div>

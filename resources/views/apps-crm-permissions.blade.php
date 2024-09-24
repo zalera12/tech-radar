@@ -102,17 +102,7 @@
                                 </tbody>
                             </table>
                             
-                            <!-- Optional: Alert Messages -->
-                            @if (session('success'))
-                                <script>
-                                    alert('{{ session('success') }}');
-                                </script>
-                            @endif
-                            @if (session('error'))
-                                <script>
-                                    alert('{{ session('error') }}');
-                                </script>
-                            @endif
+                     
 
                             <div class="noresult" style="display: none">
                                 <div class="text-center">

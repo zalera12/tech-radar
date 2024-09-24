@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\Log;
+use App\Models\Notification;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
@@ -95,6 +96,7 @@ class DashboardController extends Controller
         // Validasi input
         $validatedData = $request->validate([
             'name' => 'required|string|max:100',
+            'status' => 'required|string|max:100',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -114,9 +116,19 @@ class DashboardController extends Controller
             'id' => $id,
             'name' => $validatedData['name'],
             'code' => $code,
+            'status' => $validatedData['status'],
             'description' => $validatedData['description'] ?? null,
             'image' => $imagePath,
         ]);
+
+        Notification::create([
+            'id' => Ulid::generate(),
+            'title' => 'Perusahaan Berhasil Didirikan!',
+            'message' => "Selamat, perusahaan Anda, ".$validatedData['name'].", telah berhasil didirikan. Kini, Anda dapat memanfaatkan Tech Radar untuk melacak teknologi, memantau tren terbaru, dan mengelola inovasi. Mulailah menjelajahi fitur yang tersedia untuk perusahaan Anda!",
+            'user_id' => auth()->user()->id,
+            'is_read' => false,
+        ]);
+        
 
         // Mendapatkan role dan permission IDs
         $ownerRole = Role::where('name', 'OWNER')->first();
@@ -151,7 +163,7 @@ class DashboardController extends Controller
             'status' => 'ACCEPTED',
         ]);
 
-        return redirect('/')->with('add_success', 'Perusahaan Berhasil Ditambahkan!');
+        return redirect('/')->with('add_success', 'The Company Has Been Successfully Added!');
     }
 
     public function editCompanies(Request $request, $id)
@@ -160,6 +172,7 @@ class DashboardController extends Controller
         $request->validate([
             'name' => 'required|string|max:100',
             'description' => 'nullable|string',
+            'status' => 'required|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     
@@ -180,6 +193,7 @@ class DashboardController extends Controller
     
         // Update nama dan deskripsi
         $company->name = $request->input('name');
+        $company->status = $request->input('status');
         $company->description = $request->input('description');
     
         // Simpan perubahan
@@ -189,7 +203,7 @@ class DashboardController extends Controller
             'id' => Ulid::generate(),
             'company_id' => $request->id,
             'name' => $request->user,
-            'description' => "Edit Company"
+            'description' => "Mengubah nama perusahaan menjadi ".$request->input('name')
         ]);
     
         // Redirect kembali dengan pesan sukses

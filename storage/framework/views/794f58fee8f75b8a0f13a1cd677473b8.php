@@ -10,7 +10,7 @@
             Companies
         <?php $__env->endSlot(); ?>
         <?php $__env->slot('title'); ?>
-            Users
+            Role
         <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
 
@@ -21,7 +21,7 @@
                     <div class="d-flex align-items-center flex-wrap gap-2">
                         <div class="flex-grow-1">
                             <button class="btn btn-secondary add-btn" data-bs-toggle="modal" data-bs-target="#showModal"><i
-                                    class="ri-add-fill me-1 align-bottom"></i> Add Users</button>
+                                    class="ri-add-fill me-1 align-bottom"></i> Add Role</button>
                         </div>
                         <div class="flex-shrink-0">
                             <div class="hstack text-nowrap gap-2">
@@ -149,6 +149,8 @@
                                             <div class="modal-body">
                                                 <input type="hidden" id="edit-company-id" name="company_id"
                                                     value="<?php echo e($company->id); ?>" />
+                                                    <input type="hidden" name="user"
+                                            value="<?php echo e($user->name); ?>" />
                                                 <div class="row g-3">
                                                     <div class="col-lg-12">
                                                         <label for="edit-name" class="form-label text-secondary mb-1">Role
@@ -285,6 +287,8 @@ unset($__errorArgs, $__bag); ?>
                                     <div class="modal-body">
                                         <input type="hidden" id="id-field" name="company_id"
                                             value="<?php echo e($company->id); ?>" />
+                                            <input type="hidden" name="user"
+                                            value="<?php echo e($user->name); ?>" />
                                         <div class="row g-3">
                                             <div class="col-lg-12">
                                                 <label for="name" class="form-label text-secondary mb-1">Role Name
@@ -381,6 +385,8 @@ unset($__errorArgs, $__bag); ?>
                                                 <?php echo csrf_field(); ?>
                                                 <?php echo method_field('DELETE'); ?>
                                                 <input type="hidden" name="company" value="<?php echo e($company->id); ?>">
+                                                <input type="hidden" name="company_id" value="<?php echo e($company->id); ?>">
+                                                <input type="hidden" name="user" value="<?php echo e($user->name); ?>">
                                                 <input type="hidden" name="role_id" id="role-id-to-delete">
                                                 <button type="submit" class="btn btn-danger" id="delete-record">Yes,
                                                     Delete It!!</button>

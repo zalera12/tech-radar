@@ -64,8 +64,8 @@
                         </ul>
                     </div>
                 </li> --}}
-                <li class="menu-title" style="margin-top: 10px;">
-                    <span>Perusahaan</span>
+                <li class="menu-title" style="">
+                    <span>Companies</span>
                 </li>
 
                 {{-- Ambil data perusahaan yang terkait dengan user dengan status Accepted dari pivot --}}
@@ -73,7 +73,6 @@
                     $user = auth()->user();
                     $acceptedCompanies = $user->companies()->wherePivot('status', 'Accepted')->get();
                 @endphp
-
                 @if ($acceptedCompanies->isNotEmpty())
                     <div class="menu-dropdown" id="sidebarCompanies">
                         <ul class="nav nav-sm gap-3 flex-column">
@@ -172,25 +171,33 @@
                             @endforeach
                         </ul>
                     </div>
-                @else
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            document.querySelector('.menu-link[href="#sidebarCompanies"]').addEventListener('click', function(
-                                event) {
-                                event.preventDefault(); // Mencegah dropdown muncul
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'No Company Linked',
-                                    text: 'You are not linked to any company.',
-                                });
-                            });
-                        });
-                    </script>
                 @endif
-
                 </li>
                 <!-- end Dashboard Menu -->
-
+                <li class="menu-title" style="">
+                    <span>Message</span>
+                </li>
+                <div class="menu-dropdown" style="position: relative">
+                    <ul class="nav nav-sm gap-3 flex-column">
+                        <a class="nav-item d-flex gap-2 align-items-center {{ request()->is('message') ? 'active text-primary' : '' }}"
+                            href="/message">
+                            <img src="{{ asset('/build/images/message.png') }}"
+                                style="width: 25px;height:25px;border-radius:50%;">
+                            <span
+                                class="{{ request()->is('message') ? 'text-primary' : 'text-muted' }}">Messages</span>
+                        </a>
+                    </ul>
+                    <?php
+                    $messageCount = App\Models\Notification::where('user_id', auth()->user()->id)
+                        ->where('is_read', false)
+                        ->count();
+                    ?>
+                    @if ($messageCount > 0)
+                        <span
+                            style="display: flex;justify-content:center;align-items:center;width: 18px;height:18px;border-radius:50%;color:white;font-size:10px;position: absolute;top:5px;right:85px;"
+                            class="bg-primary me-3 ">{{ $messageCount }}</span>
+                    @endif
+                </div>
             </ul>
         </div>
         <!-- Sidebar -->

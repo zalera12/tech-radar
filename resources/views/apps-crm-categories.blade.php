@@ -31,7 +31,7 @@
                                 <button class="btn btn-primary"><i class="ri-filter-2-line me-1 align-bottom"></i>
                                     Filters</button>
                                 <button class="btn btn-soft-success">Import</button>
-                                <button type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown"
+                                <button type="button" kid="dropdownMenuLink1" data-bs-toggle="dropdown"
                                     aria-expanded="false" class="btn btn-soft-info"><i class="ri-more-2-fill"></i></button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
                                     <li><a class="dropdown-item" href="#">All</a></li>

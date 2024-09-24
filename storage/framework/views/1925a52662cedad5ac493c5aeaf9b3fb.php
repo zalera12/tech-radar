@@ -102,17 +102,7 @@
                                 </tbody>
                             </table>
                             
-                            <!-- Optional: Alert Messages -->
-                            <?php if(session('success')): ?>
-                                <script>
-                                    alert('<?php echo e(session('success')); ?>');
-                                </script>
-                            <?php endif; ?>
-                            <?php if(session('error')): ?>
-                                <script>
-                                    alert('<?php echo e(session('error')); ?>');
-                                </script>
-                            <?php endif; ?>
+                     
 
                             <div class="noresult" style="display: none">
                                 <div class="text-center">

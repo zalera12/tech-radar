@@ -22,16 +22,16 @@ class AuthController extends Controller
                 'email' => $loginUser->email,
                 'google_id' => $loginUser->id,
             ]);
+            Notification::create([
+                'id' => Ulid::generate(),
+                'title' => 'Selamat Bergabung dengan Platform Tech Radar Kami!',
+                'message' => "Akun Anda telah berhasil dibuat. Kini Anda dapat mengakses dan memanfaatkan fitur Tech Radar untuk memonitor teknologi terbaru, menganalisis tren, dan mengelola inovasi di perusahaan Anda. Jangan ragu untuk mulai menjelajahi semua fitur yang tersedia!",
+                'user_id' => $user->id,
+                'is_read' => false,
+            ]);
         }
         Auth::login($user);
-        Notification::create([
-            'id' => Ulid::generate(),
-            'title' => 'Berhasil Bergabung!',
-            'message' => 'Anda Berhasil Bergabung',
-            'user_id' => $user->id,
-            'is_read' => False      
-        ]);
-        return redirect('/')->with('login_success', 'Temukan Perusahaan dan Teknologi Terbaru Sekarang!');
+        return redirect('/')->with('login_success', "Hey there! You are in. Lets get started!");
     }
 
     public function logout(Request $request)

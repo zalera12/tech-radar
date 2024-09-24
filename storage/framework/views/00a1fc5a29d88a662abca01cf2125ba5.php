@@ -46,8 +46,8 @@
 
                 </div>
                 
-                <li class="menu-title" style="margin-top: 10px;">
-                    <span>Perusahaan</span>
+                <li class="menu-title" style="">
+                    <span>Companies</span>
                 </li>
 
                 
@@ -55,7 +55,6 @@
                     $user = auth()->user();
                     $acceptedCompanies = $user->companies()->wherePivot('status', 'Accepted')->get();
                 ?>
-
                 <?php if($acceptedCompanies->isNotEmpty()): ?>
                     <div class="menu-dropdown" id="sidebarCompanies">
                         <ul class="nav nav-sm gap-3 flex-column">
@@ -154,25 +153,33 @@
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
                     </div>
-                <?php else: ?>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            document.querySelector('.menu-link[href="#sidebarCompanies"]').addEventListener('click', function(
-                                event) {
-                                event.preventDefault(); // Mencegah dropdown muncul
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'No Company Linked',
-                                    text: 'You are not linked to any company.',
-                                });
-                            });
-                        });
-                    </script>
                 <?php endif; ?>
-
                 </li>
                 <!-- end Dashboard Menu -->
-
+                <li class="menu-title" style="">
+                    <span>Message</span>
+                </li>
+                <div class="menu-dropdown" style="position: relative">
+                    <ul class="nav nav-sm gap-3 flex-column">
+                        <a class="nav-item d-flex gap-2 align-items-center <?php echo e(request()->is('message') ? 'active text-primary' : ''); ?>"
+                            href="/message">
+                            <img src="<?php echo e(asset('/build/images/message.png')); ?>"
+                                style="width: 25px;height:25px;border-radius:50%;">
+                            <span
+                                class="<?php echo e(request()->is('message') ? 'text-primary' : 'text-muted'); ?>">Messages</span>
+                        </a>
+                    </ul>
+                    <?php
+                    $messageCount = App\Models\Notification::where('user_id', auth()->user()->id)
+                        ->where('is_read', false)
+                        ->count();
+                    ?>
+                    <?php if($messageCount > 0): ?>
+                        <span
+                            style="display: flex;justify-content:center;align-items:center;width: 18px;height:18px;border-radius:50%;color:white;font-size:10px;position: absolute;top:5px;right:85px;"
+                            class="bg-primary me-3 "><?php echo e($messageCount); ?></span>
+                    <?php endif; ?>
+                </div>
             </ul>
         </div>
         <!-- Sidebar -->

@@ -11,8 +11,8 @@
 
             <div class="h-100">
                 <div class="flex-grow-1">
-                    <h4 class="fs-16 mb-1">Selamat Datang!, <?php echo e($user->name); ?>!</h4>
-                    <p class="text-muted mb-0">Inilah perkembangan terbaru dari radar teknologi Anda hari ini</p>
+                    <h4 class="fs-16 mb-1">Welcome, <?php echo e($user->name); ?>!</h4>
+                    <p class="text-muted mb-0">Explore the most recent insights and updates from your Tech Radar, keeping you ahead in today's fast-evolving landscape.</p>
                 </div>
                 <div class="flex-grow-1 mb-3 mt-4">
                     <h4 class="fs-16 mb-1">Statistic</h4>
@@ -142,16 +142,16 @@
                             <div class="card-body">
                                 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between button-container">
                                     <button class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#JoinCompanyModal">
-                                        <i class="ri-add-line align-bottom me-1"></i> Gabung Perusahaan
+                                        <i class="ri-add-line align-bottom me-1"></i>Join a company
                                     </button>
                                     
                                     <button class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#CreateJobModal">
-                                        <i class="ri-add-line align-bottom me-1"></i> Buat Perusahaan
+                                        <i class="ri-add-line align-bottom me-1"></i>Create a company
                                     </button>
                                 </div>
 
                                 <div class="row mt-3 gy-3">
-                                    <div class="col-xxl-10 col-md-6">
+                                    <div class=" col-md-6">
                                         <form action="/" method="GET">
                                             <div class="input-group mb-3">
                                                 <input type="text" name="search" class="form-control search bg-light border-light" 
@@ -167,7 +167,7 @@
                                         
                                     </div>
                                    
-                                        <div class="col-xxl-2 col-md-6">
+                                        <div class="col-md-6">
                                             <form id="filterForm" action="/" method="GET">
                                                 <div class="input-light">
                                                     <select class="form-control" data-choices data-choices-search-false
@@ -186,9 +186,9 @@
                                 </div>
                             </div>
                         </div>
-                        <h4 class="mt-2" style="margin-bottom: 20px;">List Perusahaan Yang Terkait Dengan Anda</h4>
+                        <h4 class="mt-3" style="margin-bottom: 25px;">Companies You Have Worked With</h4>
                         <div class="row">
-                            <div class="col-xxl-9">
+                            <div class="">
                                 <?php if($dataCompanies->isNotEmpty()): ?>
                                 <div id="job-list">
                                     <?php $__currentLoopData = $dataCompanies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -216,6 +216,13 @@
                                         <div class="card-footer border-top-dashed">
                                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                                                 <div><i class="ri-user-3-line align-bottom me-1"></i><?php echo e(count($data->users)); ?> orang</div>
+                                                <div>
+                                                    <i class="ri-window-line align-bottom me-1"></i>
+                                                    <?php 
+                                                        $totalTechnologies = App\Models\Technology::where('company_id',$data->id)->count();
+                                                    ?>
+                                                    <?php echo e($totalTechnologies); ?> Technologies
+                                                </div>
                                                 <div><i class="ri-time-line align-bottom me-1"></i> 
                                                     <span class="job-postdate"><?php echo e(\Carbon\Carbon::parse($data->created_at)->format('d F Y')); ?></span>
                                                 </div>
@@ -231,8 +238,9 @@
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>      
                                 <?php else: ?>
-                                    <div id="job-list mt-5" style="display: flex;align-items:center;">
-                                        <h2>Anda tidak terkait dengan perusahaan manapun.</h2>
+                                    <div id="job-list" style="display: flex;align-items:center;justify-content:center;margin-block:80px;gap:15px;flex-direction:column">
+                                        <img src="/build/images/warning.png" width="150px">
+                                        <h5>You are not connected to any companies!</h5>
                                     </div>
                                 <?php endif; ?>
                               
@@ -332,7 +340,7 @@
                                             </div>
                                         </div>
                                         <div class="mb-4">
-                                            <label for="name" class="form-label text-secondary mb-1">Company Name
+                                            <label for="name" class="form-label text-black mb-1">Company Name
                                                 <span style="color:var(--error)">*</span></label>
                                             <input type="text" class="form-control <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -352,14 +360,42 @@ $message = $__bag->first($__errorArgs[0]); ?>
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong><?php echo e($message); ?></strong>
                                                 </span>
+                                            </div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                                        <div class="mb-4">
+                                            <label for="status" class="form-label text-black mb-1">status
+                                                <span style="color:var(--error)">*</span>
+                                            </label>
+                                            <select class="form-select  <?php $__errorArgs = ['status'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" name="status" aria-label="Default select example">
+                                                <option selected class="text-muted">Select a status</option>
+                                                <option value="private">private</option>
+                                                <option value="public">public</option>
+                                              </select>
+                                            <?php $__errorArgs = ['status'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong><?php echo e($message); ?></strong>
+                                                </span>
                                             <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                                         </div>
                                         <div class="mb-4">
-                                            <label for="description" class="form-label text-secondary" style="font-weight:600;">Description
-                                                <span style="color: var(--error);">*</span>
+                                            <label for="description" class="form-label text-black" style="font-weight:600;">Description
                                             </label>
                                             <input id="description" name="description" type="hidden" class="<?php $__errorArgs = ['description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -384,9 +420,8 @@ endif;
 unset($__errorArgs, $__bag); ?>
                                         </div>
 
-                                        
                                         <div class="mb-4">
-                                            <label for="image" class="form-label text-secondary mb-1">Company Logo</label>
+                                            <label for="image" class="form-label text-black mb-1">Company Logo</label>
                                             <input type="file" class="form-control <?php $__errorArgs = ['image'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -416,7 +451,7 @@ unset($__errorArgs, $__bag); ?>
                                     <div class="hstack gap-2 justify-content-end">
                                         <button type="button" class="btn btn-light"
                                             data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-success" id="add-btn">Add Job</button>
+                                        <button type="submit" class="btn btn-success" id="add-btn">Add Company</button>
                                     </div>
                                 </div>
                             </form>
@@ -476,7 +511,7 @@ unset($__errorArgs, $__bag); ?>
         <?php if(session('login_success')): ?>
             Swal.fire({
                 icon: 'success',
-                title: 'Selamat Datang!',
+                title: 'Welcome!',
                 text: "<?php echo e(session('login_success')); ?>",
                 confirmButtonText: 'Oke',
             });
@@ -485,7 +520,7 @@ unset($__errorArgs, $__bag); ?>
         <?php if(session('add_success')): ?>
             Swal.fire({
                 icon: 'success',
-                title: 'Berhasil!',
+                title: 'Success!',
                 text: "<?php echo e(session('add_success')); ?>",
                 confirmButtonText: 'Oke',
             });

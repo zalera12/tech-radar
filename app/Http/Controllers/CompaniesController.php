@@ -509,8 +509,8 @@ class CompaniesController extends Controller
     {
         // Validasi input
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'name' => 'required|string|max:50',
+            'description' => 'nullable|string|max:320',
         ]);
     
         // Buat kategori baru
@@ -689,8 +689,8 @@ class CompaniesController extends Controller
     public function editCategoryCompanies(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'name' => 'required|string|max:50',
+            'description' => 'nullable|string|max:320',
         ]);
 
         $category = Category::findOrFail($request->category_id);
