@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\company_users;
 use App\Models\Log;
 use App\Models\Notification;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\role_permissions;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -254,14 +256,13 @@ class DashboardController extends Controller
 
         // Step 1: Cari company berdasarkan code
         $company = Company::where('code', $request->company_code)->first();
-        
 
         // Step 2: Ambil ID dari user yang sedang login
-        $user = Auth::user();
+        $userMe = Auth::user();
 
         // Step 3: Cek apakah user sudah ada di company tersebut
-        $existingCompanyUser = $user
-            ->companies()
+        $existingCompanyUser = $userMe
+           ->companies()
             ->where('company_id', $company->id)
             ->first();
 
@@ -286,54 +287,53 @@ class DashboardController extends Controller
         }
 
         // Step 5: Assign data ke tabel pivot company_users dengan status WAITING
-        $user->companies()->attach($company->id, [
+        $userMe->companies()->attach($company->id, [
             'id' => Ulid::generate(),
             'role_id' => $pendingRole->id,
             'status' => 'WAITING',
         ]);
 
-        // Ambil permission berdasarkan nama
-        $permission = Permission::where("name", "Acc Company User")->first();
-
-        if ($permission) {
-            $rolesWithPermission = $company->roles
-                ->filter(function ($role) use ($permission) {
-                    return $role->permissions->contains('id', $permission->id);
-                })
-                ->unique('id');
-            // Periksa jika ada role yang ditemukan sebelum mencari user
-            if ($rolesWithPermission->isNotEmpty()) {
-                // Ambil user yang memiliki role-role tersebut di company
-                $userIdsWithRoles = User::whereHas('roles', function ($query) use ($rolesWithPermission) {
-                    $query->whereIn('role_id', $rolesWithPermission->pluck('id'));
-                })
-                    ->whereHas('companies', function ($query) use ($company) {
-                        $query->where('company_id', $company->id);
-                    })
-                    ->pluck('id'); // Ambil hanya ID user
-
-                // Periksa jika ada user yang ditemukan sebelum mengirim notifikasi
-                if ($userIdsWithRoles->isNotEmpty()) {
-                    foreach ($userIdsWithRoles as $userId) {
-                        // Ambil data user berdasarkan ID
-                            Notification::create([
-                                'id' => Ulid::generate(),
-                                'title' => 'Permintaan Bergabung dari Pengguna Baru!',
-                                'message' => 'Pengguna bernama ' . $user->name . ' telah mengajukan permintaan untuk bergabung dengan perusahaan ' . $company->name . '. Silakan tinjau permintaan tersebut.',
-                                'user_id' => $userId,
-                                'is_read' => false,
-                            ]);
+        $permission = Permission::where('name', 'Acc Company User')->first();
+        $dataUsers = [];
+        $users = [];
+        // cari role di company tersebut dengan permission namanya sama dengan Acc Company User
+        $rolesWithPermission = role_permissions::where('company_id', $company->id)
+            ->where('permission_id', $permission->id)
+            ->get();
+        // Periksa jika ada role yang ditemukan sebelum mencari user
+        if ($rolesWithPermission->isNotEmpty()) {
+            // Cari Data di company_user yang company_id sama dengan $company->id
+            $userCompany = company_users::where('company_id', $company->id)->get();
+            //cari data di company_user yang role_id sama dengan role-role id yang ada di array rolesWithPermission lalu simpan ke dalam array users
+            foreach ($userCompany as $user) {
+                foreach ($rolesWithPermission as $role) {
+                    if ($user->role_id == $role->role_id) {
+                        $users[] = $user;
                     }
-                } else {
-                    // Handle jika tidak ada user dengan role yang sesuai
+                }
+            }
+            if (!empty($users)) {
+                //query data user dengan id sama dengan user_id yang ada di array users lalu simpan ke dalam array dataUsers
+                foreach ($users as $user) {
+                    $dataUsers[] = User::where('id', $user->user_id)->first();
                 }
             } else {
-                // Handle jika tidak ada role yang ditemukan
+                $dataUsers = [];
             }
         } else {
-            // Handle jika permission tidak ditemukan
-            $userIdsWithRoles = collect(); // Kosongkan jika tidak ada permission
+            $dataUsers = [];
         }
+        
+        foreach ($dataUsers as $userId) {
+            Notification::create([
+                'id' => Ulid::generate(),
+                'title' => 'Permintaan Bergabung dari Pengguna Baru!',
+                'message' => 'Pengguna bernama ' . $userMe->name . ' telah mengajukan permintaan untuk bergabung dengan perusahaan ' . $company->name . '. Silakan tinjau permintaan tersebut.',
+                'user_id' => $userId->id,
+                'is_read' => false,
+            ]);
+        }
+
 
         Notification::create([
             'id' => Ulid::generate(),
