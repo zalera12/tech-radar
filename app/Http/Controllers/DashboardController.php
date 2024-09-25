@@ -339,7 +339,7 @@ class DashboardController extends Controller
             'id' => Ulid::generate(),
             'title' => 'Permintaan Bergabung Berhasil Dikirim!',
             'message' => 'Anda telah mengirimkan permintaan untuk bergabung dengan ' . $company->name . '. Harap tunggu hingga permintaan Anda diproses.',
-            'user_id' => $user->id,
+            'user_id' => $userMe->id,
             'is_read' => false,
         ]);
 
