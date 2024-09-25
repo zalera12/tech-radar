@@ -356,7 +356,7 @@
                                         <p class="text-muted fs-14 mb-4 pt-1">Removing this user will detach their
                                             association with the company.</p>
                                         <form id="deleteUserForm"
-                                            action="{{ route('companies.roles.delete') }}??permission=Delete Company User&idcp={{ $company->id }}"
+                                            action="{{ route('companies.roles.delete') }}?permission=Delete Company User&idcp={{ $company->id }}"
                                             method="POST">
                                             @csrf
                                             <input type="hidden" name="user" value="{{ $user->name }}" >
