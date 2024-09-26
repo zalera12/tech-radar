@@ -37,7 +37,6 @@
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="{{ $totalCompany }}">0</span> Company</h4>
-                                        <a href="" class="text-decoration-underline">View Detail</a>
                                     </div>
                                     <div class="avatar-sm flex-shrink-0">
                                         <span class="avatar-title bg-secondary-subtle rounded fs-3">
@@ -66,7 +65,7 @@
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="{{ $totalTechnology }}">0</span> Technology</h4>
-                                        <a href="" class="text-decoration-underline">View Detail</a>
+                                       
                                     </div>
                                     <div class="avatar-sm flex-shrink-0">
                                         <span class="avatar-title bg-primary-subtle rounded fs-3">
@@ -94,7 +93,6 @@
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="{{ $totalMessage }}">0</span> Message </h4>
-                                        <a href="" class="text-decoration-underline">View Details</a>
                                     </div>
                                     <div class="avatar-sm flex-shrink-0">
                                         <span class="avatar-title bg-success-subtle rounded fs-3">
@@ -123,7 +121,6 @@
                                         ?>
                                         <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                                 data-target="{{ $totalRole }}">0</span> Role </h4>
-                                        <a href="" class="text-decoration-underline">View Details</a>
                                     </div>
                                     <div class="avatar-sm flex-shrink-0">
                                         <span class="avatar-title bg-success-subtle rounded fs-3">
