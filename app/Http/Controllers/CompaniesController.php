@@ -65,7 +65,7 @@ class CompaniesController extends Controller
                 'company' => $company,
                 'user' => $user,
                 'role' => $userrole,
-                'categories' => Category::where('company_id',$company->id)->get(),
+                'categories' => Category::where('company_id', $company->id)->get(),
                 'created_date' => Carbon::parse($company->created_at)->format('d F Y'),
                 'companyMembers' => $companyUsers,
             ]);
@@ -76,38 +76,37 @@ class CompaniesController extends Controller
     {
         // Ambil user yang sedang login
         $user = auth()->user();
-    
+
         // Ambil companies terkait user yang sedang login
         $companies = $user->companies;
-    
+
         // Cari company yang spesifik, misalnya berdasarkan ID
         $companyId = $company->id;
         $company = $companies->firstWhere('id', $companyId);
-    
+
         // Ambil roles yang terkait dengan perusahaan ini (melalui pivot company_users)
-        $roles = $company->roles->unique('id'); 
-        
+        $roles = $company->roles->unique('id');
+
         // Ambil nilai search dan role dari request
         $search = $request->input('search');
         $roleFilter = $request->input('role_id'); // Ganti ke 'role_id'
         $sort_order = $request->input('sort_order', 'terbaru'); // Default sort 'terbaru'
-    
+
         // Buat query untuk mengambil user yang terkait dengan perusahaan ini melalui pivot company_users
-        $usersQuery = $company->users()->withPivot('role_id', 'status');
-    
+        $usersQuery = $company->users()->withPivot('role_id', 'status')->wherePivot('status', 'ACCEPTED');
+
         // Filter berdasarkan role (jika ada role yang dipilih)
         if ($roleFilter) {
             $usersQuery->wherePivot('role_id', $roleFilter);
         }
-    
+
         // Jika ada input search, filter berdasarkan nama atau email
         if ($search) {
             $usersQuery->where(function ($query) use ($search) {
-                $query->where('name', 'LIKE', '%' . $search . '%')
-                      ->orWhere('email', 'LIKE', '%' . $search . '%');
+                $query->where('name', 'LIKE', '%' . $search . '%')->orWhere('email', 'LIKE', '%' . $search . '%');
             });
         }
-    
+
         // Terapkan logika sorting berdasarkan sort_order
         if ($sort_order === 'terbaru') {
             $usersQuery->orderBy('created_at', 'desc');
@@ -118,10 +117,10 @@ class CompaniesController extends Controller
         } elseif ($sort_order === 'Z-A') {
             $usersQuery->orderBy('name', 'desc');
         }
-    
+
         // Paginate hasil query
-        $companyUsers = $usersQuery->paginate(3);
-    
+        $companyUsers = $usersQuery->paginate(50);
+
         // Return ke view dengan data yang dibutuhkan
         return view('apps-crm-companies', [
             'user' => $user,
@@ -130,8 +129,6 @@ class CompaniesController extends Controller
             'roles' => $roles,
         ]);
     }
-    
-    
 
     public function pendingMemberCompanies(Request $request, Company $company)
     {
@@ -169,7 +166,7 @@ class CompaniesController extends Controller
         }
 
         // Paginate hasil query
-        $pendingMembers = $pendingMembersQuery->paginate(1);
+        $pendingMembers = $pendingMembersQuery->paginate(50);
 
         // Kembalikan ke view dengan data yang dibutuhkan
         return view('apps-crm-pending-members', [
@@ -192,10 +189,11 @@ class CompaniesController extends Controller
 
         $user = User::where('email', $request->email)->first();
         $company = Company::find($request->company_id);
+        $role = Role::where('id', $request->role_id)->first();
 
         // Cek apakah user ada
         if (!$user) {
-            return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id");
+            return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('not_found', 'User not found!');
         }
 
         // Cek apakah user sudah terdaftar di perusahaan ini
@@ -205,7 +203,7 @@ class CompaniesController extends Controller
                 ->where('user_id', $user->id)
                 ->exists()
         ) {
-            return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id");
+            return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('user_exists', 'The user is already a member of this company!');
         }
 
         // Tambahkan user ke perusahaan
@@ -213,12 +211,20 @@ class CompaniesController extends Controller
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user,
-            'description' => "Add Company User"
+            'description' => "Menambahkan pengguna bernama {$user->name} ke dalam perusahaan.",
         ]);
-    
+
         $company->users()->attach($user->id, ['id' => Ulid::generate(), 'role_id' => $request->role_id, 'status' => 'ACCEPTED']);
 
-        return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('add_success', 'user berhasil ditambahkan ke perusahaan');
+        Notification::create([
+            'id' => Ulid::generate(),
+            'title' => 'Berhasil Bergabung dengan Perusahaan!',
+            'message' => 'Selamat! Anda telah berhasil bergabung dengan ' . $company->name . ' sebagai ' . $role->name . ' melalui undangan. Selamat bekerja dan berkontribusi.',
+            'user_id' => $user->id,
+            'is_read' => false,
+        ]);
+
+        return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('add_success', 'User has been successfully added to the company.');
     }
 
     public function updatePendingMember(Request $request, $memberId)
@@ -231,13 +237,13 @@ class CompaniesController extends Controller
         // Ambil pending member dan update role serta status
         $member = User::findOrFail($memberId);
         $company = Company::where('id', $request->company_id)->first();
-        $role = Role::where('id',$request->role_id)->first()->name;
+        $role = Role::where('id', $request->role_id)->first()->name;
 
-        if($request->status == 'ACCEPTED'){
+        if ($request->status == 'ACCEPTED') {
             Notification::create([
                 'id' => Ulid::generate(),
                 'title' => 'Permintaan Bergabung Diterima!',
-                'message' => "Selamat! Permintaan Anda untuk bergabung dengan ".$company->name." telah disetujui. Anda sekarang menjadi bagian dari perusahaan sebagai ".$role.".",
+                'message' => 'Selamat! Permintaan Anda untuk bergabung dengan ' . $company->name . ' telah disetujui. Anda sekarang menjadi bagian dari perusahaan sebagai ' . $role . '.',
                 'user_id' => $member->id,
                 'is_read' => false,
             ]);
@@ -253,7 +259,7 @@ class CompaniesController extends Controller
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user,
-            'description' => "Update Pending Company User"
+            'description' => "User dengan nama {$request->user} telah menyetujui permintaan bergabung dari user bernama {$member->name} ke perusahaan",
         ]);
 
         return redirect("/companies/pendingMember/$company->id?permission=Read Pending Company User&idcp=$company->id")->with('update_success', 'Pending member updated successfully');
@@ -268,17 +274,16 @@ class CompaniesController extends Controller
         // Ambil user dan update role pada pivot table
         $user = User::findOrFail($request->id);
         $company = Company::where('id', $request->company_id)->first(); // Misal perusahaan terkait didapat dari user yang login
-    
-        // Update role di pivot table
-        $company->users()->updateExistingPivot($user->id, [
-            'role_id' => $request->role_id,
-        ]);
-
+        $role = Role::where('id', $request->role_id)->first();
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user,
-            'description' => "Edit Company User"
+            'description' => 'Mengubah Role user bernama ' . $user->name . ' Dari ' . $request->roleOld . ' menjadi ' . $role->name . '.',
+        ]);
+        // Update role di pivot table
+        $company->users()->updateExistingPivot($user->id, [
+            'role_id' => $request->role_id,
         ]);
 
         return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('success', 'User role updated successfully');
@@ -290,16 +295,37 @@ class CompaniesController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'company_id' => 'required|exists:companies,id',
+            'role' => 'required|string', // Validasi role juga
         ]);
 
+        // Ambil user dan company
         $user = User::findOrFail($request->user_id);
         $company = Company::findOrFail($request->company_id);
 
+        // Cek apakah user_id sama dengan user yang sedang login
+        if (auth()->user()->id == $request->user_id) {
+            return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('error', 'Failed to remove user. You cannot remove yourself from the company.');
+        }
+
+        // Cek jika role adalah OWNER
+        if ($request->role == 'OWNER') {
+            return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('error', 'Failed to remove user. You cannot remove the owner.');
+        }
+
+        // Log penghapusan user
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user,
-            'description' => "Delete Company User"
+            'description' => "Mengeluarkan user dengan nama {$user->name} dari perusahaan.",
+        ]);
+
+        Notification::create([
+            'id' => Ulid::generate(),
+            'title' => 'Anda Telah Dikeluarkan dari Perusahaan',
+            'message' => 'Kami informasikan bahwa Anda telah dikeluarkan dari perusahaan ' . $company->name . '. Terima kasih atas kontribusi yang telah Anda berikan.',
+            'user_id' => $user->id,
+            'is_read' => false,
         ]);
 
         // Menghapus user dari perusahaan (detach)
@@ -339,7 +365,7 @@ class CompaniesController extends Controller
         }
 
         // Pagination
-        $roles = $roles->paginate(3); // Sesuaikan jumlah per halaman
+        $roles = $roles->paginate(50); // Sesuaikan jumlah per halaman
 
         // Kirim data ke view
         return view('apps-crm-roles', [
@@ -424,11 +450,11 @@ class CompaniesController extends Controller
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user,
-            'description' => "Add Company Role"
+            'description' => 'Menambahkan role baru dengan nama ' . $request->name . '.',
         ]);
 
         // Redirect ke halaman permissions
-        return redirect("/companies/permissions/$companyId?permission=Read User permission&idcp=$companyId")->with('success_create', 'Role berhasil ditambahkan. Silakan isi permission untuk role yang baru.');
+        return redirect("/companies/permissions/$companyId?permission=Read User permission&idcp=$companyId")->with('success_create', 'Role has been successfully added. Please assign permissions for the newly created role');
     }
 
     public function editRolesCompanies(Request $request)
@@ -438,7 +464,7 @@ class CompaniesController extends Controller
             'description' => 'nullable|string',
         ]);
         $roleId = $request->role_id;
-
+        $role = Role::where('id', $roleId)->first();
         // Update role with new data
         Role::where('id', $roleId)->update($validated);
 
@@ -447,9 +473,8 @@ class CompaniesController extends Controller
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user,
-            'description' => "Edit Company Role"
+            'description' => "Mengubah role dari {$role->name} menjadi {$request->name}",
         ]);
-
 
         return redirect("/companies/roles/$request->company?permission=Read Company Role&idcp=$request->company")->with('success_update', 'Role updated successfully!');
     }
@@ -461,20 +486,30 @@ class CompaniesController extends Controller
         ]);
 
         try {
-            // Find role by ID and delete
+            // Find role by ID
             $role = Role::findOrFail($request->role_id);
+
+            // Cek apakah role adalah "owner"
+            if (in_array($role->name, ['OWNER', 'Pending Member', 'GUEST'])) {
+                // Redirect with error if the role is one of the restricted names
+                return redirect("/companies/roles/$request->company?permission=Read Company Role&idcp=$request->company")->with('error', 'Failed to delete role. You cannot delete this role.');
+            }
+
+            // Log the deletion
             Log::create([
                 'id' => Ulid::generate(),
                 'company_id' => $request->company_id,
                 'name' => $request->user,
-                'description' => "Delete Company Role"
+                'description' => "Menghapus Role {$role->name}",
             ]);
+
+            // Delete the role
             $role->delete();
 
             // Redirect back with success message
             return redirect()->back()->with('success_delete', 'Role deleted successfully!');
         } catch (\Exception $e) {
-            // Redirect back with error message
+            // Redirect back with error message in case of failure
             return redirect("/companies/roles/$request->company?permission=Read Company Role&idcp=$request->company")->with('error', 'Failed to delete role.');
         }
     }
@@ -482,32 +517,32 @@ class CompaniesController extends Controller
     public function categoriesCompanies(Company $company)
     {
         $user = auth()->user();
-         // Ambil data request dari input
-         $search = request('search');
-         $sortOrder = request('sort_order', 'terbaru');
- 
-         // Ambil semua roles yang terkait dengan perusahaan tertentu
-         $categories = Category::where('company_id',$company->id);
- 
-         // Filter berdasarkan search jika ada input search
-         if ($search) {
-             $categories->where('name', 'like', '%' . $search . '%');
-         }
- 
-         // Sorting berdasarkan input sort_order
-         if ($sortOrder === 'terbaru') {
-             $categories->orderBy('created_at', 'desc');
-         } elseif ($sortOrder === 'terlama') {
-             $categories->orderBy('created_at', 'asc');
-         } elseif ($sortOrder === 'A-Z') {
-             $categories->orderBy('name', 'asc');
-         } elseif ($sortOrder === 'Z-A') {
-             $categories->orderBy('name', 'desc');
-         }
- 
-         // Pagination
-         $categories = $categories->paginate(10); // Sesuaikan jumlah per halaman
- 
+        // Ambil data request dari input
+        $search = request('search');
+        $sortOrder = request('sort_order', 'terbaru');
+
+        // Ambil semua roles yang terkait dengan perusahaan tertentu
+        $categories = Category::where('company_id', $company->id);
+
+        // Filter berdasarkan search jika ada input search
+        if ($search) {
+            $categories->where('name', 'like', '%' . $search . '%');
+        }
+
+        // Sorting berdasarkan input sort_order
+        if ($sortOrder === 'terbaru') {
+            $categories->orderBy('created_at', 'desc');
+        } elseif ($sortOrder === 'terlama') {
+            $categories->orderBy('created_at', 'asc');
+        } elseif ($sortOrder === 'A-Z') {
+            $categories->orderBy('name', 'asc');
+        } elseif ($sortOrder === 'Z-A') {
+            $categories->orderBy('name', 'desc');
+        }
+
+        // Pagination
+        $categories = $categories->paginate(50); // Sesuaikan jumlah per halaman
+
         return view('apps-crm-categories', [
             'categories' => $categories,
             'user' => $user,
@@ -522,66 +557,62 @@ class CompaniesController extends Controller
             'name' => 'required|string|max:50',
             'description' => 'nullable|string|max:320',
         ]);
-    
+
         // Buat kategori baru
         $category = Category::create([
             'name' => $request->name,
             'description' => $request->description,
-            'company_id' => $company->id
+            'company_id' => $company->id,
         ]);
-    
+
         // Tentukan path untuk menyimpan file JSON di direktori storage/app/public/files
-        $filePath = 'files/' .strtoupper($category->name). '.json';
-    
+        $filePath = 'files/' . strtoupper($category->name) . ' - ' . $company->name . '.json';
+
         // Buat folder jika belum ada
         if (!Storage::disk('public')->exists('files')) {
             Storage::disk('public')->makeDirectory('files');
         }
-    
+
         // Tulis data kosong ke file JSON
         Storage::disk('public')->put($filePath, json_encode([], JSON_PRETTY_PRINT));
-    
+
         // Buat entri log untuk pencatatan aktivitas penambahan kategori
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $company->id,
             'name' => $request->user, // Pastikan ini adalah data yang benar untuk log
-            'description' => "Add Category Technology"
+            'description' => 'Menambahkan category ' . $request->name . '.',
         ]);
-    
+
         // Redirect dengan pesan sukses
-        return redirect("/companies/categories/$company->id?permission=Read Category Technology&idcp=$company->id")
-            ->with('success_update', 'Category added successfully, and JSON file created.');
+        return redirect("/companies/categories/$company->id?permission=Read Category Technology&idcp=$company->id")->with('success_update', 'Category added successfully, and JSON file created.');
     }
-    
-    
-    
-    
-    private function updateCategoryJson($categoryId)
+
+    private function updateCategoryJson($categoryId, $companyId)
     {
         // Ambil semua teknologi yang memiliki category_id sesuai
-        $technologies = Technology::where('category_id', $categoryId)
-            ->get(['name', 'ring', 'quadrant', 'is_new', 'description']);
-    
-        // Ubah format 'is_new' menjadi "TRUE"/"FALSE"
+        $technologies = Technology::where('category_id', $categoryId)->get(['name', 'ring', 'quadrant', 'is_new', 'description']);
+
+        $companyName = Company::where('id', $companyId)->first()->name;
+
         $formattedTechnologies = $technologies->map(function ($tech) {
             return [
                 'name' => $tech->name,
                 'ring' => $tech->ring,
                 'quadrant' => $tech->quadrant,
-                'isNew' => $tech->is_new ? "TRUE" : "FALSE", // Mengubah ke "TRUE"/"FALSE"
-                'description' => $tech->description ??  "-",
+                'isNew' => $tech->is_new ? 'TRUE' : 'FALSE', // Mengubah ke "TRUE"/"FALSE"
+                'description' => $tech->description ?? '-',
             ];
         });
 
-        $category = Category::where('id',$categoryId)->first();
-        
+        $category = Category::where('id', $categoryId)->first();
+
         // Tentukan path file JSON di direktori storage/app/public/files
-        $filePath = 'files/' . strtoupper($category->name) . '.json'; // Pastikan tidak ada 'public/' di sini
-    
+        $filePath = 'files/' . strtoupper($category->name) . ' - ' . $companyName . '.json'; // Pastikan tidak ada 'public/' di sini
+
         // Tulis data ke file JSON di storage menggunakan Storage facade
         Storage::disk('public')->put($filePath, json_encode($formattedTechnologies, JSON_PRETTY_PRINT));
-    
+
         // Verifikasi apakah file berhasil ditulis
         if (Storage::disk('public')->exists($filePath)) {
             // Optional: log sukses atau lakukan tindakan lain
@@ -591,10 +622,50 @@ class CompaniesController extends Controller
             // Log::error("Gagal menyimpan file JSON di storage untuk category: $categoryId");
         }
     }
-    
-    
-    
-    
+
+    private function removeTechnologyFromCategoryJson($technologyId, $categoryId, $companyId)
+{
+    // Ambil nama perusahaan
+    $companyName = Company::where('id', $companyId)->first()->name;
+
+    // Ambil semua teknologi yang memiliki category_id sesuai
+    $technologies = Technology::where('category_id', $categoryId)->get(['id', 'name', 'ring', 'quadrant', 'is_new', 'description']);
+
+    // Filter teknologi, hapus teknologi dengan ID yang diberikan
+    $filteredTechnologies = $technologies->filter(function ($tech) use ($technologyId) {
+        return $tech->id != $technologyId; // Hanya simpan teknologi yang bukan teknologi yang akan dihapus
+    });
+
+    // Format data teknologi yang tersisa
+    $formattedTechnologies = $filteredTechnologies->map(function ($tech) {
+        return [
+            'name' => $tech->name,
+            'ring' => $tech->ring,
+            'quadrant' => $tech->quadrant,
+            'isNew' => $tech->is_new ? 'TRUE' : 'FALSE', // Mengubah ke "TRUE"/"FALSE"
+            'description' => $tech->description ?? '-',
+        ];
+    });
+
+    // Ambil nama kategori
+    $category = Category::where('id', $categoryId)->first();
+
+    // Tentukan path file JSON di direktori storage/app/public/files
+    $filePath = 'files/' . strtoupper($category->name) . ' - ' . $companyName . '.json';
+
+    // Tulis data yang sudah diformat ke file JSON di storage menggunakan Storage facade
+    Storage::disk('public')->put($filePath, json_encode($formattedTechnologies->toArray(), JSON_PRETTY_PRINT));
+
+    // Verifikasi apakah file berhasil ditulis
+    if (Storage::disk('public')->exists($filePath)) {
+        // Optional: log sukses atau lakukan tindakan lain
+        // Log::info("File JSON berhasil diperbarui di storage setelah menghapus teknologi: $technologyId");
+    } else {
+        // Optional: log jika terjadi error
+        // Log::error("Gagal memperbarui file JSON setelah menghapus teknologi: $technologyId");
+    }
+}
+
 
     public function addTechnologiesCompanies(Request $request)
     {
@@ -608,29 +679,27 @@ class CompaniesController extends Controller
             'company_id' => 'required|exists:companies,id',
             'user_id' => 'required|exists:users,id',
         ]);
-    
+
         // Generate ULID untuk id technology
         $validated['id'] = Ulid::generate();
-    
+
         // Buat technology baru
         Technology::create($validated);
-    
+
         // Update file JSON untuk kategori terkait
-        $this->updateCategoryJson($validated['category_id']);
-    
+        $this->updateCategoryJson($validated['category_id'], $request->company_id);
+
         // Buat log untuk penambahan teknologi
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user, // Pastikan ini adalah data yang benar untuk log
-            'description' => "Add Technology"
+            'description' => 'Menambahkan Technology ' . $request->name . '.',
         ]);
-    
+
         // Redirect dengan pesan sukses
-        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")->with('success', 'Technology updated successfully.');
+        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")->with('success', 'Technology added successfully.');
     }
-    
-    
 
     public function updateTechnologiesCompanies(Request $request)
     {
@@ -648,6 +717,9 @@ class CompaniesController extends Controller
         // Temukan teknologi berdasarkan id
         $technology = Technology::findOrFail($request->id);
     
+        // Simpan category_id lama sebelum update
+        $oldCategoryId = $technology->category_id;
+    
         // Update teknologi dengan data yang telah divalidasi
         $technology->update($request->all());
     
@@ -656,65 +728,91 @@ class CompaniesController extends Controller
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user, // Pastikan ini adalah data yang benar untuk log
-            'description' => "Edit Technology"
+            'description' => 'Mengubah data technology ' . $request->name . '.',
         ]);
     
-        // Update file JSON untuk kategori terkait
-        $this->updateCategoryJson($technology->category_id);
+        // Jika category_id berubah, hapus data teknologi dari file JSON kategori lama
+        if ($oldCategoryId != $technology->category_id) {
+            $this->removeTechnologyFromCategoryJson($technology->id, $oldCategoryId, $request->company_id);
+        }
+    
+        // Update file JSON untuk kategori terkait (kategori baru atau tetap sama)
+        $this->updateCategoryJson($technology->category_id, $request->company_id);
     
         // Redirect ke halaman teknologi dengan pesan sukses
-        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")->with('success', 'Technology updated successfully.');
+        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")
+            ->with('success', 'Technology updated successfully.');
     }
-    
     
 
     public function deleteTechnologiesCompanies(Request $request)
     {
         // Temukan teknologi berdasarkan ID
         $technology = Technology::findOrFail($request->id);
-    
+
         // Ambil category_id sebelum teknologi dihapus
         $categoryId = $technology->category_id;
-    
+
         // Buat log untuk mencatat aktivitas penghapusan teknologi
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user, // Pastikan ini adalah data yang benar untuk log
-            'description' => "Delete Technology"
+            'description' => 'Menghapus Technology'.$technology->name.'.',
         ]);
-    
+
         // Hapus teknologi
         $technology->delete();
-    
+
         // Update file JSON untuk kategori terkait setelah penghapusan
-        $this->updateCategoryJson($categoryId);
-    
+        $this->updateCategoryJson($categoryId, $request->company_id);
+
         // Redirect ke halaman teknologi dengan pesan sukses
-        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")->with('success', 'Technology updated successfully.');
+        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")->with('success', 'Technology deleted successfully.');
     }
-    
-    
 
     public function editCategoryCompanies(Request $request)
     {
+        // Validasi input
         $request->validate([
             'name' => 'required|string|max:50',
             'description' => 'nullable|string|max:320',
         ]);
 
+        // Ambil data category berdasarkan id
         $category = Category::findOrFail($request->category_id);
+
+        // Buat log perubahan sebelum update data
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => 'Mengubah Data category ' . $category->name . '.',
+        ]);
+
+        // Simpan nama kategori lama untuk pengecekan nanti
+        $oldCategoryName = $category->name;
+        $company = Company::where('id', $request->company_id)->first();
+
+        // Update category
         $category->update([
             'name' => $request->name,
             'description' => $request->description,
         ]);
 
-        Log::create([
-            'id' => Ulid::generate(),
-            'company_id' => $request->company_id,
-            'name' => $request->user,
-            'description' => "Edit Category Technology"
-        ]);
+        // Cek jika nama category diubah
+        if ($oldCategoryName != $request->name) {
+            // Tentukan path file lama dan file baru
+
+            $oldFilePath = 'files/' . strtoupper($oldCategoryName) . ' - ' . $company->name . '.json';
+            $newFilePath = 'files/' . strtoupper($request->name) . ' - ' . $company->name . '.json';
+            // Jika file JSON dengan nama lama ada, rename file tersebut
+            if (Storage::disk('public')->exists($oldFilePath)) {
+                Storage::disk('public')->move($oldFilePath, $newFilePath);
+            }
+        }
+
+        // Redirect dengan pesan sukses
         return redirect("/companies/categories/$request->company_id?permission=Read Category Technology&idcp=$request->company_id")->with('success_update', 'Category updated successfully.');
     }
 
@@ -722,23 +820,25 @@ class CompaniesController extends Controller
     {
         // Temukan kategori berdasarkan ID yang diterima dari request
         $category = Category::findOrFail($request->category_id);
+        $company = Company::where('id', $request->company_id)->first()->name;
+        // Tentukan path file JSON yang akan dihapus di disk 'public'
+        $filePath = 'files/' . strtoupper($category->name) . ' - ' . $company . '.json';
 
-        // Tentukan path file JSON yang akan dihapus
-        $filePath = public_path('files/' . $category->id . '.json');
-        // Hapus kategori dari database
-        $category->delete();
-
-        // Periksa apakah file JSON ada, jika ya maka hapus
-        if (File::exists($filePath)) {
-            File::delete($filePath);
-        }
-
+        // Buat log untuk pencatatan penghapusan kategori
         Log::create([
             'id' => Ulid::generate(),
             'company_id' => $request->company_id,
             'name' => $request->user,
-            'description' => "Delete Category Technology"
+            'description' => 'Menghapus Data Category ' . $category->name . '.',
         ]);
+
+        // Hapus kategori dari database
+        $category->delete();
+
+        // Periksa apakah file JSON ada, jika ya maka hapus
+        if (Storage::disk('public')->exists($filePath)) {
+            Storage::disk('public')->delete($filePath);
+        }
 
         return redirect("/companies/categories/$request->company_id?permission=Read Category Technology&idcp=$request->company_id")->with('success_delete', 'Category deleted successfully, and associated JSON file deleted.');
     }
@@ -746,38 +846,37 @@ class CompaniesController extends Controller
     public function technologiesCompanies(Request $request, Company $company)
     {
         $user = auth()->user();
-    
+
         // Ambil filter dari request
         $filterCategory = $request->input('filterCategory');
         $filterRing = $request->input('filterRing');
         $filterQuadrant = $request->input('filterQuadrant'); // Filter Quadrant
         $search = $request->input('search');
         $sortOrder = $request->input('sort_order'); // Ambil sorting dari request
-    
+
         // Mulai query dengan memfilter berdasarkan company_id
-        $query = Technology::with(['category', 'user'])
-            ->where('company_id', $company->id);
-    
+        $query = Technology::with(['category', 'user'])->where('company_id', $company->id);
+
         // Filter berdasarkan category_id jika ada
         if ($filterCategory) {
             $query->where('category_id', $filterCategory);
         }
-    
+
         // Filter berdasarkan ring jika ada
         if ($filterRing) {
             $query->where('ring', $filterRing);
         }
-    
+
         // Filter berdasarkan quadrant jika ada
         if ($filterQuadrant) {
             $query->where('quadrant', $filterQuadrant);
         }
-    
+
         // Filter berdasarkan search jika ada
         if ($search) {
             $query->where('name', 'like', '%' . $search . '%');
         }
-    
+
         // Tambahkan logika sorting
         if ($sortOrder) {
             switch ($sortOrder) {
@@ -799,13 +898,13 @@ class CompaniesController extends Controller
         } else {
             $query->orderBy('created_at', 'desc'); // Default sort by terbaru if no sort_order is set
         }
-    
+
         // Paginasi dengan 10 data per halaman
         $technologies = $query->paginate(50);
-    
+
         // Dapatkan semua kategori dari perusahaan
         $categories = $company->categories;
-    
+
         // Kembalikan view dengan data yang diperlukan
         return view('apps-crm-technologies', [
             'technologies' => $technologies,
@@ -821,6 +920,4 @@ class CompaniesController extends Controller
         $technology = Technology::with(['category', 'company', 'user'])->findOrFail($id);
         return view('technologies.show', compact('technology'));
     }
-
-   
 }

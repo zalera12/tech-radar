@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    @lang('translation.companies')
+    technologies
 @endsection
 @section('css')
     <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
@@ -8,20 +8,21 @@
 @section('content')
     @component('components.breadcrumb')
         @slot('li_1')
-            Companies
+            {{ $company->name }}
         @endslot
         @slot('title')
-            Users
+            Technologies
         @endslot
     @endcomponent
 
-    <div class="row">
+    <h4>Tehcnologies Page</h4>
+    <div class="row mt-3">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center gap-2 justify-content-between flex-md-row flex-column">
 
-                        <button class="btn btn-secondary add-btn" style="width: 260px;" data-bs-toggle="modal"
+                        <button class="btn btn-secondary add-btn" sty="width: 260px;" data-bs-toggle="modal"
                             data-bs-target="#addTehcnologyModal"><i class="ri-add-fill me-1 align-bottom"></i> Add
                             Technologies</button>
                         <div class="d-flex align-items-center gap-2" style="width: 260px;">
@@ -156,6 +157,7 @@
                 <div class="card-body mt-3">
                     <div>
                         <div class="table-responsive table-card mb-3">
+                            @if ($technologies->isNotEmpty())
                             <table class="table align-middle table-nowrap mb-0" id="technologiesTable">
                                 <thead class="table-light">
                                     <tr>
@@ -181,13 +183,6 @@
                                             <td class="ring">{{ $technology->ring }}</td>
                                             <td>
                                                 <ul class="list-inline hstack gap-2 mb-0">
-                                                    <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="View">
-                                                        <a href="{{ route('technologies.show', $technology->id) }}"
-                                                            class="view-item-btn">
-                                                            <i class="ri-eye-fill align-bottom text-muted"></i>
-                                                        </a>
-                                                    </li>
                                                     <li class="list-inline-item edit" data-bs-toggle="tooltip"
                                                         data-bs-trigger="hover" data-bs-placement="top" title="Edit">
                                                         <a class="edit-item-btn" href="#editTechnologyModal"
@@ -214,148 +209,17 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
-                            <!-- Modal Edit -->
-                            <div class="modal fade" id="editTechnologyModal" tabindex="-1"
-                                aria-labelledby="editTechnologyModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered modal-lg">
-                                    <div class="modal-content border-0">
-                                        <div class="modal-header bg-info-subtle p-3">
-                                            <h5 class="modal-title" id="editTechnologyModalLabel">Edit Technology</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close" id="close-edit-modal"></button>
-                                        </div>
-                                        <form
-                                            action="/companies/technologies/edit?permission=Edit Technology&idcp={{ $company->id }}"
-                                            method="POST" autocomplete="off" id="editTechnologyForm">
-                                            @csrf
-                                            <input type="hidden" name="id" id="edit-technology-id">
-                                            <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                            <input type="hidden" name="company_id" value="{{ $company->id }}">
-                                            <input type="hidden" name="user" value="{{ $user->name }}">
-
-                                            <div class="modal-body">
-                                                <div class="row g-3">
-                                                    <div class="col-lg-12">
-                                                        <label for="edit-category"
-                                                            class="form-label text-secondary mb-1">Category
-                                                            <span style="color:var(--error)">*</span>
-                                                        </label>
-                                                        <select class="form-select @error('category') is-invalid @enderror"
-                                                            id="edit-category" name="category_id" required>
-                                                            <option value="" disabled selected>Select Category
-                                                            </option>
-                                                            @foreach ($categories as $category)
-                                                                <option value="{{ $category->id }}">{{ $category->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                        @error('ring')
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <label for="edit-name"
-                                                            class="form-label text-secondary mb-1">Technology Name
-                                                            <span style="color:var(--error)">*</span>
-                                                        </label>
-                                                        <input type="text"
-                                                            class="form-control @error('name') is-invalid @enderror"
-                                                            id="edit-name" name="name"
-                                                            placeholder="Enter technology name"
-                                                            value="{{ old('name') }}" required>
-                                                        @error('name')
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="mb-2">
-                                                            <label for="description" class="form-label text-secondary"
-                                                                style="font-weight:600;">Description
-                                                                <span style="color: var(--error);">*</span>
-                                                            </label>
-                                                            <input id="edit-description" name="description"
-                                                                type="hidden"
-                                                                class="@error('description') is-invalid @enderror"
-                                                                value="{{ old('description') }}">
-                                                            <trix-editor input="edit-description"></trix-editor>
-                                                            @error('description')
-                                                                <span class="invalid-feedback" role="alert">
-                                                                    <strong>{{ $message }}</strong>
-                                                                </span>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <label for="edit-quadrant"
-                                                            class="form-label text-secondary mb-1">Quadrant
-                                                            <span style="color:var(--error)">*</span>
-                                                        </label>
-                                                        <select class="form-select @error('quadrant') is-invalid @enderror"
-                                                            id="edit-quadrant" name="quadrant" required>
-                                                            <option value="" disabled selected>Select Quadrant
-                                                            </option>
-                                                            <option value="Techniques">Techniques</option>
-                                                            <option value="Platforms">Platforms</option>
-                                                            <option value="Tools">Tools</option>
-                                                            <option value="LanguageS and Frameworks">Languages and Frameworks
-                                                            </option>
-                                                        </select>
-                                                        @error('quadrant')
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <label for="edit-ring" class="form-label text-secondary mb-1">Ring
-                                                            <span style="color:var(--error)">*</span>
-                                                        </label>
-                                                        <select class="form-select @error('ring') is-invalid @enderror"
-                                                            id="edit-ring" name="ring" required>
-                                                            <option value="" disabled selected>Select Ring</option>
-                                                            <option value="hold">hold</option>
-                                                            <option value="adopt">adopt</option>
-                                                            <option value="assess">assess</option>
-                                                            <option value="trial">trial</option>
-                                                        </select>
-                                                        @error('ring')
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <div class="hstack gap-2 justify-content-end">
-                                                    <button type="button" class="btn btn-light"
-                                                        data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-success">Save Changes</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-
-                            <div class="noresult" style="display: none">
+                            @else
+                            <div class="noresult mt-5">
                                 <div class="text-center">
                                     <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
                                         colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
                                     </lord-icon>
-                                    <h5 class="mt-2">Sorry! No Result Found</h5>
-                                    <p class="text-muted mb-0">We've searched more than 150+ companies We did not find any
-                                        companies for you search.</p>
+                                    <h5 class="mt-2">Apologies, No Technologies Data Available</h5>
+                                    <p class="text-muted mb-0">Unfortunately, there are no Technologies available to display.
                                 </div>
-                            </div>
+                            </div>  
+                            @endif      
                         </div>
                         <div class="d-flex justify-content-end mt-3">
                             <div class="col-sm-6">
@@ -395,6 +259,133 @@
                             </div>
                         </div>
                     </div>
+                          <!-- Modal Edit -->
+                          <div class="modal fade" id="editTechnologyModal" tabindex="-1"
+                          aria-labelledby="editTechnologyModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered modal-lg">
+                              <div class="modal-content border-0">
+                                  <div class="modal-header bg-info-subtle p-3">
+                                      <h5 class="modal-title" id="editTechnologyModalLabel">Edit Technology</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                          aria-label="Close" id="close-edit-modal"></button>
+                                  </div>
+                                  <form
+                                      action="/companies/technologies/edit?permission=Edit Technology&idcp={{ $company->id }}"
+                                      method="POST" autocomplete="off" id="editTechnologyForm">
+                                      @csrf
+                                      <input type="hidden" name="id" id="edit-technology-id">
+                                      <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                      <input type="hidden" name="company_id" value="{{ $company->id }}">
+                                      <input type="hidden" name="user" value="{{ $user->name }}">
+
+                                      <div class="modal-body">
+                                          <div class="row g-3">
+                                              <div class="col-lg-12">
+                                                  <label for="edit-category"
+                                                      class="form-label text-secondary mb-1">Category
+                                                      <span style="color:var(--error)">*</span>
+                                                  </label>
+                                                  <select class="form-select @error('category') is-invalid @enderror"
+                                                      id="edit-category" name="category_id" required>
+                                                      <option value="" disabled selected>Select Category
+                                                      </option>
+                                                      @foreach ($categories as $category)
+                                                          <option value="{{ $category->id }}">{{ $category->name }}
+                                                          </option>
+                                                      @endforeach
+                                                  </select>
+                                                  @error('ring')
+                                                      <span class="invalid-feedback" role="alert">
+                                                          <strong>{{ $message }}</strong>
+                                                      </span>
+                                                  @enderror
+                                              </div>
+                                              <div class="col-lg-12">
+                                                  <label for="edit-name"
+                                                      class="form-label text-secondary mb-1">Technology Name
+                                                      <span style="color:var(--error)">*</span>
+                                                  </label>
+                                                  <input type="text"
+                                                      class="form-control @error('name') is-invalid @enderror"
+                                                      id="edit-name" name="name"
+                                                      placeholder="Enter technology name"
+                                                      value="{{ old('name') }}" required>
+                                                  @error('name')
+                                                      <span class="invalid-feedback" role="alert">
+                                                          <strong>{{ $message }}</strong>
+                                                      </span>
+                                                  @enderror
+                                              </div>
+                                              <div class="col-lg-12">
+                                                  <div class="mb-2">
+                                                      <label for="description" class="form-label text-secondary"
+                                                          style="font-weight:600;">Description
+                                                          <span style="color: var(--error);">*</span>
+                                                      </label>
+                                                      <input id="edit-description" name="description"
+                                                          type="hidden"
+                                                          class="@error('description') is-invalid @enderror"
+                                                          value="{{ old('description') }}">
+                                                      <trix-editor input="edit-description"></trix-editor>
+                                                      @error('description')
+                                                          <span class="invalid-feedback" role="alert">
+                                                              <strong>{{ $message }}</strong>
+                                                          </span>
+                                                      @enderror
+                                                  </div>
+                                              </div>
+                                              <div class="col-lg-12">
+                                                  <label for="edit-quadrant"
+                                                      class="form-label text-secondary mb-1">Quadrant
+                                                      <span style="color:var(--error)">*</span>
+                                                  </label>
+                                                  <select class="form-select @error('quadrant') is-invalid @enderror"
+                                                      id="edit-quadrant" name="quadrant" required>
+                                                      <option value="" disabled selected>Select Quadrant
+                                                      </option>
+                                                      <option value="Techniques">Techniques</option>
+                                                      <option value="Platforms">Platforms</option>
+                                                      <option value="Tools">Tools</option>
+                                                      <option value="Languages and Frameworks">Languages and Frameworks
+                                                      </option>
+                                                  </select>
+                                                  @error('quadrant')
+                                                      <span class="invalid-feedback" role="alert">
+                                                          <strong>{{ $message }}</strong>
+                                                      </span>
+                                                  @enderror
+                                              </div>
+                                              <div class="col-lg-12">
+                                                  <label for="edit-ring" class="form-label text-secondary mb-1">Ring
+                                                      <span style="color:var(--error)">*</span>
+                                                  </label>
+                                                  <select class="form-select @error('ring') is-invalid @enderror"
+                                                      id="edit-ring" name="ring" required>
+                                                      <option value="" disabled selected>Select Ring</option>
+                                                      <option value="hold">hold</option>
+                                                      <option value="adopt">adopt</option>
+                                                      <option value="assess">assess</option>
+                                                      <option value="trial">trial</option>
+                                                  </select>
+                                                  @error('ring')
+                                                      <span class="invalid-feedback" role="alert">
+                                                          <strong>{{ $message }}</strong>
+                                                      </span>
+                                                  @enderror
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <div class="hstack gap-2 justify-content-end">
+                                              <button type="button" class="btn btn-light"
+                                                  data-bs-dismiss="modal">Close</button>
+                                              <button type="submit" class="btn btn-success">Save Changes</button>
+                                          </div>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
                     <div class="modal fade" id="addTehcnologyModal" tabindex="-1"
                         aria-labelledby="addTechnologyModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -646,6 +637,16 @@
                 icon: 'success',
                 title: 'Success',
                 text: "{{ session('success_update') }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @endif
+
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: "{{ session('success') }}",
                 showConfirmButton: false,
                 timer: 1500
             });

@@ -1,5 +1,5 @@
 <?php $__env->startSection('title'); ?>
-    <?php echo app('translator')->get('translation.companies'); ?>
+    Roles
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('css'); ?>
     <link href="<?php echo e(URL::asset('build/libs/sweetalert2/sweetalert2.min.css')); ?>" rel="stylesheet" type="text/css" />
@@ -7,14 +7,16 @@
 <?php $__env->startSection('content'); ?>
     <?php $__env->startComponent('components.breadcrumb'); ?>
         <?php $__env->slot('li_1'); ?>
-            Companies
+            <?php echo e($company->name); ?>
+
         <?php $__env->endSlot(); ?>
         <?php $__env->slot('title'); ?>
-            Role
+            Roles
         <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
 
-    <div class="row">
+    <h4>Roles Page</h4>
+    <div class="row mt-3">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
@@ -23,29 +25,12 @@
                             <button class="btn btn-secondary add-btn" data-bs-toggle="modal" data-bs-target="#showModal"><i
                                     class="ri-add-fill me-1 align-bottom"></i> Add Role</button>
                         </div>
-                        <div class="flex-shrink-0">
-                            <div class="hstack text-nowrap gap-2">
-                                <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i
-                                        class="ri-delete-bin-2-line"></i></button>
-                                <button class="btn btn-primary"><i class="ri-filter-2-line me-1 align-bottom"></i>
-                                    Filters</button>
-                                <button class="btn btn-soft-success">Import</button>
-                                <button type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown"
-                                    aria-expanded="false" class="btn btn-soft-info"><i class="ri-more-2-fill"></i></button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                    <li><a class="dropdown-item" href="#">All</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Week</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Month</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Year</a></li>
-                                </ul>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <!--end col-->
-        <div class="col-xxl-9">
+        <div class="">
             <div class="card" id="companyList">
                 <div class="card-header">
                     <div class="row g-2">
@@ -53,7 +38,7 @@
                             <form action="<?php echo e(url()->current()); ?>" method="GET">
                                 <div class="input-group mb-3">
                                     <input type="text" name="search" class="form-control search bg-light border-light"
-                                        id="searchJob" value="<?php echo e(request('search')); ?>" placeholder="Search for members...">
+                                        id="searchJob" value="<?php echo e(request('search')); ?>" placeholder="Search for roles...">
                                     <!-- Memastikan filter tetap dibawa ketika search dilakukan -->
                                     <input type="hidden" name="sort_order" value="<?php echo e(request('sort_order')); ?>">
                                     <input type="hidden" name="permission" value="Read Company Role">
@@ -64,32 +49,37 @@
                                 </div>
                             </form>
                         </div>
-                    
+
                         <div class="col-md-auto ms-auto">
                             <div class="d-flex align-items-center gap-2">
-                                <span class="fw-bold">Urutkan Berdasarkan : </span>
+                                <span class="fw-bold">Sort By : </span>
                                 <form action="<?php echo e(url()->current()); ?>" method="GET" id="filterForm">
                                     <!-- Hidden input untuk menjaga parameter yang sudah ada di URL -->
                                     <input type="hidden" name="permission" value="Read Company Role">
                                     <input type="hidden" name="idcp" value="<?php echo e($company->id); ?>">
                                     <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
-                    
+
                                     <select class="form-control" style="cursor: pointer" name="sort_order" id="sortOrder"
                                         onchange="this.form.submit()">
-                                        <option value="terbaru" <?php echo e(request('sort_order') == 'terbaru' ? 'selected' : ''); ?>>Terbaru</option>
-                                        <option value="terlama" <?php echo e(request('sort_order') == 'terlama' ? 'selected' : ''); ?>>Terlama</option>
-                                        <option value="A-Z" <?php echo e(request('sort_order') == 'A-Z' ? 'selected' : ''); ?>>A-Z</option>
-                                        <option value="Z-A" <?php echo e(request('sort_order') == 'Z-A' ? 'selected' : ''); ?>>Z-A</option>
+                                        <option value="terbaru" <?php echo e(request('sort_order') == 'terbaru' ? 'selected' : ''); ?>>
+                                            Terbaru</option>
+                                        <option value="terlama" <?php echo e(request('sort_order') == 'terlama' ? 'selected' : ''); ?>>
+                                            Terlama</option>
+                                        <option value="A-Z" <?php echo e(request('sort_order') == 'A-Z' ? 'selected' : ''); ?>>A-Z
+                                        </option>
+                                        <option value="Z-A" <?php echo e(request('sort_order') == 'Z-A' ? 'selected' : ''); ?>>Z-A
+                                        </option>
                                     </select>
                                 </form>
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="card-body">
                     <div>
                         <div class="table-responsive table-card mb-3">
+                            <?php if($roles->isNotEmpty()): ?>
                             <table class="table align-middle table-nowrap mb-0" id="roleTable">
                                 <thead class="table-light">
                                     <tr>
@@ -100,7 +90,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                            
+
                                     <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
                                             <td><?php echo e($roles->firstItem() + $index); ?></td>
@@ -128,112 +118,24 @@
                                         </tr>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tbody>
-                            </table>
-
-                            <!-- Modal Edit -->
-                            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered modal-lg">
-                                    <div class="modal-content border-0">
-                                        <div class="modal-header bg-info-subtle p-3">
-                                            <h5 class="modal-title" id="editModalLabel">Edit Role</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close" id="close-edit-modal"></button>
-                                        </div>
-                                        <form class="tablelist-form" action="/companies/roles/edit?permission=Edit Company Role&idcp=<?php echo e($company->id); ?>" method="POST"
-                                            autocomplete="off" id="editRoleForm">
-                                            <?php echo csrf_field(); ?>
-                                            <input type="hidden" id="edit-role-id" name="role_id"
-                                                value="<?php echo e(old('id')); ?>" />
-                                            <input type="hidden" name="company" value="<?php echo e($company->id); ?>">
-                                            <div class="modal-body">
-                                                <input type="hidden" id="edit-company-id" name="company_id"
-                                                    value="<?php echo e($company->id); ?>" />
-                                                    <input type="hidden" name="user"
-                                            value="<?php echo e($user->name); ?>" />
-                                                <div class="row g-3">
-                                                    <div class="col-lg-12">
-                                                        <label for="edit-name" class="form-label text-secondary mb-1">Role
-                                                            Name
-                                                            <span style="color:var(--error)">*</span>
-                                                        </label>
-                                                        <input type="text"
-                                                            class="form-control <?php $__errorArgs = ['name'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>"
-                                                            id="edit-name" name="name" placeholder="Enter role name"
-                                                            value="<?php echo e(old('name')); ?>" required>
-                                                        <?php $__errorArgs = ['name'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong><?php echo e($message); ?></strong>
-                                                            </span>
-                                                        <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <label for="edit-description"
-                                                            class="form-label text-secondary mb-1">Description</label>
-                                                        <textarea class="form-control <?php $__errorArgs = ['description'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>" id="edit-description" name="description"
-                                                            placeholder="Enter description"><?php echo e(old('description')); ?></textarea>
-                                                        <?php $__errorArgs = ['description'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong><?php echo e($message); ?></strong>
-                                                            </span>
-                                                        <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <div class="hstack gap-2 justify-content-end">
-                                                    <button type="button" class="btn btn-light"
-                                                        data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-success">Save Changes</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="noresult" style="display: none">
+                            </table>     
+                            <?php else: ?>
+                            <div class="noresult">
                                 <div class="text-center">
                                     <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
                                         colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
                                     </lord-icon>
-                                    <h5 class="mt-2">Sorry! No Result Found</h5>
-                                    <p class="text-muted mb-0">We've searched more than 150+ companies We did not find any
-                                        companies for you search.</p>
+                                    <h5 class="mt-2">Apologies, No Roles Data Available</h5>
+                                    <p class="text-muted mb-0">Unfortunately, there are no Roles available to display.
+                                    </p>
                                 </div>
                             </div>
+                            <?php endif; ?>
                         </div>
                         <div class="d-flex justify-content-end mt-3">
                             <div class="col-sm-6">
-                                <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                <div
+                                    class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
                                     <?php if($roles->onFirstPage()): ?>
                                         <div class="page-item disabled">
                                             <span class="page-link">Previous</span>
@@ -244,19 +146,21 @@ unset($__errorArgs, $__bag); ?>
                                                 class="page-link" id="page-prev">Previous</a>
                                         </div>
                                     <?php endif; ?>
-                            
+
                                     <!-- Page Numbers -->
                                     <span id="page-num" class="pagination">
                                         <?php $__currentLoopData = $roles->links()->elements[0]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <?php if($page == $roles->currentPage()): ?>
-                                                <span class="page-item active"><span class="page-link"><?php echo e($page); ?></span></span>
+                                                <span class="page-item active"><span
+                                                        class="page-link"><?php echo e($page); ?></span></span>
                                             <?php else: ?>
                                                 <a href="<?php echo e($roles->appends(request()->except('page'))->url($page)); ?>"
-                                                    class="page-item"><span class="page-link"><?php echo e($page); ?></span></a>
+                                                    class="page-item"><span
+                                                        class="page-link"><?php echo e($page); ?></span></a>
                                             <?php endif; ?>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </span>
-                            
+
                                     <?php if($roles->hasMorePages()): ?>
                                         <div class="page-item">
                                             <a href="<?php echo e($roles->appends(request()->except('page'))->nextPageUrl()); ?>"
@@ -269,7 +173,96 @@ unset($__errorArgs, $__bag); ?>
                                     <?php endif; ?>
                                 </div>
                             </div>
-                            
+
+                        </div>
+                    </div>
+                    <!-- Modal Edit -->
+                    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0">
+                                <div class="modal-header bg-info-subtle p-3">
+                                    <h5 class="modal-title" id="editModalLabel">Edit Role</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                        id="close-edit-modal"></button>
+                                </div>
+                                <form class="tablelist-form"
+                                    action="/companies/roles/edit?permission=Edit Company Role&idcp=<?php echo e($company->id); ?>"
+                                    method="POST" autocomplete="off" id="editRoleForm">
+                                    <?php echo csrf_field(); ?>
+                                    <input type="hidden" id="edit-role-id" name="role_id"
+                                        value="<?php echo e(old('id')); ?>" />
+                                    <input type="hidden" name="company" value="<?php echo e($company->id); ?>">
+                                    <div class="modal-body">
+                                        <input type="hidden" id="edit-company-id" name="company_id"
+                                            value="<?php echo e($company->id); ?>" />
+                                        <input type="hidden" name="user" value="<?php echo e($user->name); ?>" />
+                                        <div class="row g-3">
+                                            <div class="col-lg-12">
+                                                <label for="edit-name" class="form-label text-secondary mb-1">Role
+                                                    Name
+                                                    <span style="color:var(--error)">*</span>
+                                                </label>
+                                                <input type="text"
+                                                    class="form-control <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                                    id="edit-name" name="name" placeholder="Enter role name"
+                                                    value="<?php echo e(old('name')); ?>" required>
+                                                <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong><?php echo e($message); ?></strong>
+                                                    </span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <label for="edit-description"
+                                                    class="form-label text-secondary mb-1">Description</label>
+                                                <textarea class="form-control <?php $__errorArgs = ['description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" id="edit-description" name="description"
+                                                    placeholder="Enter description"><?php echo e(old('description')); ?></textarea>
+                                                <?php $__errorArgs = ['description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong><?php echo e($message); ?></strong>
+                                                    </span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="hstack gap-2 justify-content-end">
+                                            <button type="button" class="btn btn-light"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-success">Save Changes</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                     <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -281,14 +274,14 @@ unset($__errorArgs, $__bag); ?>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                         id="close-modal"></button>
                                 </div>
-                                <form class="tablelist-form" action="/companies/roles/add?permission=Add Company Role&idcp=<?php echo e($company->id); ?>" method="POST"
-                                    autocomplete="off">
+                                <form class="tablelist-form"
+                                    action="/companies/roles/add?permission=Add Company Role&idcp=<?php echo e($company->id); ?>"
+                                    method="POST" autocomplete="off">
                                     <?php echo csrf_field(); ?>
                                     <div class="modal-body">
                                         <input type="hidden" id="id-field" name="company_id"
                                             value="<?php echo e($company->id); ?>" />
-                                            <input type="hidden" name="user"
-                                            value="<?php echo e($user->name); ?>" />
+                                        <input type="hidden" name="user" value="<?php echo e($user->name); ?>" />
                                         <div class="row g-3">
                                             <div class="col-lg-12">
                                                 <label for="name" class="form-label text-secondary mb-1">Role Name
@@ -381,7 +374,8 @@ unset($__errorArgs, $__bag); ?>
                                                 data-bs-dismiss="modal">
                                                 <i class="ri-close-line me-1 align-middle"></i> Close
                                             </button>
-                                            <form id="delete-form" method="POST" action="<?php echo e(route('roles.delete')); ?>?permission=Delete Company Role&idcp=<?php echo e($company->id); ?>">
+                                            <form id="delete-form" method="POST"
+                                                action="<?php echo e(route('roles.delete')); ?>?permission=Delete Company Role&idcp=<?php echo e($company->id); ?>">
                                                 <?php echo csrf_field(); ?>
                                                 <?php echo method_field('DELETE'); ?>
                                                 <input type="hidden" name="company" value="<?php echo e($company->id); ?>">
@@ -458,6 +452,15 @@ unset($__errorArgs, $__bag); ?>
                 icon: 'success',
                 title: 'Success',
                 text: "<?php echo e(session('success_delete')); ?>",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        <?php endif; ?>
+        <?php if(session('error')): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'error',
+                text: "<?php echo e(session('error')); ?>",
                 showConfirmButton: false,
                 timer: 1500
             });

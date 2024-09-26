@@ -116,7 +116,7 @@
                                             <li class="nav-item">
                                                 <a href="/companies/users/<?php echo e($company->id); ?>?permission=Read Company User&idcp=<?php echo e($company->id); ?>"
                                                     class="nav-link <?php echo e(request()->is('companies/users/' . $company->id) ? 'text-primary' : ''); ?>">
-                                                    Users
+                                                    Employees
                                                 </a>
                                             </li>
                                             <li class="nav-item">

@@ -134,7 +134,7 @@
                                             <li class="nav-item">
                                                 <a href="/companies/users/{{ $company->id }}?permission=Read Company User&idcp={{ $company->id }}"
                                                     class="nav-link {{ request()->is('companies/users/' . $company->id) ? 'text-primary' : '' }}">
-                                                    Users
+                                                    Employees
                                                 </a>
                                             </li>
                                             <li class="nav-item">

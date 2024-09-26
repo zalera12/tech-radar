@@ -41,8 +41,7 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::post('/companies/user/add', [CompaniesController::class, 'addUser'])
             ->middleware('check.permission:Add Company User')->name('company.addUser');
         Route::post('/companies/users/edit', [CompaniesController::class, 'updateRoleUser'])
-            ->middleware('check.permission:Edit Company User')->name('company-users.update');
-     
+            ->middleware('check.permission:Edit Company User')->name('company-users.update');   
         Route::post('/companies/roles/delete', [CompaniesController::class, 'destroyUserCompanies'])
             ->middleware('check.permission:Delete Company User')->name('companies.roles.delete');
 
@@ -88,7 +87,7 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/companies/pendingMember/{company}', [CompaniesController::class, 'pendingMemberCompanies'])
             ->middleware('check.permission:Read Pending Company User')->name('companies.pendingMembers');
         Route::put('/companies/pendingMember/update/{member}', [CompaniesController::class, 'updatePendingMember'])
-            ->middleware('check.permission:Update Company User')->name('companies.pendingMember.update');
+            ->middleware('check.permission:Acc Company User')->name('companies.pendingMember.update');
 
         //Permission: Manage Log
         Route::get('/companies/log/{company}', [LogController::class, 'index'])

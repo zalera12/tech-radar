@@ -390,7 +390,7 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-                                        <div class="mb-4">
+                                        <div class="mb-4 mt-4">
                                             <label for="status" class="form-label text-black mb-1">status
                                                 <span style="color:var(--error)">*</span>
                                             </label>

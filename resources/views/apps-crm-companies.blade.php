@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    @lang('translation.companies')
+    employees
 @endsection
 @section('css')
     <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
@@ -8,45 +8,29 @@
 @section('content')
     @component('components.breadcrumb')
         @slot('li_1')
-            Companies
+            {{ $company->name }}
         @endslot
         @slot('title')
-            Users
+            Employees
         @endslot
     @endcomponent
 
-    <div class="row">
+    <h4>Users Page</h4>
+    <div class="row mt-3">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center flex-wrap gap-2">
                         <div class="flex-grow-1">
                             <button class="btn btn-secondary add-btn" data-bs-toggle="modal" data-bs-target="#showModal"><i
-                                    class="ri-add-fill me-1 align-bottom"></i> Add Users</button>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <div class="hstack text-nowrap gap-2">
-                                <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i
-                                        class="ri-delete-bin-2-line"></i></button>
-                                <button class="btn btn-primary"><i class="ri-filter-2-line me-1 align-bottom"></i>
-                                    Filters</button>
-                                <button class="btn btn-soft-success">Import</button>
-                                <button type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown"
-                                    aria-expanded="false" class="btn btn-soft-info"><i class="ri-more-2-fill"></i></button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                    <li><a class="dropdown-item" href="#">All</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Week</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Month</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Year</a></li>
-                                </ul>
-                            </div>
+                                    class="ri-add-fill me-1 align-bottom"></i> Add Employee</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!--end col-->
-        <div class="col-xxl-9">
+        <div class="">
             <div class="card" id="companyList">
                 <div class="card-header">
                     <div
@@ -56,7 +40,7 @@
                             <form action="{{ url()->current() }}" method="GET" class="d-flex align-items-center w-100">
                                 <div class="input-group mb-0">
                                     <input type="text" name="search" class="form-control search bg-light border-light"
-                                        id="searchJob" value="{{ request('search') }}" placeholder="Search for members...">
+                                        id="searchJob" value="{{ request('search') }}" placeholder="Search for employees...">
                                     <!-- Memastikan parameter filter dan sort_order tetap ada saat search dilakukan -->
                                     <input type="hidden" name="sort_order" value="{{ request('sort_order') }}">
                                     <input type="hidden" name="role_id" value="{{ request('role_id') }}">
@@ -80,9 +64,9 @@
 
                                 <div class="input-group mb-0 d-flex align-items-center">
                                     <label for="roleFilter" class="form-label me-3">Filter Role</label>
-                                    <select class="form-control" name="role_id" id="roleFilter"
+                                    <select class="form-control text-center" name="role_id" id="roleFilter"
                                         onchange="this.form.submit()">
-                                        <option value="">-- All Roles --</option>
+                                        <option value="">All Roles</option>
                                         @foreach ($roles as $role)
                                             <option value="{{ $role->id }}"
                                                 {{ request('role_id') == $role->id ? 'selected' : '' }}>
@@ -103,8 +87,8 @@
                                 <input type="hidden" name="permission" value="Read Company User">
 
                                 <div class="input-group mb-0 d-flex align-items-center">
-                                    <label for="sortOrder" class="form-label me-3">Urutkan Berdasarkan</label>
-                                    <select class="form-control" name="sort_order" id="sortOrder"
+                                    <label for="sortOrder" class="form-label me-3">Sort By : </label>
+                                    <select class="form-control text-center" name="sort_order" id="sortOrder"
                                         onchange="this.form.submit()">
                                         <option value="terbaru"
                                             {{ request('sort_order') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
@@ -124,80 +108,78 @@
                 <div class="card-body">
                     <div>
                         <div class="table-responsive table-card mb-3">
-                            <table class="table align-middle table-nowrap mb-0" id="customerTable">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="sort" data-sort="name" scope="col">No</th>
-                                        <th class="sort" data-sort="name" scope="col">Photo</th>
-                                        <th class="sort" data-sort="owner" scope="col">Name</th>
-                                        <th class="sort" data-sort="industry_type" scope="col">Email</th>
-                                        <th class="sort" data-sort="role" scope="col">Role</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($companyUsers as $index => $member)
-                                        <tr data-id="{{ $member->id }}" data-company-id="{{ $company->id }}"
-                                            data-role-id="{{ $member->pivot->role_id }}">
-                                            <td>{{ $companyUsers->firstItem() + $index }}</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0">
-                                                        <img src="{{ asset($member->photo ? 'storage/' . $member->photo : '/build/images/users/user-dummy-img.jpg') }}"
-                                                            alt="User Photo"
-                                                            class="avatar-xxs rounded-circle object-fit-cover">
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="name">{{ $member->name }}</td>
-                                            <td class="email">{{ $member->email }}</td>
-                                            <td>
-                                                <?php
-                                                $roleId = $member->pivot->role_id;
-                                                $role = App\Models\Role::find($roleId);
-                                                ?>
-                                                {{ $role ? $role->name : 'N/A' }}
-                                            </td>
-                                            <td>
-                                                <ul class="list-inline hstack gap-2 mb-0">
-                                                    <li class="list-inline-item edit" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="Message">
-                                                        <a href="javascript:void(0);" class="text-muted d-inline-block">
-                                                            <i class="ri-question-answer-line fs-16"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top"
-                                                        title="Edit Role">
-                                                        <a class="edit-item-btn" href="#editUserRoleModal"
-                                                            data-bs-toggle="modal">
-                                                            <i class="ri-pencil-fill align-bottom text-muted"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="Delete">
-                                                        <a class="remove-item-btn" data-bs-toggle="modal"
-                                                            href="#deleteRecordModal" data-userId="{{ $member->id }}">
-                                                            <i class="ri-delete-bin-fill align-bottom text-muted"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </td>
+                            @if ($companyUsers->isNotEmpty())
+                                <table class="table align-middle table-nowrap mb-0" id="customerTable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="sort" data-sort="name" scope="col">No</th>
+                                            <th class="sort" data-sort="name" scope="col">Photo</th>
+                                            <th class="sort" data-sort="owner" scope="col">Name</th>
+                                            <th class="sort" data-sort="industry_type" scope="col">Email</th>
+                                            <th class="sort" data-sort="role" scope="col">Role</th>
+                                            <th scope="col">Action</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-
-                            <div class="noresult" style="display: none">
-                                <div class="text-center">
-                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                        colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
-                                    </lord-icon>
-                                    <h5 class="mt-2">Sorry! No Result Found</h5>
-                                    <p class="text-muted mb-0">We've searched more than 150+ companies We did not find any
-                                        companies for you search.</p>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($companyUsers as $index => $member)
+                                            <tr data-id="{{ $member->id }}" data-company-id="{{ $company->id }}"
+                                                data-role-id="{{ $member->pivot->role_id }}">
+                                                <td>{{ $companyUsers->firstItem() + $index }}</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0">
+                                                            <img src="{{ asset($member->photo ? 'storage/' . $member->photo : '/build/images/users/user-dummy-img.jpg') }}"
+                                                                alt="User Photo"
+                                                                class="avatar-xxs rounded-circle object-fit-cover">
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="name">{{ $member->name }}</td>
+                                                <td class="email">{{ $member->email }}</td>
+                                                <td>
+                                                    <?php
+                                                    $roleId = $member->pivot->role_id;
+                                                    $role = App\Models\Role::find($roleId);
+                                                    ?>
+                                                    {{ $role ? $role->name : 'N/A' }}
+                                                </td>
+                                                <td>
+                                                    <ul class="list-inline hstack gap-2 mb-0">
+                                                        <li class="list-inline-item" data-bs-toggle="tooltip"
+                                                            data-bs-trigger="hover" data-bs-placement="top"
+                                                            title="Edit">
+                                                            <a class="edit-item-btn" href="#editUserRoleModal"
+                                                                data-bs-toggle="modal" data-role="{{ $role->name }}">
+                                                                <i class="ri-pencil-fill align-bottom text-muted"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-inline-item" data-bs-toggle="tooltip"
+                                                            data-bs-trigger="hover" data-bs-placement="top" title="Delete">
+                                                            <a class="remove-item-btn" data-bs-toggle="modal"
+                                                                href="#deleteRecordModal" data-userId="{{ $member->id }}" data-role="{{ $role->name }}">
+                                                                <i class="ri-delete-bin-fill align-bottom text-muted"></i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                
+                            @else
+                                <div class="noresult mt-5">
+                                    <div class="text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                            colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
+                                        </lord-icon>
+                                        <h5 class="mt-2">Apologies, No Employees Data Available</h5>
+                                        <p class="text-muted mb-0">Unfortunately, there are no employees available to display.
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                                
+                            @endif
                         </div>
                         <div class="d-flex justify-content-end mt-3">
                             <div class="col-sm-6">
@@ -255,8 +237,9 @@
                                     @csrf
                                     <input type="hidden" name="id" id="id-user" value="">
                                     <input type="hidden" name="user" value="{{ $user->name }}">
-                                    <input type="hidden" name="company_id" value="{{ $company->id }}"
-                                        id="id-company">
+                                    <input type="hidden" name="company_id" value="{{ $company->id }}">
+                                    <input type="hidden" name="roleOld" id="roleOld">
+
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="editUserRoleModalLabel">Edit User Role</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -361,6 +344,7 @@
                                             @csrf
                                             <input type="hidden" name="user" value="{{ $user->name }}" >
                                             <input type="hidden" name="user_id" id="userId">
+                                            <input type="hidden" name="role" id="role">
                                             <input type="hidden" name="company_id" id="companyId">
                                             <div class="hstack gap-2 justify-content-center remove">
                                                 <button class="btn btn-link link-success fw-medium text-decoration-none"
@@ -398,12 +382,11 @@
             button.addEventListener('click', function() {
                 const row = this.closest('tr');
                 const Id = row.getAttribute('data-id');
-                const idCompany = row.getAttribute('data-company-id');
-                const roleId = row.getAttribute('data-role-id');
+                const roleName = this.getAttribute('data-role');
 
                 // Set nilai hidden input di form modal
                 document.getElementById('id-user').value = Id;
-                document.getElementById('id-company').value = idCompany;
+                document.getElementById('roleOld').value = roleName;
 
                 // Set action URL form sesuai dengan ID user
                 const form = document.getElementById('editUserRoleForm');
@@ -452,11 +435,11 @@
             button.addEventListener('click', function() {
                 const userId = this.getAttribute('data-userId');
                 const companyId = this.closest('tr').getAttribute('data-company-id');
-
+                const roleName = this.getAttribute('data-role');
                 // Set nilai hidden input di form
                 document.getElementById('userId').value = userId;
                 document.getElementById('companyId').value = companyId;
-
+                document.getElementById('role').value = roleName;
                 // Tampilkan modal delete
                 const deleteModal = new bootstrap.Modal(document.getElementById('deleteRecordModal'));
                 deleteModal.show();
@@ -473,5 +456,52 @@
             document.body.style.paddingRight = '';
             document.body.style.overflow = '';
         });
+
+        
+        @if (session('not_found'))
+            Swal.fire({
+                icon: 'error',
+                title: 'error',
+                text: "{{ session('not_found') }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @endif
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'error',
+                text: "{{ session('error') }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @endif
+        @if (session('user_exists'))
+            Swal.fire({
+                icon: 'error',
+                title: 'error',
+                text: "{{ session('user_exists') }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @endif
+        @if (session('add_success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: "{{ session('add_success') }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @endif
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @endif
     </script>
 @endsection

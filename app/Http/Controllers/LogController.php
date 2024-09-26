@@ -40,7 +40,7 @@ class LogController extends Controller
     }
 
     // Pagination dengan 10 item per halaman
-    $logs = $logsQuery->paginate(3)->withQueryString();
+    $logs = $logsQuery->latest()->paginate(50)->withQueryString();
 
     return view('apps-crm-log', [
         'user' => auth()->user(),
@@ -60,10 +60,10 @@ class LogController extends Controller
             $log->delete();
 
             // Redirect dengan pesan sukses
-            return redirect("/companies/log/$request->company_id?permission=Read Change Log&idcp=$request->company_id")->with('success', 'Log berhasil dihapus.');
+            return redirect("/companies/log/$request->company_id?permission=Read Change Log&idcp=$request->company_id")->with('success', 'Logs have been successfully deleted.');
         }
 
         // Redirect dengan pesan error jika log tidak ditemukan
-        return redirect()->back()->with('error', 'Log tidak ditemukan.');
+        return redirect()->back()->with('error', 'Log Not Found.');
     }
 }

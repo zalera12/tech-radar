@@ -456,7 +456,8 @@ unset($__errorArgs, $__bag); ?>
                                 <p class="card-text text-muted mb-0"><?php echo e($category->description); ?></p>
                             </div>
                             <div class="card-footer">
-                                <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/<?php echo e($category->name); ?>.json" class="link-success float-end">View Radar <i
+                                <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/<?php echo e(strtoupper($category->name)); ?>.json"
+                                    class="link-success float-end">View Radar <i
                                         class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i></a>
                                 <p class="text-muted mb-0">
                                     <?php echo e(\Carbon\Carbon::parse($category->created_at)->format('d F Y')); ?>
@@ -486,13 +487,25 @@ unset($__errorArgs, $__bag); ?>
         </div>
         <div class="row mt-3">
             <?php
-            $employess = $company->users;
+            $employess = $company
+                ->users()
+                ->wherePivot('status', 'ACCEPTED')
+                ->orderBy('pivot_created_at', 'asc') // Urutkan berdasarkan waktu yang terlama
+                ->get();
             ?>
             <?php $__currentLoopData = $employess; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="col-xl-4">
                     <div class="card">
                         <div class="card-header text-center">
-                            <h6 class="card-title mb-0">Our Employee</h6>
+                            <h6 class="card-title mb-0"></h6>
+                            <?php
+                            $roleId = App\Models\company_users::where('company_id', $company->id)
+                                ->where('user_id', $employee->id)
+                                ->pluck('role_id')
+                                ->first();
+                            $role = App\Models\Role::where('id',$roleId)->first()->name;
+                            ?>
+                            <p class="mb-0 fw-medium" style="font-size: 14px;"><?php echo e($role); ?></p>
                         </div>
                         <div class="card-body p-4 text-center">
                             <div class="mx-auto avatar-md mb-3">
@@ -502,12 +515,14 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <h5 class="card-title mb-1"><?php echo e($employee->name); ?></h5>
                             <?php
-                            $role = $user
-                                ->roles()
-                                ->wherePivot('company_id', $company->id)
+                            //cari data company dan user tertentu
+                            $waktu_masuk = App\Models\company_users::where('company_id', $company->id)
+                                ->where('user_id', $employee->id)
+                                ->pluck('created_at')
                                 ->first();
                             ?>
-                            <p class="text-muted mb-0 fw-medium" style="font-size: 12px;"><?php echo e($role->name); ?></p>
+                            <p class="text-muted mb-0 fw-medium" style="font-size: 12px;"><?php echo e($waktu_masuk->diffForHumans()); ?></p>
+
                         </div>
                         <div class="card-footer text-center">
                             <i class="ri-window-line align-bottom me-1"></i>

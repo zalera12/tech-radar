@@ -375,7 +375,7 @@
                                                 </span>
                                             </div>
                                         @enderror
-                                        <div class="mb-4">
+                                        <div class="mb-4 mt-4">
                                             <label for="status" class="form-label text-black mb-1">status
                                                 <span style="color:var(--error)">*</span>
                                             </label>
