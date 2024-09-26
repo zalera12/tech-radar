@@ -66,6 +66,6 @@ class CheckPermission
             return $next($request);
         }
 
-        return redirect()->back()->with('error', 'Anda tidak mempunyai akses ke halaman yang ingin Anda tuju');
+        return redirect()->back()->with('error', 'You do not have permission to perform this action.');
     }
 }

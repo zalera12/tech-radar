@@ -42,10 +42,23 @@
                                                 data-bs-target="#editCompanyModal">
                                                 <i class="ri-pencil-line align-bottom me-1"></i> Edit Company
                                             </button>
-                                            <button class="btn btn-danger btn-custom" data-bs-toggle="modal"
+                                            <button class="btn btn-danger btn-custom me-2" data-bs-toggle="modal"
                                                 data-bs-target="#deleteCompanyModal" data-id="{{ $company->id }}">
                                                 <i class="ri-delete-bin-line align-bottom me-1"></i> Delete Company
                                             </button>
+                                            <?php 
+                                                  $roleId = App\Models\company_users::where('company_id', $company->id)
+                                                        ->where('user_id', $user->id)
+                                                        ->pluck('role_id')
+                                                        ->first();
+                                                    $role = App\Models\Role::where('id',$roleId)->first()->name;
+                                            ?>
+                                            @if ($role != 'OWNER')
+                                                <button class="btn btn-danger btn-custom me-2" data-bs-toggle="modal"
+                                                    data-bs-target="#leavingCompanyModal" data-id="{{ $company->id }}">
+                                                    <i class="ri-share-forward-2-line align-bottom me-1"></i> Leaving The Company
+                                                </button>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -82,6 +95,46 @@
                                                                 value="{{ $user->name }}">
                                                             <button type="submit" class="btn btn-danger"
                                                                 id="delete-record">Yes, Delete It!</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade zoomIn" id="leavingCompanyModal" tabindex="-1"
+                                    aria-labelledby="leavingCompanyLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="btn-close" id="leavingRecord-close"
+                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body p-5 text-center">
+                                                <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
+                                                    colors="primary:#405189,secondary:#f06548"
+                                                    style="width:90px;height:90px">
+                                                </lord-icon>
+                                                <div class="mt-4 text-center">
+                                                    <h4 class="fs-semibold">Are you sure you want to leaving this company?
+                                                    </h4>
+                                                    <p class="text-muted fs-14 mb-4 pt-1">Leaving from this company will remove
+                                                        you from the company.</p>
+                                                    <div class="hstack gap-2 justify-content-center remove">
+                                                        <button
+                                                            class="btn btn-link link-success fw-medium text-decoration-none"
+                                                            data-bs-dismiss="modal">
+                                                            <i class="ri-close-line me-1 align-middle"></i> Close
+                                                        </button>
+                                                        <form id="leaving-form" method="POST"
+                                                            action="/companies/leaving/{{ $company->id }}?permission=Leaving The Company&idcp={{ $company->id }}">
+                                                            @csrf
+                                                            <input type="hidden" name="id" id="leaving-company-id">
+                                                            <input type="hidden" name="user"
+                                                                value="{{ $user->name }}">
+                                                            <button type="submit" class="btn btn-danger"
+                                                                id="leaving-record">Yes, I am!</button>
                                                         </form>
                                                     </div>
                                                 </div>

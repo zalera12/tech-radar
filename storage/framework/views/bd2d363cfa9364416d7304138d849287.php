@@ -124,7 +124,6 @@
 </div>
 <!-- END layout-wrapper -->
 
-<?php echo $__env->make('layouts.customizer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
 <!-- JAVASCRIPT -->
 <?php echo $__env->make('layouts.vendor-scripts', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
@@ -150,7 +149,7 @@
 
     <?php if(session('error')): ?>
         Swal.fire({
-            title: 'Gagal!',
+            title: 'Failed!',
             text: "<?php echo e(session('error')); ?>",
             icon: 'error',
             confirmButtonColor: '#3085d6',

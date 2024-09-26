@@ -130,6 +130,20 @@ class CompaniesController extends Controller
         ]);
     }
 
+    public function leavingCompanies(Request $request,Company $company){
+        $user = auth()->user() ;
+        $user->companies()->detach($company->id);
+        Notification::create([
+            'id' => Ulid::generate(),
+            'title' => 'Berhasil Keluar Dari Perusahaan!',
+            'message' => 'Selamat! Anda telah berhasil keluar dari perusahaan '.$company->name.'.',
+            'user_id' => $user->id,
+            'is_read' => false,
+        ]);
+        
+        return redirect('/index')->with('success_leaving','You have successfully left the company.');
+    }
+
     public function pendingMemberCompanies(Request $request, Company $company)
     {
         $user = auth()->user();

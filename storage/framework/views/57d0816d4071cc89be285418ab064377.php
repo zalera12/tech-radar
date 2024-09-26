@@ -1,5 +1,5 @@
 <?php $__env->startSection('title'); ?>
-    <?php echo app('translator')->get('translation.companies'); ?>
+    notifications
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('css'); ?>
     <link href="<?php echo e(URL::asset('build/libs/sweetalert2/sweetalert2.min.css')); ?>" rel="stylesheet" type="text/css" />
@@ -7,10 +7,10 @@
 <?php $__env->startSection('content'); ?>
     <?php $__env->startComponent('components.breadcrumb'); ?>
         <?php $__env->slot('li_1'); ?>
-            Companies
+            Dashboard
         <?php $__env->endSlot(); ?>
         <?php $__env->slot('title'); ?>
-            Users
+            Notifications
         <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
 

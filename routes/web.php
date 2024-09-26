@@ -44,6 +44,8 @@ Route::middleware(['web', 'auth'])->group(function () {
             ->middleware('check.permission:Edit Company User')->name('company-users.update');   
         Route::post('/companies/roles/delete', [CompaniesController::class, 'destroyUserCompanies'])
             ->middleware('check.permission:Delete Company User')->name('companies.roles.delete');
+        Route::post('/companies/leaving/{company}', [CompaniesController::class, 'leavingCompanies'])
+            ->middleware('check.permission:Leaving The Company');
 
         // Permission: Manage Company Roles
         Route::get('/companies/roles/{company}', [CompaniesController::class, 'rolesCompanies'])

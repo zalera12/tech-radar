@@ -500,6 +500,15 @@
             });
         @endif
 
+        @if(session('success_leaving'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "{{ session('success_leaving') }}",
+                confirmButtonText: 'Oke',
+            });
+        @endif
+
         @if(session('request_sent_successfully'))
             Swal.fire({
                 icon: 'success',

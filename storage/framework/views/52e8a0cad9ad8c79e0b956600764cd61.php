@@ -571,6 +571,15 @@ unset($__errorArgs, $__bag); ?>
             });
         <?php endif; ?>
 
+        <?php if(session('success_leaving')): ?>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "<?php echo e(session('success_leaving')); ?>",
+                confirmButtonText: 'Oke',
+            });
+        <?php endif; ?>
+
         <?php if(session('request_sent_successfully')): ?>
             Swal.fire({
                 icon: 'success',

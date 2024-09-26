@@ -126,7 +126,6 @@
                                                 </a>
                                             </li>
                                             <!-- Link ke Permissions, hanya muncul jika role user adalah Owner -->
-                                            <?php if($role && $role->name === 'OWNER'): ?>
                                                 <li class="nav-item">
                                                     <a href="/companies/permissions/<?php echo e($company->id); ?>?permission=Read User permission&idcp=<?php echo e($company->id); ?>"
                                                         class="nav-link <?php echo e(request()->is('companies/permissions/' . $company->id) ? 'text-primary' : ''); ?>">
@@ -145,7 +144,6 @@
                                                         Logs
                                                     </a>
                                                 </li>
-                                            <?php endif; ?>
                                         </ul>
                                     </div>
 
@@ -157,7 +155,7 @@
                 </li>
                 <!-- end Dashboard Menu -->
                 <li class="menu-title" style="">
-                    <span>Message</span>
+                    <span>Notification</span>
                 </li>
                 <div class="menu-dropdown" style="position: relative">
                     <ul class="nav nav-sm gap-3 flex-column">
@@ -166,7 +164,7 @@
                             <img src="<?php echo e(asset('/build/images/message.png')); ?>"
                                 style="width: 25px;height:25px;border-radius:50%;">
                             <span
-                                class="<?php echo e(request()->is('message') ? 'text-primary' : 'text-muted'); ?>">Messages</span>
+                                class="<?php echo e(request()->is('message') ? 'text-primary' : 'text-muted'); ?>">Notifications</span>
                         </a>
                     </ul>
                     <?php
