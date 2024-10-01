@@ -31,7 +31,7 @@ class AuthController extends Controller
             ]);
         }
         Auth::login($user);
-        return redirect('/')->with('login_success', "Hey there! You are in. Lets get started!");
+        return redirect('/index')->with('login_success', "Hey there! You are in. Lets get started!");
     }
 
     public function logout(Request $request)

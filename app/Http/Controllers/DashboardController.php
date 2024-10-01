@@ -164,7 +164,7 @@ class DashboardController extends Controller
             'status' => 'ACCEPTED',
         ]);
 
-        return redirect('/')->with('add_success', 'The Company Has Been Successfully Added!');
+        return redirect('/index')->with('add_success', 'The Company Has Been Successfully Added!');
     }
 
     public function editCompanies(Request $request, $id)

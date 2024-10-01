@@ -278,7 +278,7 @@
                             <span><?php echo e($totalTechnologies); ?> Technology</span>
                         </div>
                         <div style="margin-top:20px;">
-                            <a href="/company/detail/<?php echo e($company->id); ?>" class="btn"
+                            <a href="" class="btn"
                                 style="width: 100%;display:inline-block;text-align:center">Lihat Detail</a>
                         </div>
                     </div>
@@ -523,4 +523,4 @@
 </body>
 
 </html>
-<?php /**PATH E:\magang\test ui adminDashboard\Laravel\corporate\resources\views/index2.blade.php ENDPATH**/ ?>
+<?php /**PATH E:\magang\test ui adminDashboard\Laravel\corporate\resources\views//index2.blade.php ENDPATH**/ ?>

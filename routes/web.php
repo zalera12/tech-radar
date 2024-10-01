@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompaniesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\indexController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MessagesController;
 use App\Models\Category;
@@ -11,7 +12,6 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
 Route::middleware(['web', 'auth'])->group(function () {
-    Route::get('/', [DashboardController::class, 'index']);
     Route::get('/index', [DashboardController::class, 'index']);
     Route::get('/message', [MessagesController::class, 'index']);
     Route::get('/auth-profile', [DashboardController::class, 'profile']);
@@ -123,9 +123,11 @@ Route::get('/testApi', function () {
     return view('apiTest', ['categories' => $categories]);
 })->name('apiTest');
 
-Route::get('/testHome', function () {
-    return view('index2');
-})->name('testHome');
+Route::get('/', [indexController::class,"index"]);
+Route::get('/all-company', [indexController::class,"company"]);
+Route::get('/company/detail/{company}', [indexController::class,"detailCompany"]);
+
+
 
 Route::get('/loginAccount', function () {
     return Socialite::driver('google')->redirect();
