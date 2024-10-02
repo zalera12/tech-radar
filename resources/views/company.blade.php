@@ -41,12 +41,23 @@
         </div>
         <ul class="nav__links" id="nav-links">
             <li><a href="/">Halaman Utama</a></li>
+            @if (Auth::check())
+            <li>
+                <form action="/logout" method="POST" class="btn" style="display: flex; align-items:center; gap:10px;">
+                    @csrf
+                    <button type="submit" style="background: transparent; border: none; color: white; cursor: pointer;">
+                        Logout
+                    </button>
+                </form>
+            </li> 
+        @else
             <li>
                 <a href="/loginAccount" class="btn" style="display: flex;align-items:center;gap:10px;">
                     <img src="/assets/google.png" style="width: 20px;">
-                    <span style="color: white">Sign in</span>
+                    <span style="color: white">Login</span>
                 </a>
-            </li>
+            </li>              
+        @endif
         </ul>
     </nav>
 
