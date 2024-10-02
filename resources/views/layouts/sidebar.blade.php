@@ -4,12 +4,9 @@
     <div class="navbar-brand-box">
         <!-- Dark Logo-->
         <a href="index" class="logo logo-dark">
-            <span class="logo-sm">
-                <img src="{{ URL::asset('build/images/logo-sm.png') }}" alt="" height="22">
-            </span>
-            <span class="logo-lg">
-                <img src="{{ URL::asset('build/images/logo-dark.png') }}" alt="" height="17">
-            </span>
+            <a href="/index">
+                <h3>Tech Radar</h3>
+            </a>
         </a>
         <!-- Light Logo-->
         <a href="index" class="logo logo-light">
@@ -41,6 +38,13 @@
                                 style="width: 25px;height:25px;border-radius:50%;">
                             <span
                                 class="{{ request()->is('index') ? 'text-primary' : 'text-muted' }}">@lang('translation.dashboards')</span>
+                        </a>
+                        <a class="nav-item d-flex gap-2 align-items-center"
+                            href="/">
+                            <img src="{{ asset('/build/images/home.png') }}"
+                                style="width: 30px;height:30px;border-radius:50%;">
+                            <span
+                                class="text-muted">Home</span>
                         </a>
                     </ul>
 

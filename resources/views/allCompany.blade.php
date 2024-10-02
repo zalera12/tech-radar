@@ -15,7 +15,10 @@
 </head>
 
 <body>
-    <nav>
+    <a href="#navbar" style="position: fixed;right:20px;bottom:35px;background:#fea82b;padding-block:5px;padding-inline:10px;border-radius:5px;z-index:9999;">
+        <i class="ri-arrow-up-line" style="font-size:30px;color:white;"></i>
+    </a>
+    <nav id="navbar">
         <div class="nav__header">
             <div class="nav__logo">
                 <a href="#" class="logo">Tech<span>Radar</span></a>

@@ -245,21 +245,17 @@ unset($__errorArgs, $__bag); ?>
                                                         </div>
                                                         <!-- Input for company description -->
                                                         <div class="col-lg-12">
-                                                            <label for="description" class="form-label text-black"
-                                                                style="font-weight:600;">Description
+                                                            <label for="description" class="form-label text-black" style="font-weight:600;">Description
                                                                 <span style="color: var(--error);">*</span>
                                                             </label>
-                                                            <input id="description" name="description" type="hidden"
-                                                                class="<?php $__errorArgs = ['description'];
+                                                            <textarea id="description" name="description" class="form-control <?php $__errorArgs = ['description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>"
-                                                                value="<?php echo e($company->description); ?>">
-                                                            <trix-editor input="description"></trix-editor>
+unset($__errorArgs, $__bag); ?>" rows="5"><?php echo e($company->description); ?></textarea>
                                                             <?php $__errorArgs = ['description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :

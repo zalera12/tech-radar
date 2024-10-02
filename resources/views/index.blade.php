@@ -389,19 +389,15 @@
                                             @enderror
                                         </div>
                                         <div class="mb-4">
-                                            <label for="description" class="form-label text-black"
-                                                style="font-weight:600;">Description
-                                            </label>
-                                            <input id="description" name="description" type="hidden"
-                                                class="@error('description') is-invalid @enderror"
-                                                value="{{ old('description') }}">
-                                            <trix-editor input="description"></trix-editor>
+                                            <label for="description" class="form-label text-black" style="font-weight:600;">Description</label>
+                                            <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror" rows="5">{{ old('description') }}</textarea>
                                             @error('description')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
                                         </div>
+                                        
 
                                         <div class="mb-4">
                                             <label for="image" class="form-label text-black mb-1">Company Logo</label>
@@ -523,6 +519,15 @@
                 icon: 'error',
                 title: 'Error!',
                 text: "{{ session('company_already_joined') }}",
+                confirmButtonText: 'Oke',
+            });
+        @endif
+
+        @if(session('message'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: "{{ session('message') }}",
                 confirmButtonText: 'Oke',
             });
         @endif

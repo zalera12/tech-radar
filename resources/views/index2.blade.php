@@ -9,6 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         .accordion-button.custom-button {
             background-color: rgb(161, 8, 14);
@@ -70,13 +72,22 @@
             border-color: rgb(161, 8, 14);
             /* Merah saat hover */
         }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+  
     </style>
 
     <title>Tech Radar | Home</title>
 </head>
 
 <body>
-    <nav>
+    <a href="#navbar" style="position: fixed;right:20px;bottom:35px;background:#fea82b;padding-block:5px;padding-inline:10px;border-radius:5px;z-index:9999;">
+        <i class="ri-arrow-up-line" style="font-size:30px;color:white;"></i>
+    </a>
+    <nav id="navbar">
         <div class="nav__header">
             <div class="nav__logo">
                 <a href="#" class="logo">Tech<span>Radar</span></a>
@@ -88,15 +99,30 @@
         <ul class="nav__links" id="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
-            <li><a href="#job">Jobs</a></li>
+            <li><a href="#categories">Categories</a></li>
+            <li><a href="#job">Companies</a></li>
             <li><a href="#service">Services</a></li>
-            <li><a href="#client">Client</a></li>
+            <li><a href="#client">Teams</a></li>
+            @if (Auth::check())
+            <li><a href="/index">Dashboard</a></li>
+            @endif
+            @if (Auth::check())
+            <li>
+                <form action="/logout" method="POST" class="btn" style="display: flex; align-items:center; gap:10px;">
+                    @csrf
+                    <button type="submit" style="background: transparent; border: none; color: white; cursor: pointer;">
+                        Logout
+                    </button>
+                </form>
+            </li> 
+        @else
             <li>
                 <a href="/loginAccount" class="btn" style="display: flex;align-items:center;gap:10px;">
                     <img src="/assets/google.png" style="width: 20px;">
-                    <span style="color: white">Sign in</span>
+                    <span style="color: white">Login</span>
                 </a>
-            </li>
+            </li>              
+        @endif
         </ul>
     </nav>
     <header class="section__container header__container" id="home">
@@ -175,7 +201,7 @@
     </section>
 
 
-    <section class="section__container explore__container">
+    <section class="section__container explore__container" id="categories">
         <h2 class="section__header">
             <span>Beragam Kategori Teknologi</span> Menunggu Anda untuk Dieksplorasi
         </h2>
@@ -337,49 +363,136 @@
         </p>
         
         <div class="accordion" id="accordionExample" style="margin-top: 3.5rem;">
+            <!-- Accordion Item #1 -->
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button custom-button" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Accordion Item #1
+                        Apa itu Tech Radar?
                     </button>
                 </h2>
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                     data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <strong>This is the first item's accordion body.</strong> You can modify any of this with custom CSS.
+                        <strong>Tech Radar</strong> adalah alat visual yang dikembangkan oleh ThoughtWorks untuk membantu 
+                        organisasi dalam mengevaluasi dan melacak teknologi baru. Dengan menggunakan radar ini, tim 
+                        pengembang dapat memahami tren teknologi dan membuat keputusan yang lebih baik terkait 
+                        adopsi, percobaan, atau penghindaran teknologi tertentu.
                     </div>
                 </div>
             </div>
+        
+            <!-- Accordion Item #2 -->
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingTwo">
                     <button class="accordion-button collapsed custom-button" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Accordion Item #2
+                        Bagaimana cara membaca Tech Radar?
                     </button>
                 </h2>
                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                     data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <strong>This is the second item's accordion body.</strong> Customize it further with CSS.
+                        Tech Radar dibagi menjadi beberapa kuadran yang masing-masing menggambarkan kategori teknologi, 
+                        seperti:
+                        <ul>
+                            <li><strong>Techniques</strong>: Metode atau praktik yang dapat diadopsi untuk meningkatkan 
+                            efisiensi kerja.</li>
+                            <li><strong>Tools</strong>: Alat dan perangkat lunak yang dapat membantu pengembangan 
+                            dan kolaborasi tim.</li>
+                            <li><strong>Platforms</strong>: Infrastruktur dan layanan yang dapat digunakan untuk 
+                            pengembangan aplikasi.</li>
+                            <li><strong>Languages & Frameworks</strong>: Bahasa pemrograman dan framework yang 
+                            direkomendasikan untuk proyek baru.</li>
+                        </ul>
+                        Setiap kuadran memiliki status adopsi yang menunjukkan tingkat kesiapan teknologi tersebut 
+                        untuk digunakan dalam proyek.
                     </div>
                 </div>
             </div>
+        
+            <!-- Accordion Item #3 -->
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingThree">
                     <button class="accordion-button collapsed custom-button" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Accordion Item #3
+                        Apa saja kategori dalam Tech Radar?
                     </button>
                 </h2>
                 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
                     data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <strong>This is the third item's accordion body.</strong> Modernized with custom styles.
+                        Dalam Tech Radar, terdapat beberapa kategori yang digunakan untuk mengelompokkan teknologi:
+                        <ul>
+                            <li><strong>Adopt</strong>: Teknologi yang sudah terbukti efektif dan disarankan untuk 
+                            digunakan secara luas.</li>
+                            <li><strong>Trial</strong>: Teknologi yang sedang diuji coba dalam beberapa proyek dan 
+                            menunjukkan hasil positif.</li>
+                            <li><strong>Assess</strong>: Teknologi yang memerlukan analisis lebih lanjut sebelum 
+                            diadopsi.</li>
+                            <li><strong>Hold</strong>: Teknologi yang tidak disarankan untuk digunakan saat ini 
+                            karena risiko atau ketidakpastian yang tinggi.</li>
+                        </ul>
+                        Kategori ini membantu tim dalam membuat keputusan yang lebih informasional terkait teknologi 
+                        yang sebaiknya digunakan dalam proyek mereka.
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Accordion Item #4 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button collapsed custom-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        Kenapa Tech Radar penting untuk tim pengembang?
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        Tech Radar penting karena memberikan panduan visual tentang teknologi yang sedang tren 
+                        dan membantu tim pengembang untuk:
+                        <ul>
+                            <li>Memilih alat dan teknologi yang tepat untuk proyek mereka.</li>
+                            <li>Meminimalkan risiko dengan menghindari teknologi yang belum terbukti.</li>
+                            <li>Mendukung inovasi dengan memperkenalkan teknologi baru yang relevan.</li>
+                            <li>Meningkatkan kolaborasi di antara anggota tim dengan memahami teknologi yang sama.</li>
+                        </ul>
+                        Dengan menggunakan Tech Radar, tim dapat lebih proaktif dalam mengadopsi teknologi baru dan 
+                        tetap kompetitif di industri.
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Accordion Item #5 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFive">
+                    <button class="accordion-button collapsed custom-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        Bagaimana cara mengupdate Tech Radar?
+                    </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        Mengupdate Tech Radar biasanya dilakukan secara berkala (misalnya setiap 6 bulan) untuk 
+                        memastikan informasi tetap relevan. Proses ini melibatkan:
+                        <ul>
+                            <li>Mengumpulkan umpan balik dari tim pengembang mengenai teknologi yang telah 
+                            diadopsi.</li>
+                            <li>Melakukan riset tentang teknologi baru dan tren yang sedang berkembang.</li>
+                            <li>Menilai kembali status teknologi yang ada di radar dan mengklasifikasikannya 
+                            sesuai dengan kategori yang tepat.</li>
+                            <li>Memperbarui dokumen atau representasi visual dari Tech Radar untuk 
+                            disebarkan kepada tim dan pemangku kepentingan lainnya.</li>
+                        </ul>
+                        Pembaruan yang teratur memastikan bahwa tim tetap up-to-date dengan perkembangan 
+                        teknologi yang dapat mendukung tujuan mereka.
                     </div>
                 </div>
             </div>
         </div>
+        
         
     </section>
 
@@ -398,109 +511,104 @@
                 <!-- Slides -->
                 <div class="swiper-slide">
                     <div class="client__card">
-                        <img src="assets/client-1.jpg" alt="client" />
+                        <img src="assets/bangsam.jpeg" alt="client" style="width: 85px;height:85px;" />
                         <p>
-                            Searching for a job can be overwhelming, but this platform made
-                            it simple and efficient. I uploaded my resume, applied to a few
-                            positions, and soon enough, I was hired! Thank you for helping
-                            me kickstart my career!
+                            Sebagai seorang mentor dalam proyek Tech Radar, saya bangga dapat membantu tim memahami 
+                            dan memilih teknologi yang tepat untuk kebutuhan mereka. Dengan pendekatan yang sistematis, 
+                            kami menciptakan panduan yang memudahkan organisasi untuk menavigasi dunia teknologi yang 
+                            terus berkembang.
                         </p>
-                        <div class="client__ratings">
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-fill"></i></span>
-                        </div>
-                        <h4>Sarah Patel</h4>
-                        <h5>Graphic Designer</h5>
+                        <h4>Sammi Aldhi Yanto</h4>
+                        <h5>Mentor</h5>
                     </div>
                 </div>
                 <div class="swiper-slide">
                     <div class="client__card">
-                        <img src="assets/client-2.jpg" alt="client" />
+                        <img src="assets/daffa.jpeg" alt="client" style="width: 85px;height:85px;" />
                         <p>
-                            As a recent graduate, I was unsure where to start my job search.
-                            This website guided me through the process step by step. From
-                            creating my profile to receiving job offers, everything was
-                            seamless. I'm now happily employed thanks to this platform!
+                            Dalam peran saya sebagai analis untuk proyek Tech Radar, saya terlibat dalam pengumpulan 
+                            dan analisis data tentang berbagai teknologi. Kami memastikan bahwa informasi yang 
+                            disediakan relevan dan dapat diandalkan, sehingga memudahkan pengguna dalam membuat 
+                            keputusan strategis yang cerdas.
                         </p>
-                        <div class="client__ratings">
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-half-fill"></i></span>
-                        </div>
-                        <h4>Michael Brown</h4>
-                        <h5>Recent Graduate</h5>
+                        <h4>Daffa Dhyaulhaq</h4>
+                        <h5>Analis</h5>
                     </div>
                 </div>
                 <div class="swiper-slide">
                     <div class="client__card">
-                        <img src="assets/client-3.jpg" alt="client" />
+                        <img src="assets/rifki.jpg" alt="client" style="width: 85px;height:85px;" />
                         <p>
-                            Creating an account was a breeze, and I was amazed by the number
-                            of job opportunities available. Thanks to this website, I found
-                            the perfect position that aligned perfectly with my career
-                            goals.
+                            Sebagai UI & UX Designer dalam proyek Tech Radar, saya bertanggung jawab untuk menciptakan 
+                            pengalaman pengguna yang intuitif. Kami berfokus pada desain yang memudahkan pengguna 
+                            dalam mengeksplorasi dan memahami informasi tentang teknologi, sehingga mereka dapat 
+                            dengan mudah membuat pilihan yang tepat.
                         </p>
-                        <div class="client__ratings">
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-fill"></i></span>
-                            <span><i class="ri-star-fill"></i></span>
-                        </div>
-                        <h4>David Smith</h4>
-                        <h5>Software Engineer</h5>
+                        <h4>Rifki Pratama</h4>
+                        <h5>UI & UX Designer</h5>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="client__card">
+                        <img src="assets/azza.png" alt="client" style="width: 85px;height:85px;" />
+                        <p>
+                            Dalam kapasitas saya sebagai programmer, saya terlibat dalam pengembangan dan 
+                            implementasi proyek Tech Radar. Kami berupaya untuk menciptakan platform yang 
+                            responsif dan efisien, memungkinkan pengguna untuk menemukan informasi teknologi yang 
+                            mereka butuhkan dengan mudah dan cepat.
+                        </p>
+                        <h4>Azzairul</h4>
+                        <h5>Programmer</h5>
                     </div>
                 </div>
             </div>
+            
+            
         </div>
     </section>
 
-    <footer class="footer">
+    <footer class="footer" style="background: rgb(161, 8, 14);" style="">
         <div class="section__container footer__container">
             <div class="footer__col">
                 <div class="footer__logo">
-                    <a href="#" class="logo">Job<span>Hunt</span></a>
+                    <a href="#" class="logo text-white">Tech<span>Radar</span></a>
+
                 </div>
-                <p>
+                <p class="text-white">
                     Our platform is designed to help you find the perfect job and
                     achieve your professional dreams.
                 </p>
             </div>
             <div class="footer__col">
-                <h4>Quick Links</h4>
+                <h4 class="text-white">Quick Links</h4>
                 <ul class="footer__links">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Jobs</a></li>
-                    <li><a href="#">Testimonials</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#" class="text-white">Home</a></li>
+                    <li><a href="#" class="text-white">About Us</a></li>
+                    <li><a href="#" class="text-white">Jobs</a></li>
+                    <li><a href="#" class="text-white">Testimonials</a></li>
+                    <li><a href="#" class="text-white">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer__col">
-                <h4>Follow Us</h4>
+                <h4 class="text-white">Follow Us</h4>
                 <ul class="footer__links">
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">LinkedIn</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Youtube</a></li>
+                    <li><a href="#" class="text-white">Facebook</a></li>
+                    <li><a href="#" class="text-white">Instagram</a></li>
+                    <li><a href="#" class="text-white">LinkedIn</a></li>
+                    <li><a href="#" class="text-white">Twitter</a></li>
+                    <li><a href="#" class="text-white">Youtube</a></li>
                 </ul>
             </div>
             <div class="footer__col">
-                <h4>Contact Us</h4>
+                <h4 class="text-white">Contact Us</h4>
                 <ul class="footer__links">
                     <li>
-                        <a href="#">
+                        <a href="#" class="text-white">
                             <span><i class="ri-phone-fill"></i></span> +91 234 56788
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="#" class="text-white">
                             <span><i class="ri-map-pin-2-fill"></i></span> 123 Main Street,
                             Anytown, USA
                         </a>
@@ -508,7 +616,7 @@
                 </ul>
             </div>
         </div>
-        <div class="footer__bar">
+        <div class="footer__bar text-white">
             Copyright © 2024 Web Design Mastery. All rights reserved.
         </div>
     </footer>
@@ -519,6 +627,19 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
     </script>
     <script src="/js/main.js"></script>
+    <script>
+        
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                confirmButtonText: 'Oke',
+            });
+        @endif   
+        
+   
+    </script>
 </body>
 
 </html>

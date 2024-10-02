@@ -19,14 +19,17 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next, ...$guards)
     {
+        // Jika guard kosong, atur ke null secara default
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                // Jika user sudah login, redirect ke /index dan tambahkan pesan session
+                return redirect('/index')->with('message', 'Anda Tidak Bisa Mengakses Halaman Tersebut, Harap Logout Terlebih Dahulu!');
             }
         }
 
+        // Jika belum login, lanjutkan permintaan
         return $next($request);
     }
 }

@@ -217,14 +217,10 @@
                                                         </div>
                                                         <!-- Input for company description -->
                                                         <div class="col-lg-12">
-                                                            <label for="description" class="form-label text-black"
-                                                                style="font-weight:600;">Description
+                                                            <label for="description" class="form-label text-black" style="font-weight:600;">Description
                                                                 <span style="color: var(--error);">*</span>
                                                             </label>
-                                                            <input id="description" name="description" type="hidden"
-                                                                class="@error('description') is-invalid @enderror"
-                                                                value="{{ $company->description }}">
-                                                            <trix-editor input="description"></trix-editor>
+                                                            <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror" rows="5">{{ $company->description }}</textarea>
                                                             @error('description')
                                                                 <span class="invalid-feedback" role="alert">
                                                                     <strong>{{ $message }}</strong>

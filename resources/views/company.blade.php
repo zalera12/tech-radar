@@ -9,13 +9,28 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+        .btn2 {
+            background-color: rgb(161, 8, 14); /* Warna latar belakang default */
+            color: white; /* Warna teks default */
+            transition: background-color 0.3s, color 0.3s; /* Transisi halus untuk perubahan warna */
+        }
 
+        .explore__card:hover .btn2 {
+            background-color: #fea82b; /* Warna latar belakang saat hover */
+            color: white; /* Warna teks saat hover */
+        }
+    </style>
 
     <title>Tech Radar | {{ $company->name }}</title>
 </head>
 
 <body>
-    <nav>
+    
+    <a href="#navbar" style="position: fixed;right:20px;bottom:35px;background:#fea82b;padding-block:5px;padding-inline:10px;border-radius:5px;z-index:9999;">
+        <i class="ri-arrow-up-line" style="font-size:30px;color:white;"></i>
+    </a>
+    <nav id="navbar">
         <div class="nav__header">
             <div class="nav__logo">
                 <a href="#" class="logo">Tech<span>Radar</span></a>
@@ -41,21 +56,18 @@
         <div class="section__description__company">
             {!! $company->description !!}
         </div>
-        <div class="row justify-content-between align-items-center"
-            style="display: flex;align-items:center;margin-top:100px;">
+        <div class="row justify-content-between align-items-center" style="display: flex;align-items:center;margin-top:100px;">
             <!-- Form Pencarian -->
-            <form action="" class="col-md-5 mb-3 mb-md-0">
+            <form action="" method="GET" class="col-md-5 mb-3 mb-md-0">
                 <div class="input-group">
-                    <input type="text" class="form-control" value="{{ request('search') }}"
-                        placeholder="Cari nama atau deskripsi..." name="search">
+                    <input type="text" class="form-control" value="{{ request('search') }}" placeholder="Cari nama atau deskripsi..." name="search">
                     <button class="btn btn-primary" type="submit">Cari</button>
                 </div>
             </form>
-
+        
             <!-- Form Filter -->
-            <form action="" class="col-md-3">
-                <select class="form-select custom-select" name="filter" aria-label="Pilih urutan"
-                    style="padding: 1rem 2rem;border-radius: 5px;" onchange="this.form.submit()">
+            <form action="" method="GET" class="col-md-3">
+                <select class="form-select custom-select" name="filter" aria-label="Pilih urutan" style="padding: 1rem 2rem;border-radius: 5px;" onchange="this.form.submit()">
                     <option value="" disabled selected>Urutkan berdasarkan</option>
                     <option value="terbaru" {{ request('filter') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
                     <option value="terlama" {{ request('filter') == 'terlama' ? 'selected' : '' }}>Terlama</option>
@@ -64,9 +76,10 @@
                 </select>
             </form>
         </div>
+        
         <div class="job__grid row justify-content-center">
             @foreach ($categories as $category)
-                <div class="col-12 col-lg-6 col-xl-4"> <!-- Tempatkan class grid di sini -->
+                <div class="col-12 col-lg-6 col-xl-4 mt-3"> <!-- Tempatkan class grid di sini -->
                     <div class="explore__card">
                         <span><i class="ri-layout-fill"></i></span>
                         <h4>{{ $category->name }}</h4>
@@ -97,52 +110,43 @@
             @endforeach
             <div class="d-flex justify-content-end mt-5">
                 <div class="col-sm-6">
-                    <div
-                        class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                    <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
                         @if ($categories->onFirstPage())
                             <div class="page-item disabled" style="margin-right: 10px;">
-                                <span class="page-link"
-                                    style="background-color: #fea82b; color: rgb(161, 8, 14); border-color: rgb(161, 8, 14);">Sebelumnya</span>
+                                <span class="page-link" style="background-color: #fea82b; color: rgb(161, 8, 14); border-color: rgb(161, 8, 14);">Sebelumnya</span>
                             </div>
                         @else
                             <div class="page-item" style="margin-right: 10px;">
-                                <a href="{{ $categories->appends(request()->all())->previousPageUrl() }}"
-                                    class="page-link" id="page-prev"
-                                    style="background-color: #fea82b; color: rgb(161, 8, 14); border-color: rgb(161, 8, 14);">Sebelumnya</a>
+                                <a href="{{ $categories->appends(request()->all())->previousPageUrl() }}" class="page-link" id="page-prev" style="background-color: #fea82b; color: rgb(161, 8, 14); border-color: rgb(161, 8, 14);">Sebelumnya</a>
                             </div>
                         @endif
-
+                    
                         <!-- Page Numbers -->
                         <span id="page-num" class="pagination">
                             @foreach ($categories->links()->elements[0] as $page => $url)
                                 @if ($page == $categories->currentPage())
                                     <span class="page-item active" style="margin-right: 10px;">
-                                        <span class="page-link"
-                                            style="background-color: rgb(161, 8, 14); color: #fff; border-color: rgb(161, 8, 14);">{{ $page }}</span>
+                                        <span class="page-link" style="background-color: rgb(161, 8, 14); color: #fff; border-color: rgb(161, 8, 14);">{{ $page }}</span>
                                     </span>
                                 @else
-                                    <a href="{{ $categories->appends(request()->all())->url($page) }}" class="page-item"
-                                        style="margin-right: 10px;">
-                                        <span class="page-link"
-                                            style="background-color: #fea82b; color: rgb(161, 8, 14); border-color: rgb(161, 8, 14);">{{ $page }}</span>
+                                    <a href="{{ $categories->appends(request()->all())->url($page) }}" class="page-item" style="margin-right: 10px;">
+                                        <span class="page-link" style="background-color: #fea82b; color: rgb(161, 8, 14); border-color: rgb(161, 8, 14);">{{ $page }}</span>
                                     </a>
                                 @endif
                             @endforeach
                         </span>
-
+                    
                         @if ($categories->hasMorePages())
                             <div class="page-item">
-                                <a href="{{ $categories->appends(request()->all())->nextPageUrl() }}" class="page-link"
-                                    id="page-next"
-                                    style="background-color: #fea82b; color: rgb(161, 8, 14); border-color: rgb(161, 8, 14);">Berikutnya</a>
+                                <a href="{{ $categories->appends(request()->all())->nextPageUrl() }}" class="page-link" id="page-next" style="background-color: #fea82b; color: rgb(161, 8, 14); border-color: rgb(161, 8, 14);">Berikutnya</a>
                             </div>
                         @else
                             <div class="page-item disabled">
-                                <span class="page-link"
-                                    style="background-color: #fea82b; color: rgb(161, 8, 14); border-color: rgb(161, 8, 14);">Berikutnya</span>
+                                <span class="page-link" style="background-color: #fea82b; color: rgb(161, 8, 14); border-color: rgb(161, 8, 14);">Berikutnya</span>
                             </div>
                         @endif
                     </div>
+                    
 
                 </div>
             </div>

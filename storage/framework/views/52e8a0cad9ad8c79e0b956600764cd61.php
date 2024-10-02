@@ -418,20 +418,15 @@ endif;
 unset($__errorArgs, $__bag); ?>
                                         </div>
                                         <div class="mb-4">
-                                            <label for="description" class="form-label text-black"
-                                                style="font-weight:600;">Description
-                                            </label>
-                                            <input id="description" name="description" type="hidden"
-                                                class="<?php $__errorArgs = ['description'];
+                                            <label for="description" class="form-label text-black" style="font-weight:600;">Description</label>
+                                            <textarea id="description" name="description" class="form-control <?php $__errorArgs = ['description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>"
-                                                value="<?php echo e(old('description')); ?>">
-                                            <trix-editor input="description"></trix-editor>
+unset($__errorArgs, $__bag); ?>" rows="5"><?php echo e(old('description')); ?></textarea>
                                             <?php $__errorArgs = ['description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -445,6 +440,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                                         </div>
+                                        
 
                                         <div class="mb-4">
                                             <label for="image" class="form-label text-black mb-1">Company Logo</label>
@@ -594,6 +590,15 @@ unset($__errorArgs, $__bag); ?>
                 icon: 'error',
                 title: 'Error!',
                 text: "<?php echo e(session('company_already_joined')); ?>",
+                confirmButtonText: 'Oke',
+            });
+        <?php endif; ?>
+
+        <?php if(session('message')): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: "<?php echo e(session('message')); ?>",
                 confirmButtonText: 'Oke',
             });
         <?php endif; ?>

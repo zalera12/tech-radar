@@ -59,13 +59,48 @@ class indexController extends Controller
         ]);
     }
 
-    public function detailCompany(Company $company){
-        $categories = Category::where('company_id',$company->id);
-        return view('company',[
+    public function detailCompany(Company $company)
+    {
+        // Ambil parameter pencarian dan filter dari request
+        $search = request('search');
+        $filter = request('filter');
+    
+        // Mulai query kategori
+        $categories = Category::where('company_id', $company->id);
+    
+        // Jika ada pencarian, tambahkan kondisi pencarian
+        if ($search) {
+            $categories->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                      ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
+    
+        // Jika ada filter, tambahkan kondisi filter
+        if ($filter) {
+            switch ($filter) {
+                case 'terbaru':
+                    $categories->orderBy('created_at', 'desc');
+                    break;
+                case 'terlama':
+                    $categories->orderBy('created_at', 'asc');
+                    break;
+                case 'az':
+                    $categories->orderBy('name', 'asc');
+                    break;
+                case 'za':
+                    $categories->orderBy('name', 'desc');
+                    break;
+            }
+        }
+    
+        // Paginasikan hasil
+        return view('company', [
             'company' => $company,
-            'categories' => $categories->paginate(3)
+            'categories' => $categories->paginate(18)->appends(request()->all()), // Pastikan untuk menyertakan semua parameter request
         ]);
     }
+    
     
 
     
