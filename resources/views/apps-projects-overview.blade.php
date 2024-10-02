@@ -461,7 +461,7 @@
                                 <p class="card-text text-muted mb-0">{{ $category->description }}</p>
                             </div>
                             <div class="card-footer">
-                                <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ strtoupper($category->name) }}.json"
+                                <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ strtoupper($category->name) }} - {{ $company->name }}.json"
                                     class="link-success float-end">View Radar <i
                                         class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i></a>
                                 <p class="text-muted mb-0">

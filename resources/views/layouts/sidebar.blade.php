@@ -196,7 +196,7 @@
                     ?>
                     @if ($messageCount > 0)
                         <span
-                            style="display: flex;justify-content:center;align-items:center;width: 18px;height:18px;border-radius:50%;color:white;font-size:10px;position: absolute;top:5px;right:85px;"
+                            style="display: flex;justify-content:center;align-items:center;width: 18px;height:18px;border-radius:50%;color:white;font-size:10px;position: absolute;top:5px;right:62px;"
                             class="bg-primary me-3 ">{{ $messageCount }}</span>
                     @endif
                 </div>

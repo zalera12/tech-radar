@@ -178,18 +178,19 @@
 
                 </div>
                 <p class="text-white">
-                    Our platform is designed to help you find the perfect job and
-                    achieve your professional dreams.
+                    Tech Radar dirancang untuk membantu Anda menjelajahi dan memvisualisasikan tren teknologi, sehingga memungkinkan pengambilan keputusan yang tepat untuk proyek Anda.
                 </p>
+                
             </div>
             <div class="footer__col">
                 <h4 class="text-white">Quick Links</h4>
                 <ul class="footer__links">
-                    <li><a href="#" class="text-white">Home</a></li>
-                    <li><a href="#" class="text-white">About Us</a></li>
-                    <li><a href="#" class="text-white">Jobs</a></li>
-                    <li><a href="#" class="text-white">Testimonials</a></li>
-                    <li><a href="#" class="text-white">Contact Us</a></li>
+                    <li><a href="#navbar" class="text-white">Home</a></li>
+                    <li><a href="#about" class="text-white">About</a></li>
+                    <li><a href="#categories" class="text-white">Categories</a></li>
+                    <li><a href="#job" class="text-white">Companies</a></li>
+                    <li><a href="#service" class="text-white">Services</a></li>
+                    <li><a href="#client" class="text-white">Teams</a></li>
                 </ul>
             </div>
             <div class="footer__col">
@@ -212,15 +213,15 @@
                     </li>
                     <li>
                         <a href="#" class="text-white">
-                            <span><i class="ri-map-pin-2-fill"></i></span> 123 Main Street,
-                            Anytown, USA
+                            <span><i class="ri-map-pin-2-fill"></i></span> 123 Panam,
+                            Riau, Indonesia
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="footer__bar text-white">
-            Copyright © 2024 Web Design Mastery. All rights reserved.
+            Copyright © 2024 Tech Radar Project. All rights reserved.
         </div>
     </footer>
 

@@ -120,7 +120,7 @@
                                 </tbody>
                             </table>     
                             <?php else: ?>
-                            <div class="noresult">
+                            <div class="noresult mt-5">
                                 <div class="text-center">
                                     <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
                                         colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">

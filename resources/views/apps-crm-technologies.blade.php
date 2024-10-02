@@ -35,19 +35,21 @@
                                 <input type="hidden" name="filter" value="{{ request('filter') }}">
                                 <input type="hidden" name="filterQuadrant" value="{{ request('filterQuadrant') }}">
                                 <input type="hidden" name="filterRing" value="{{ request('filterRing') }}">
-                            
-                            
+
+
                                 <!-- Dropdown untuk filter By kategori -->
-                                <select class="form-control" name="filterCategory" onchange="this.form.submit()" style="cursor: pointer;width:150px;text-align:center; margin-left:10px;">
+                                <select class="form-control" name="filterCategory" onchange="this.form.submit()"
+                                    style="cursor: pointer;width:150px;text-align:center; margin-left:10px;">
                                     <option value="">All Category</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" {{ request('filterCategory') == $category->id ? 'selected' : '' }}>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ request('filterCategory') == $category->id ? 'selected' : '' }}>
                                             {{ $category->name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </form>
-                            
+
                         </div>
                         <div class="d-flex align-items-center gap-2" style="width: 260px;">
                             <span class="fw-bold">Filter By : </span>
@@ -60,18 +62,23 @@
                                 <input type="hidden" name="filterCategory" value="{{ request('filterCategory') }}">
                                 <input type="hidden" name="filterQuadrant" value="{{ request('filterQuadrant') }}">
                                 <input type="hidden" name="filterRing" value="{{ request('filterRing') }}">
-        
-                            
+
+
                                 <!-- Select untuk Ring (baru ditambahkan sesuai enum 'ring') -->
-                                <select class="form-control" name="filterRing" onchange="this.form.submit()" style="cursor: pointer;width:150px;text-align:center; margin-left:10px;">
+                                <select class="form-control" name="filterRing" onchange="this.form.submit()"
+                                    style="cursor: pointer;width:150px;text-align:center; margin-left:10px;">
                                     <option value="">All Rings</option>
-                                    <option value="hold" {{ request('filterRing') == 'hold' ? 'selected' : '' }}>hold</option>
-                                    <option value="adopt" {{ request('filterRing') == 'adopt' ? 'selected' : '' }}>adopt</option>
-                                    <option value="assess" {{ request('filterRing') == 'assess' ? 'selected' : '' }}>assess</option>
-                                    <option value="trial" {{ request('filterRing') == 'trial' ? 'selected' : '' }}>trial</option>
+                                    <option value="hold" {{ request('filterRing') == 'hold' ? 'selected' : '' }}>hold
+                                    </option>
+                                    <option value="adopt" {{ request('filterRing') == 'adopt' ? 'selected' : '' }}>adopt
+                                    </option>
+                                    <option value="assess" {{ request('filterRing') == 'assess' ? 'selected' : '' }}>assess
+                                    </option>
+                                    <option value="trial" {{ request('filterRing') == 'trial' ? 'selected' : '' }}>trial
+                                    </option>
                                 </select>
                             </form>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -83,12 +90,13 @@
                 <div class="card-header">
                     <div class="d-flex align-items-center gap-2 justify-content-between flex-md-row flex-column">
 
-                        
+
                         <div class="" style="width: 260px;">
                             <form action="{{ url()->current() }}" method="GET">
                                 <div class="input-group">
                                     <input type="text" name="search" class="form-control search bg-light border-light"
-                                        id="searchJob" value="{{ request('search') }}" placeholder="Search for technologies...">
+                                        id="searchJob" value="{{ request('search') }}"
+                                        placeholder="Search for technologies...">
                                     <!-- Memastikan filter tetap dibawa ketika search dilakukan -->
                                     <input type="hidden" name="permission" value="Read Technology">
                                     <input type="hidden" name="idcp" value="{{ $company->id }}">
@@ -100,7 +108,7 @@
                                     </button>
                                 </div>
                             </form>
-                            
+
                         </div>
                         <div class="d-flex align-items-center gap-2" style="width: 260px;">
                             <span class="fw-bold">Filter By : </span>
@@ -112,20 +120,28 @@
                                 <input type="hidden" name="filter" value="{{ request('filter') }}">
                                 <input type="hidden" name="filterCategory" value="{{ request('filterCategory') }}">
                                 <input type="hidden" name="filterRing" value="{{ request('filterRing') }}">
-                            
+
                                 <!-- Filter Quadrant -->
-                                <select class="form-control" style="cursor: pointer;width:150px;text-align:center;margin-left:10px;" name="filterQuadrant" id="filterQuadrant" onchange="this.form.submit()">
+                                <select class="form-control"
+                                    style="cursor: pointer;width:150px;text-align:center;margin-left:10px;"
+                                    name="filterQuadrant" id="filterQuadrant" onchange="this.form.submit()">
                                     <option value="">All Quadrant</option>
-                                    <option value="Techniques" {{ request('filterQuadrant') == 'Techniques' ? 'selected' : '' }}>Techniques</option>
-                                    <option value="Platforms" {{ request('filterQuadrant') == 'Platforms' ? 'selected' : '' }}>Platforms</option>
-                                    <option value="Tools" {{ request('filterQuadrant') == 'Tools' ? 'selected' : '' }}>Tools</option>
-                                    <option value="Languages and Frameworks" {{ request('filterQuadrant') == 'Languages and Frameworks' ? 'selected' : '' }}>Languages and Frameworks</option>
+                                    <option value="Techniques"
+                                        {{ request('filterQuadrant') == 'Techniques' ? 'selected' : '' }}>Techniques
+                                    </option>
+                                    <option value="Platforms"
+                                        {{ request('filterQuadrant') == 'Platforms' ? 'selected' : '' }}>Platforms</option>
+                                    <option value="Tools" {{ request('filterQuadrant') == 'Tools' ? 'selected' : '' }}>
+                                        Tools</option>
+                                    <option value="Languages and Frameworks"
+                                        {{ request('filterQuadrant') == 'Languages and Frameworks' ? 'selected' : '' }}>
+                                        Languages and Frameworks</option>
                                 </select>
-                        
+
                             </form>
-                            
+
                         </div>
-                        
+
                         <div class="d-flex align-items-center gap-2" style="width: 260px;">
                             <span class="fw-bold">Filter By : </span>
                             <form action="{{ url()->current() }}" method="GET" id="filterForm">
@@ -139,7 +155,8 @@
                                 <input type="hidden" name="filterRing" value="{{ request('filterRing') }}">
 
 
-                                <select class="form-control" style="cursor: pointer;width:150px;text-align:center;margin-left:10px;"
+                                <select class="form-control"
+                                    style="cursor: pointer;width:150px;text-align:center;margin-left:10px;"
                                     name="sort_order" id="sortOrder" onchange="this.form.submit()">
                                     <option value="terbaru" {{ request('sort_order') == 'terbaru' ? 'selected' : '' }}>
                                         Terbaru</option>
@@ -158,96 +175,119 @@
                     <div>
                         <div class="table-responsive table-card mb-3">
                             @if ($technologies->isNotEmpty())
-                            <table class="table align-middle table-nowrap mb-0" id="technologiesTable">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th scope="col">No</th>
-                                        <th scope="col">Category</th>
-                                        <th scope="col">User</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Is New</th>
-                                        <th scope="col">Quadrant</th>
-                                        <th scope="col">Ring</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($technologies as $index => $technology)
+                                <table class="table align-middle table-nowrap mb-0" id="technologiesTable">
+                                    <thead class="table-light">
                                         <tr>
-                                            <td>{{ $technologies->firstItem() + $index }}</td>
-                                            <td class="category">{{ $technology->category->name }}</td>
-                                            <td class="user">{{ $technology->user->name }}</td>
-                                            <td class="name">{{ $technology->name }}</td>
-                                            <td class="is_new">{{ $technology->is_new ? 'Yes' : 'No' }}</td>
-                                            <td class="quadrant">{{ $technology->quadrant }}</td>
-                                            <td class="ring">{{ $technology->ring }}</td>
-                                            <td>
-                                                <ul class="list-inline hstack gap-2 mb-0">
-                                                    <li class="list-inline-item edit" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                                                        <a class="edit-item-btn" href="#editTechnologyModal"
-                                                            data-bs-toggle="modal" data-id="{{ $technology->id }}"
-                                                            data-name="{{ $technology->name }}"
-                                                            data-category="{{ $technology->category->id }}"
-                                                            data-description="{{ $technology->description }}"
-                                                            data-quadrant="{{ $technology->quadrant }}"
-                                                            data-ring="{{ $technology->ring }}">
-                                                            <i class="ri-pencil-fill align-bottom text-muted"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="Delete">
-                                                        <a class="remove-item-btn" data-bs-toggle="modal"
-                                                            href="#deleteTechnologyModal"
-                                                            data-id="{{ $technology->id }}">
-                                                            <i class="ri-delete-bin-fill align-bottom text-muted"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </td>
+                                            <th scope="col">No</th>
+                                            <th scope="col">Category</th>
+                                            <th scope="col">User</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Is New</th>
+                                            <th scope="col">Quadrant</th>
+                                            <th scope="col">Ring</th>
+                                            <th scope="col">Action</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($technologies as $index => $technology)
+                                            <tr>
+                                                <td>{{ $technologies->firstItem() + $index }}</td>
+                                                <td class="category">{{ $technology->category->name }}</td>
+                                                <td class="user">{{ $technology->user->name }}</td>
+                                                <td class="name">{{ $technology->name }}</td>
+                                                <td class="is_new">{{ $technology->is_new ? 'Yes' : 'No' }}</td>
+                                                <td class="quadrant">{{ $technology->quadrant }}</td>
+                                                <td class="ring">{{ $technology->ring }}</td>
+                                                <td>
+                                                    <ul class="list-inline hstack gap-2 mb-0">
+                                                        <li class="list-inline-item edit" data-bs-toggle="tooltip"
+                                                            data-bs-trigger="hover" data-bs-placement="top"
+                                                            title="Edit">
+                                                            <a class="edit-item-btn" href="#editTechnologyModal"
+                                                                data-bs-toggle="modal" data-id="{{ $technology->id }}"
+                                                                data-name="{{ $technology->name }}"
+                                                                data-category="{{ $technology->category->id }}"
+                                                                data-description="{{ $technology->description }}"
+                                                                data-quadrant="{{ $technology->quadrant }}"
+                                                                data-ring="{{ $technology->ring }}">
+                                                                <i class="ri-pencil-fill align-bottom text-muted"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-inline-item" data-bs-toggle="tooltip"
+                                                            data-bs-trigger="hover" data-bs-placement="top"
+                                                            title="Delete">
+                                                            <a class="remove-item-btn" data-bs-toggle="modal"
+                                                                href="#deleteTechnologyModal"
+                                                                data-id="{{ $technology->id }}">
+                                                                <i class="ri-delete-bin-fill align-bottom text-muted"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item view-item-btn" href="javascript:void(0);"
+                                                               data-bs-toggle="modal" data-bs-target="#technologyDetailModal"
+                                                               data-id="{{ $technology->id }}"
+                                                               data-category="{{ $technology->category->name }}"
+                                                               data-name="{{ $technology->name }}"
+                                                               data-user="{{ $technology->user->name }}"
+                                                               data-is-new="{{ $technology->is_new ? 'Yes' : 'No' }}"
+                                                               data-quadrant="{{ $technology->quadrant }}"
+                                                               data-ring="{{ ucfirst($technology->ring) }}"
+                                                               data-description="{{ $technology->description }}">
+                                                                <i class="ri-eye-fill align-bottom me-2 text-muted"></i>View
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             @else
-                            <div class="noresult mt-5">
-                                <div class="text-center">
-                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                        colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
-                                    </lord-icon>
-                                    <h5 class="mt-2">Apologies, No Technologies Data Available</h5>
-                                    <p class="text-muted mb-0">Unfortunately, there are no Technologies available to display.
+                                <div class="noresult mt-5">
+                                    <div class="text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                            colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
+                                        </lord-icon>
+                                        <h5 class="mt-2">Apologies, No Technologies Data Available</h5>
+                                        <p class="text-muted mb-0">Unfortunately, there are no Technologies available to
+                                            display.
+                                    </div>
                                 </div>
-                            </div>  
-                            @endif      
+                            @endif
                         </div>
                         <div class="d-flex justify-content-end mt-3">
                             <div class="col-sm-6">
-                                <div class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                                <div
+                                    class="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
                                     @if ($technologies->onFirstPage())
                                         <div class="page-item disabled">
                                             <span class="page-link">Previous</span>
                                         </div>
                                     @else
                                         <div class="page-item">
-                                            <a href="{{ $technologies->appends(request()->except('page'))->previousPageUrl() }}" class="page-link" id="page-prev">Previous</a>
+                                            <a href="{{ $technologies->appends(request()->except('page'))->previousPageUrl() }}"
+                                                class="page-link" id="page-prev">Previous</a>
                                         </div>
                                     @endif
-                                
+
                                     <!-- Page Numbers -->
                                     <span id="page-num" class="pagination">
                                         @foreach ($technologies->links()->elements[0] as $page => $url)
                                             @if ($page == $technologies->currentPage())
-                                                <span class="page-item active"><span class="page-link">{{ $page }}</span></span>
+                                                <span class="page-item active"><span
+                                                        class="page-link">{{ $page }}</span></span>
                                             @else
-                                                <a href="{{ $technologies->appends(request()->except('page'))->url($page) }}" class="page-item"><span class="page-link">{{ $page }}</span></a>
+                                                <a href="{{ $technologies->appends(request()->except('page'))->url($page) }}"
+                                                    class="page-item"><span
+                                                        class="page-link">{{ $page }}</span></a>
                                             @endif
                                         @endforeach
                                     </span>
-                                
+
                                     @if ($technologies->hasMorePages())
                                         <div class="page-item">
-                                            <a href="{{ $technologies->appends(request()->except('page'))->nextPageUrl() }}" class="page-link" id="page-next">Next</a>
+                                            <a href="{{ $technologies->appends(request()->except('page'))->nextPageUrl() }}"
+                                                class="page-link" id="page-next">Next</a>
                                         </div>
                                     @else
                                         <div class="page-item disabled">
@@ -255,137 +295,188 @@
                                         </div>
                                     @endif
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
-                          <!-- Modal Edit -->
-                          <div class="modal fade" id="editTechnologyModal" tabindex="-1"
-                          aria-labelledby="editTechnologyModalLabel" aria-hidden="true">
-                          <div class="modal-dialog modal-dialog-centered modal-lg">
-                              <div class="modal-content border-0">
-                                  <div class="modal-header bg-info-subtle p-3">
-                                      <h5 class="modal-title" id="editTechnologyModalLabel">Edit Technology</h5>
-                                      <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                          aria-label="Close" id="close-edit-modal"></button>
-                                  </div>
-                                  <form
-                                      action="/companies/technologies/edit?permission=Edit Technology&idcp={{ $company->id }}"
-                                      method="POST" autocomplete="off" id="editTechnologyForm">
-                                      @csrf
-                                      <input type="hidden" name="id" id="edit-technology-id">
-                                      <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                      <input type="hidden" name="company_id" value="{{ $company->id }}">
-                                      <input type="hidden" name="user" value="{{ $user->name }}">
+                    <!-- Modal Edit -->
+                    <div class="modal fade" id="editTechnologyModal" tabindex="-1"
+                        aria-labelledby="editTechnologyModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0">
+                                <div class="modal-header bg-info-subtle p-3">
+                                    <h5 class="modal-title" id="editTechnologyModalLabel">Edit Technology</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                        id="close-edit-modal"></button>
+                                </div>
+                                <form
+                                    action="/companies/technologies/edit?permission=Edit Technology&idcp={{ $company->id }}"
+                                    method="POST" autocomplete="off" id="editTechnologyForm">
+                                    @csrf
+                                    <input type="hidden" name="id" id="edit-technology-id">
+                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                    <input type="hidden" name="company_id" value="{{ $company->id }}">
+                                    <input type="hidden" name="user" value="{{ $user->name }}">
 
-                                      <div class="modal-body">
-                                          <div class="row g-3">
-                                              <div class="col-lg-12">
-                                                  <label for="edit-category"
-                                                      class="form-label text-secondary mb-1">Category
-                                                      <span style="color:var(--error)">*</span>
-                                                  </label>
-                                                  <select class="form-select @error('category') is-invalid @enderror"
-                                                      id="edit-category" name="category_id" required>
-                                                      <option value="" disabled selected>Select Category
-                                                      </option>
-                                                      @foreach ($categories as $category)
-                                                          <option value="{{ $category->id }}">{{ $category->name }}
-                                                          </option>
-                                                      @endforeach
-                                                  </select>
-                                                  @error('ring')
-                                                      <span class="invalid-feedback" role="alert">
-                                                          <strong>{{ $message }}</strong>
-                                                      </span>
-                                                  @enderror
-                                              </div>
-                                              <div class="col-lg-12">
-                                                  <label for="edit-name"
-                                                      class="form-label text-secondary mb-1">Technology Name
-                                                      <span style="color:var(--error)">*</span>
-                                                  </label>
-                                                  <input type="text"
-                                                      class="form-control @error('name') is-invalid @enderror"
-                                                      id="edit-name" name="name"
-                                                      placeholder="Enter technology name"
-                                                      value="{{ old('name') }}" required>
-                                                  @error('name')
-                                                      <span class="invalid-feedback" role="alert">
-                                                          <strong>{{ $message }}</strong>
-                                                      </span>
-                                                  @enderror
-                                              </div>
-                                              <div class="col-lg-12">
-                                                  <div class="mb-2">
-                                                      <label for="description" class="form-label text-secondary"
-                                                          style="font-weight:600;">Description
-                                                          <span style="color: var(--error);">*</span>
-                                                      </label>
-                                                      <input id="edit-description" name="description"
-                                                          type="hidden"
-                                                          class="@error('description') is-invalid @enderror"
-                                                          value="{{ old('description') }}">
-                                                      <trix-editor input="edit-description"></trix-editor>
-                                                      @error('description')
-                                                          <span class="invalid-feedback" role="alert">
-                                                              <strong>{{ $message }}</strong>
-                                                          </span>
-                                                      @enderror
-                                                  </div>
-                                              </div>
-                                              <div class="col-lg-12">
-                                                  <label for="edit-quadrant"
-                                                      class="form-label text-secondary mb-1">Quadrant
-                                                      <span style="color:var(--error)">*</span>
-                                                  </label>
-                                                  <select class="form-select @error('quadrant') is-invalid @enderror"
-                                                      id="edit-quadrant" name="quadrant" required>
-                                                      <option value="" disabled selected>Select Quadrant
-                                                      </option>
-                                                      <option value="Techniques">Techniques</option>
-                                                      <option value="Platforms">Platforms</option>
-                                                      <option value="Tools">Tools</option>
-                                                      <option value="Languages and Frameworks">Languages and Frameworks
-                                                      </option>
-                                                  </select>
-                                                  @error('quadrant')
-                                                      <span class="invalid-feedback" role="alert">
-                                                          <strong>{{ $message }}</strong>
-                                                      </span>
-                                                  @enderror
-                                              </div>
-                                              <div class="col-lg-12">
-                                                  <label for="edit-ring" class="form-label text-secondary mb-1">Ring
-                                                      <span style="color:var(--error)">*</span>
-                                                  </label>
-                                                  <select class="form-select @error('ring') is-invalid @enderror"
-                                                      id="edit-ring" name="ring" required>
-                                                      <option value="" disabled selected>Select Ring</option>
-                                                      <option value="hold">hold</option>
-                                                      <option value="adopt">adopt</option>
-                                                      <option value="assess">assess</option>
-                                                      <option value="trial">trial</option>
-                                                  </select>
-                                                  @error('ring')
-                                                      <span class="invalid-feedback" role="alert">
-                                                          <strong>{{ $message }}</strong>
-                                                      </span>
-                                                  @enderror
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="modal-footer">
-                                          <div class="hstack gap-2 justify-content-end">
-                                              <button type="button" class="btn btn-light"
-                                                  data-bs-dismiss="modal">Close</button>
-                                              <button type="submit" class="btn btn-success">Save Changes</button>
-                                          </div>
-                                      </div>
-                                  </form>
-                              </div>
-                          </div>
-                      </div>
+                                    <div class="modal-body">
+                                        <div class="row g-3">
+                                            <div class="col-lg-12">
+                                                <label for="edit-category" class="form-label text-secondary mb-1">Category
+                                                    <span style="color:var(--error)">*</span>
+                                                </label>
+                                                <select class="form-select @error('category') is-invalid @enderror"
+                                                    id="edit-category" name="category_id" required>
+                                                    <option value="" disabled selected>Select Category
+                                                    </option>
+                                                    @foreach ($categories as $category)
+                                                        <option value="{{ $category->id }}">{{ $category->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('ring')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <label for="edit-name" class="form-label text-secondary mb-1">Technology
+                                                    Name
+                                                    <span style="color:var(--error)">*</span>
+                                                </label>
+                                                <input type="text"
+                                                    class="form-control @error('name') is-invalid @enderror"
+                                                    id="edit-name" name="name" placeholder="Enter technology name"
+                                                    value="{{ old('name') }}" required>
+                                                @error('name')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-2">
+                                                    <label for="description" class="form-label text-secondary"
+                                                        style="font-weight:600;">Description
+                                                        <span style="color: var(--error);">*</span>
+                                                    </label>
+                                                    <input id="edit-description" name="description" type="hidden"
+                                                        class="@error('description') is-invalid @enderror"
+                                                        value="{{ old('description') }}">
+                                                    <trix-editor input="edit-description"></trix-editor>
+                                                    @error('description')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <label for="edit-quadrant" class="form-label text-secondary mb-1">Quadrant
+                                                    <span style="color:var(--error)">*</span>
+                                                </label>
+                                                <select class="form-select @error('quadrant') is-invalid @enderror"
+                                                    id="edit-quadrant" name="quadrant" required>
+                                                    <option value="" disabled selected>Select Quadrant
+                                                    </option>
+                                                    <option value="Techniques">Techniques</option>
+                                                    <option value="Platforms">Platforms</option>
+                                                    <option value="Tools">Tools</option>
+                                                    <option value="Languages and Frameworks">Languages and Frameworks
+                                                    </option>
+                                                </select>
+                                                @error('quadrant')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <label for="edit-ring" class="form-label text-secondary mb-1">Ring
+                                                    <span style="color:var(--error)">*</span>
+                                                </label>
+                                                <select class="form-select @error('ring') is-invalid @enderror"
+                                                    id="edit-ring" name="ring" required>
+                                                    <option value="" disabled selected>Select Ring</option>
+                                                    <option value="hold">hold</option>
+                                                    <option value="adopt">adopt</option>
+                                                    <option value="assess">assess</option>
+                                                    <option value="trial">trial</option>
+                                                </select>
+                                                @error('ring')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="hstack gap-2 justify-content-end">
+                                            <button type="button" class="btn btn-light"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-success">Save Changes</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal fade" id="technologyDetailModal" tabindex="-1" aria-labelledby="technologyDetailModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0">
+                                <div class="modal-header bg-primary text-white p-3">
+                                    <h5 class="modal-title" id="technologyDetailModalLabel">Technology Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-detail-modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-3">
+                                        <!-- Category Name -->
+                                        <div class="col-lg-6">
+                                            <label class="form-label text-secondary mb-1">Category</label>
+                                            <p class="form-control-plaintext" id="detail-category">{{ $technology->category->name }}</p>
+                                        </div>
+                                        <!-- Technology Name -->
+                                        <div class="col-lg-6">
+                                            <label class="form-label text-secondary mb-1">Technology Name</label>
+                                            <p class="form-control-plaintext" id="detail-name">{{ $technology->name }}</p>
+                                        </div>
+                                        <!-- User -->
+                                        <div class="col-lg-6">
+                                            <label class="form-label text-secondary mb-1">User</label>
+                                            <p class="form-control-plaintext" id="detail-user">{{ $technology->user->name }}</p>
+                                        </div>
+                                        <!-- Status is_new -->
+                                        <div class="col-lg-6">
+                                            <label class="form-label text-secondary mb-1">Status (New)</label>
+                                            <p class="form-control-plaintext" id="detail-is-new">{{ $technology->is_new ? 'Yes' : 'No' }}</p>
+                                        </div>
+                                        <!-- Quadrant -->
+                                        <div class="col-lg-6">
+                                            <label class="form-label text-secondary mb-1">Quadrant</label>
+                                            <p class="form-control-plaintext" id="detail-quadrant">{{ $technology->quadrant }}</p>
+                                        </div>
+                                        <!-- Ring -->
+                                        <div class="col-lg-6">
+                                            <label class="form-label text-secondary mb-1">Ring</label>
+                                            <p class="form-control-plaintext" id="detail-ring">{{ ucfirst($technology->ring) }}</p>
+                                        </div>
+                                        <!-- Description -->
+                                        <div class="col-lg-12">
+                                            <label class="form-label text-secondary mb-1">Description</label>
+                                            <p class="form-control-plaintext" id="detail-description">{{ $technology->description }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
                     <div class="modal fade" id="addTehcnologyModal" tabindex="-1"
                         aria-labelledby="addTechnologyModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -464,7 +555,8 @@
                                                     <option value="Techniques">Techniques</option>
                                                     <option value="Platforms">Platforms</option>
                                                     <option value="Tools">Tools</option>
-                                                    <option value="Languages and Frameworks">Languages and Frameworks</option>
+                                                    <option value="Languages and Frameworks">Languages and Frameworks
+                                                    </option>
                                                 </select>
                                                 @error('quadrant')
                                                     <span class="invalid-feedback" role="alert">
