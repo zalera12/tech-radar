@@ -77,6 +77,14 @@
             scroll-behavior: smooth;
         }
 
+        .swiper-pagination-bullet {
+    background-color: #fea82b;
+    opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: rgb(161, 8, 14);
+}
   
     </style>
 
@@ -505,7 +513,7 @@
         </p>
         
         <!-- Slider main container -->
-        <div class="swiper">
+        <div class="swiper" style="padding-bottom: 50px;">
             <!-- Additional required wrapper -->
             <div class="swiper-wrapper">
                 <!-- Slides -->
@@ -513,9 +521,9 @@
                     <div class="client__card">
                         <img src="assets/bangsam.jpeg" alt="client" style="width: 90px;height:80px;" />
                         <p>
-                            Sebagai seorang mentor dalam proyek Tech Radar, saya bangga dapat membantu tim memahami 
-                            dan memilih teknologi yang tepat untuk kebutuhan mereka. Dengan pendekatan yang sistematis, 
-                            kami menciptakan panduan yang memudahkan organisasi untuk menavigasi dunia teknologi yang 
+                            Sebagai seorang mentor dalam proyek Tech Radar, saya bangga dapat membantu tim memahami
+                            dan memilih teknologi yang tepat untuk kebutuhan mereka. Dengan pendekatan yang sistematis,
+                            kami menciptakan panduan yang memudahkan organisasi untuk menavigasi dunia teknologi yang
                             terus berkembang.
                         </p>
                         <h4>Sammi Aldhi Yanto</h4>
@@ -526,9 +534,9 @@
                     <div class="client__card">
                         <img src="assets/daffa.jpeg" alt="client" style="width: 90px;height:80px;" />
                         <p>
-                            Dalam peran saya sebagai analis untuk proyek Tech Radar, saya terlibat dalam pengumpulan 
-                            dan analisis data tentang berbagai teknologi. Kami memastikan bahwa informasi yang 
-                            disediakan relevan dan dapat diandalkan, sehingga memudahkan pengguna dalam membuat 
+                            Dalam peran saya sebagai analis untuk proyek Tech Radar, saya terlibat dalam pengumpulan
+                            dan analisis data tentang berbagai teknologi. Kami memastikan bahwa informasi yang
+                            disediakan relevan dan dapat diandalkan, sehingga memudahkan pengguna dalam membuat
                             keputusan strategis yang cerdas.
                         </p>
                         <h4>Daffa Dhyaulhaq</h4>
@@ -539,9 +547,9 @@
                     <div class="client__card">
                         <img src="assets/rifki.jpg" alt="client" style="width: 90px;height:80px;" />
                         <p>
-                            Sebagai UI & UX Designer dalam proyek Tech Radar, saya bertanggung jawab untuk menciptakan 
-                            pengalaman pengguna yang intuitif. Kami berfokus pada desain yang memudahkan pengguna 
-                            dalam mengeksplorasi dan memahami informasi tentang teknologi, sehingga mereka dapat 
+                            Sebagai UI & UX Designer dalam proyek Tech Radar, saya bertanggung jawab untuk menciptakan
+                            pengalaman pengguna yang intuitif. Kami berfokus pada desain yang memudahkan pengguna
+                            dalam mengeksplorasi dan memahami informasi tentang teknologi, sehingga mereka dapat
                             dengan mudah membuat pilihan yang tepat.
                         </p>
                         <h4>Rifki Pratama</h4>
@@ -552,9 +560,9 @@
                     <div class="client__card">
                         <img src="assets/azza.png" alt="client" style="width: 90px;height:80px;" />
                         <p>
-                            Dalam kapasitas saya sebagai programmer, saya terlibat dalam pengembangan dan 
-                            implementasi proyek Tech Radar. Kami berupaya untuk menciptakan platform yang 
-                            responsif dan efisien, memungkinkan pengguna untuk menemukan informasi teknologi yang 
+                            Dalam kapasitas saya sebagai programmer, saya terlibat dalam pengembangan dan
+                            implementasi proyek Tech Radar. Kami berupaya untuk menciptakan platform yang
+                            responsif dan efisien, memungkinkan pengguna untuk menemukan informasi teknologi yang
                             mereka butuhkan dengan mudah dan cepat.
                         </p>
                         <h4>Azzairul</h4>
@@ -563,8 +571,10 @@
                 </div>
             </div>
             
-            
+            <!-- Pagination (bulat-bulat) -->
+            <div class="swiper-pagination"></div>
         </div>
+        
     </section>
 
     <footer class="footer" style="background: rgb(161, 8, 14);" style="">
@@ -587,7 +597,7 @@
                     <li><a href="#categories" class="text-white">Categories</a></li>
                     <li><a href="#job" class="text-white">Companies</a></li>
                     <li><a href="#service" class="text-white">Services</a></li>
-                    <li><a href="#client" class="text-white">Teams</a></li>
+                    <li><a href="#client" "text-white">Teams</a></li>
                 </ul>
             </div>
             <div class="footer__col">
@@ -630,6 +640,9 @@
     <script src="/js/main.js"></script>
     <script>
         
+ 
+
+
         @if(session('error'))
             Swal.fire({
                 icon: 'error',
