@@ -134,7 +134,7 @@
         <img src="assets/tailwind.png" alt="header" />
         <h2>
             <img src="assets/bag.png" alt="radar" />
-            Platform Tech Radar No.1
+            Platform Tech Radar No.1 Di Dunia
         </h2>
         <h1>Jelajahi, Analisis &<br />Tingkatkan <span>Teknologi Anda</span></h1>
         <p>
@@ -511,7 +511,7 @@
                 <!-- Slides -->
                 <div class="swiper-slide">
                     <div class="client__card">
-                        <img src="assets/bangsam.jpeg" alt="client" style="width: 85px;height:85px;" />
+                        <img src="assets/bangsam.jpeg" alt="client" style="width: 90px;height:80px;" />
                         <p>
                             Sebagai seorang mentor dalam proyek Tech Radar, saya bangga dapat membantu tim memahami 
                             dan memilih teknologi yang tepat untuk kebutuhan mereka. Dengan pendekatan yang sistematis, 
@@ -524,7 +524,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="client__card">
-                        <img src="assets/daffa.jpeg" alt="client" style="width: 85px;height:85px;" />
+                        <img src="assets/daffa.jpeg" alt="client" style="width: 90px;height:80px;" />
                         <p>
                             Dalam peran saya sebagai analis untuk proyek Tech Radar, saya terlibat dalam pengumpulan 
                             dan analisis data tentang berbagai teknologi. Kami memastikan bahwa informasi yang 
@@ -537,7 +537,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="client__card">
-                        <img src="assets/rifki.jpg" alt="client" style="width: 85px;height:85px;" />
+                        <img src="assets/rifki.jpg" alt="client" style="width: 90px;height:80px;" />
                         <p>
                             Sebagai UI & UX Designer dalam proyek Tech Radar, saya bertanggung jawab untuk menciptakan 
                             pengalaman pengguna yang intuitif. Kami berfokus pada desain yang memudahkan pengguna 
@@ -550,7 +550,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="client__card">
-                        <img src="assets/azza.png" alt="client" style="width: 85px;height:85px;" />
+                        <img src="assets/azza.png" alt="client" style="width: 90px;height:80px;" />
                         <p>
                             Dalam kapasitas saya sebagai programmer, saya terlibat dalam pengembangan dan 
                             implementasi proyek Tech Radar. Kami berupaya untuk menciptakan platform yang 

@@ -233,7 +233,7 @@
                                                                data-quadrant="{{ $technology->quadrant }}"
                                                                data-ring="{{ ucfirst($technology->ring) }}"
                                                                data-description="{{ $technology->description }}">
-                                                                <i class="ri-eye-fill align-bottom me-2 text-muted"></i>View
+                                                                <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -427,7 +427,7 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content border-0">
                                 <div class="modal-header bg-primary text-white p-3">
-                                    <h5 class="modal-title" id="technologyDetailModalLabel">Technology Details</h5>
+                                    <h5 class="modal-title text-white" id="technologyDetailModalLabel">Technology Details</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-detail-modal"></button>
                                 </div>
                                 <div class="modal-body">
@@ -435,37 +435,37 @@
                                         <!-- Category Name -->
                                         <div class="col-lg-6">
                                             <label class="form-label text-secondary mb-1">Category</label>
-                                            <p class="form-control-plaintext" id="detail-category">{{ $technology->category->name }}</p>
+                                            <p class="form-control-plaintext" id="detail-category"></p>
                                         </div>
                                         <!-- Technology Name -->
                                         <div class="col-lg-6">
                                             <label class="form-label text-secondary mb-1">Technology Name</label>
-                                            <p class="form-control-plaintext" id="detail-name">{{ $technology->name }}</p>
+                                            <p class="form-control-plaintext" id="detail-name"></p>
                                         </div>
                                         <!-- User -->
                                         <div class="col-lg-6">
                                             <label class="form-label text-secondary mb-1">User</label>
-                                            <p class="form-control-plaintext" id="detail-user">{{ $technology->user->name }}</p>
+                                            <p class="form-control-plaintext" id="detail-user"></p>
                                         </div>
                                         <!-- Status is_new -->
                                         <div class="col-lg-6">
                                             <label class="form-label text-secondary mb-1">Status (New)</label>
-                                            <p class="form-control-plaintext" id="detail-is-new">{{ $technology->is_new ? 'Yes' : 'No' }}</p>
+                                            <p class="form-control-plaintext" id="detail-is-new"></p>
                                         </div>
                                         <!-- Quadrant -->
                                         <div class="col-lg-6">
                                             <label class="form-label text-secondary mb-1">Quadrant</label>
-                                            <p class="form-control-plaintext" id="detail-quadrant">{{ $technology->quadrant }}</p>
+                                            <p class="form-control-plaintext" id="detail-quadrant"></p>
                                         </div>
                                         <!-- Ring -->
                                         <div class="col-lg-6">
                                             <label class="form-label text-secondary mb-1">Ring</label>
-                                            <p class="form-control-plaintext" id="detail-ring">{{ ucfirst($technology->ring) }}</p>
+                                            <p class="form-control-plaintext" id="detail-ring"></p>
                                         </div>
                                         <!-- Description -->
                                         <div class="col-lg-12">
                                             <label class="form-label text-secondary mb-1">Description</label>
-                                            <p class="form-control-plaintext" id="detail-description">{{ $technology->description }}</p>
+                                            <p class="form-control-plaintext" id="detail-description"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -475,6 +475,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     
 
                     <div class="modal fade" id="addTehcnologyModal" tabindex="-1"
@@ -655,6 +656,7 @@
     <script src="{{ URL::asset('build/js/pages/crm-companies.init.js') }}"></script>
     <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Event listener for edit button
@@ -753,5 +755,30 @@
                 timer: 1500
             });
         @endif
+        // JavaScript/jQuery to handle the data population in the modal
+$(document).ready(function () {
+    // When view-item-btn is clicked
+    $('.view-item-btn').on('click', function () {
+        // Get the data attributes from the clicked element
+        var category = $(this).data('category');
+        var name = $(this).data('name');
+        var user = $(this).data('user');
+        var isNew = $(this).data('is-new');
+        var quadrant = $(this).data('quadrant');
+        var ring = $(this).data('ring');
+        var description = $(this).data('description');
+
+        // Set the data in the modal
+        $('#detail-category').text(category);
+        $('#detail-name').text(name);
+        $('#detail-user').text(user);
+        $('#detail-is-new').text(isNew);
+        $('#detail-quadrant').text(quadrant);
+        $('#detail-ring').text(ring);
+        $('#detail-description').html(description);
+
+    });
+});
+
     </script>
 @endsection
