@@ -46,17 +46,18 @@
                                                 data-bs-target="#deleteCompanyModal" data-id="{{ $company->id }}">
                                                 <i class="ri-delete-bin-line align-bottom me-1"></i> Delete Company
                                             </button>
-                                            <?php 
-                                                  $roleId = App\Models\company_users::where('company_id', $company->id)
-                                                        ->where('user_id', $user->id)
-                                                        ->pluck('role_id')
-                                                        ->first();
-                                                    $role = App\Models\Role::where('id',$roleId)->first()->name;
+                                            <?php
+                                            $roleId = App\Models\company_users::where('company_id', $company->id)
+                                                ->where('user_id', $user->id)
+                                                ->pluck('role_id')
+                                                ->first();
+                                            $role = App\Models\Role::where('id', $roleId)->first()->name;
                                             ?>
                                             @if ($role != 'OWNER')
                                                 <button class="btn btn-danger btn-custom me-2" data-bs-toggle="modal"
                                                     data-bs-target="#leavingCompanyModal" data-id="{{ $company->id }}">
-                                                    <i class="ri-share-forward-2-line align-bottom me-1"></i> Leaving The Company
+                                                    <i class="ri-share-forward-2-line align-bottom me-1"></i> Leaving The
+                                                    Company
                                                 </button>
                                             @endif
                                         </div>
@@ -119,7 +120,8 @@
                                                 <div class="mt-4 text-center">
                                                     <h4 class="fs-semibold">Are you sure you want to leaving this company?
                                                     </h4>
-                                                    <p class="text-muted fs-14 mb-4 pt-1">Leaving from this company will remove
+                                                    <p class="text-muted fs-14 mb-4 pt-1">Leaving from this company will
+                                                        remove
                                                         you from the company.</p>
                                                     <div class="hstack gap-2 justify-content-center remove">
                                                         <button
@@ -217,10 +219,12 @@
                                                         </div>
                                                         <!-- Input for company description -->
                                                         <div class="col-lg-12">
-                                                            <label for="description" class="form-label text-black" style="font-weight:600;">Description
+                                                            <label for="description" class="form-label text-black"
+                                                                style="font-weight:600;">Description
                                                                 <span style="color: var(--error);">*</span>
                                                             </label>
-                                                            <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror" rows="5">{{ $company->description }}</textarea>
+                                                            <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror"
+                                                                rows="5">{{ $company->description }}</textarea>
                                                             @error('description')
                                                                 <span class="invalid-feedback" role="alert">
                                                                     <strong>{{ $message }}</strong>
@@ -288,7 +292,15 @@
                                                     <div>
                                                         <p class="mb-2 fw-medium" style="font-size: 14px;">Total Members :
                                                         </p>
-                                                        <div class="badge bg-danger fs-12">{{ $company->users->count() }}
+                                                        <?php
+                                                        $companyData = App\Models\company_users::where('company_id', $company->id)
+                                                            ->where('status', 'ACCEPTED')
+                                                            ->get();
+                                                        
+                                                        $totalUsers = $companyData->count();
+                                                        
+                                                        ?>
+                                                        <div class="badge bg-danger fs-12">{{ $totalUsers }}
                                                             orang</div>
                                                     </div>
                                                 </div>
@@ -326,11 +338,8 @@
                     </div>
                     <div class="d-flex align-items-end justify-content-between mt-4">
                         <div>
-                            <?php
-                            $totalEmployess = $company->users->count();
-                            ?>
                             <h4 class="fs-20 fw-semibold ff-secondary mb-4"><span class="counter-value"
-                                    data-target="{{ $totalEmployess }}">0</span> Employee</h4>
+                                    data-target="{{ $totalUsers }}">0</span> Employee</h4>
                             <a href="/companies/users/{{ $company->id }}?permission=Read Company User&idcp={{ $company->id }}"
                                 class="text-decoration-underline">View All</a>
                         </div>
@@ -461,21 +470,20 @@
                                 <p class="card-text text-muted mb-0">{{ $category->description }}</p>
                             </div>
                             <div class="card-footer">
-                                @if($totalTechnologies > 0)
+                                @if ($totalTechnologies > 0)
                                     <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ strtoupper($category->name) }} - {{ $company->name }}.json"
                                         class="link-success float-end">View Radar <i
-                                        class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i></a>
+                                            class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i></a>
                                 @else
-                                    <a href="#"  
-                                        class="link-danger float-end">No Technologies Available <i
-                                        class="ri-alert-line align-middle ms-1 lh-1"></i></a>
+                                    <a href="#" class="link-danger float-end">No Technologies Available <i
+                                            class="ri-alert-line align-middle ms-1 lh-1"></i></a>
                                 @endif
                                 <p class="text-muted mb-0">
                                     {{ \Carbon\Carbon::parse($category->created_at)->format('d F Y') }}
                                 </p>
                             </div>
                         </div>
-                        
+
                     </div>
                 @endforeach
             @else
@@ -514,7 +522,7 @@
                                 ->where('user_id', $employee->id)
                                 ->pluck('role_id')
                                 ->first();
-                            $role = App\Models\Role::where('id',$roleId)->first()->name;
+                            $role = App\Models\Role::where('id', $roleId)->first()->name;
                             ?>
                             <p class="mb-0 fw-medium" style="font-size: 14px;">{{ $role }}</p>
                         </div>
@@ -532,7 +540,8 @@
                                 ->pluck('created_at')
                                 ->first();
                             ?>
-                            <p class="text-muted mb-0 fw-medium" style="font-size: 12px;">{{ $waktu_masuk->diffForHumans() }}</p>
+                            <p class="text-muted mb-0 fw-medium" style="font-size: 12px;">
+                                {{ $waktu_masuk->diffForHumans() }}</p>
 
                         </div>
                         <div class="card-footer text-center">
