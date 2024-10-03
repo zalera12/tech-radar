@@ -92,7 +92,7 @@
 </head>
 
 <body>
-    <a href="#navbar" style="position: fixed;right:20px;bottom:35px;background:#fea82b;padding-block:5px;padding-inline:10px;border-radius:5px;z-index:9999;">
+    <a href="#home" style="position: fixed;right:20px;bottom:35px;background:#fea82b;padding-block:5px;padding-inline:10px;border-radius:5px;z-index:9999;">
         <i class="ri-arrow-up-line" style="font-size:30px;color:white;"></i>
     </a>
     <nav id="navbar">
@@ -597,7 +597,7 @@
                     <li><a href="#categories" class="text-white">Categories</a></li>
                     <li><a href="#job" class="text-white">Companies</a></li>
                     <li><a href="#service" class="text-white">Services</a></li>
-                    <li><a href="#client" "text-white">Teams</a></li>
+                    <li><a href="#client" class="text-white">Teams</a></li>
                 </ul>
             </div>
             <div class="footer__col">
