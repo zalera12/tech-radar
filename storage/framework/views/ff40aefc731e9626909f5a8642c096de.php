@@ -505,15 +505,22 @@ unset($__errorArgs, $__bag); ?>
                                 <p class="card-text text-muted mb-0"><?php echo e($category->description); ?></p>
                             </div>
                             <div class="card-footer">
-                                <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/<?php echo e(strtoupper($category->name)); ?> - <?php echo e($company->name); ?>.json"
-                                    class="link-success float-end">View Radar <i
+                                <?php if($totalTechnologies > 0): ?>
+                                    <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/<?php echo e(strtoupper($category->name)); ?> - <?php echo e($company->name); ?>.json"
+                                        class="link-success float-end">View Radar <i
                                         class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i></a>
+                                <?php else: ?>
+                                    <a href="#"  
+                                        class="link-danger float-end">No Technologies Available <i
+                                        class="ri-alert-line align-middle ms-1 lh-1"></i></a>
+                                <?php endif; ?>
                                 <p class="text-muted mb-0">
                                     <?php echo e(\Carbon\Carbon::parse($category->created_at)->format('d F Y')); ?>
 
                                 </p>
                             </div>
                         </div>
+                        
                     </div>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             <?php else: ?>
