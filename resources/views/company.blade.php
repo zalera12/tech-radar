@@ -98,8 +98,14 @@
                         $totalTechnologies = $category->technologies->count();
                         ?>
                         <p>{{ $totalTechnologies }} teknologi</p>
-                        <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ strtoupper($category->name) }} - {{ $company->name }}.json" class="btn2 d-block text-center">Lihat Radar</a>
+                        
+                        @if($totalTechnologies > 0)
+                            <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ strtoupper($category->name) }} - {{ $company->name }}.json" class="btn2 d-block text-center">Lihat Radar</a>
+                        @else
+                            <a href="#" class="btn2 d-block text-center">Tidak Tersedia</a>
+                        @endif
                     </div>
+                    
                     {{-- <div class="job__card" style="margin-top: 1rem;">
                         <h6 style="font-size: 1.5rem;font-weight:500;">{{ $category->name }}</h6>
                         <p style="margin-top: 20px;height:65px;overflow:auto;">

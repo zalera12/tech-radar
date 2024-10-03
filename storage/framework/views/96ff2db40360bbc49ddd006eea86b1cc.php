@@ -99,8 +99,14 @@
                         $totalTechnologies = $category->technologies->count();
                         ?>
                         <p><?php echo e($totalTechnologies); ?> teknologi</p>
-                        <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/<?php echo e(strtoupper($category->name)); ?> - <?php echo e($company->name); ?>.json" class="btn2 d-block text-center">Lihat Radar</a>
+                        
+                        <?php if($totalTechnologies > 0): ?>
+                            <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/<?php echo e(strtoupper($category->name)); ?> - <?php echo e($company->name); ?>.json" class="btn2 d-block text-center">Lihat Radar</a>
+                        <?php else: ?>
+                            <a href="#" class="btn2 d-block text-center">Tidak Tersedia</a>
+                        <?php endif; ?>
                     </div>
+                    
                     
                 </div>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
