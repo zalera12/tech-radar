@@ -230,7 +230,7 @@
                 </ul>
             </div>
         </div>
-        <div class="footer__bar text-white">
+        <div class="footer__bar text-white" style="border-top:solid;border-top-color:rgba(255, 255, 255, 0.08);border-top-width:0.5px;width:98%;margin-inline:auto">
             Copyright © 2024 Tech Radar Project. All rights reserved.
         </div>
     </footer>

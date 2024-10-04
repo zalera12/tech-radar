@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <a href="#navbar" style="position: fixed;right:20px;bottom:35px;background:#fea82b;padding-block:5px;padding-inline:10px;border-radius:5px;z-index:9999;">
+    <a href="#home" style="position: fixed;right:20px;bottom:35px;background:#fea82b;padding-block:5px;padding-inline:10px;border-radius:5px;z-index:9999;">
         <i class="ri-arrow-up-line" style="font-size:30px;color:white;"></i>
     </a>
     <nav id="navbar">
@@ -231,7 +231,7 @@
                 </ul>
             </div>
         </div>
-        <div class="footer__bar text-white">
+        <div class="footer__bar text-white" style="border-top:solid;border-top-color:rgba(255, 255, 255, 0.08);border-top-width:0.5px;width:98%;margin-inline:auto">
             Copyright © 2024 Tech Radar Project. All rights reserved.
         </div>
     </footer>
