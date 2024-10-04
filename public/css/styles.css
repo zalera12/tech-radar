@@ -677,7 +677,11 @@ nav {
 }
 
 .footer__links a:hover {
-    color: var(--primary-color);
+    color: #fbbc09;
+}
+
+.footer__links li:hover {
+    color: #fbbc09;
 }
 
 .footer__links a span {

@@ -98,7 +98,7 @@
     <nav id="navbar">
         <div class="nav__header">
             <div class="nav__logo">
-                <a href="#" class="logo">Tech<span>Radar</span></a>
+                <a href="#" class="logo">Tech<span> Radar</span></a>
             </div>
             <div class="nav__menu__btn" id="menu-btn">
                 <i class="ri-menu-line"></i>
@@ -108,9 +108,9 @@
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#categories">Categories</a></li>
-            <li><a href="#job">Companies</a></li>
+            <li><a href="#companies">Companies</a></li>
             <li><a href="#service">Services</a></li>
-            <li><a href="#client">Teams</a></li>
+            <li><a href="#teams">Teams</a></li>
             @if (Auth::check())
             <li><a href="/index">Dashboard</a></li>
             @endif
@@ -265,7 +265,7 @@
     </section>
 
 
-    <section class="section__container job__container" id="job">
+    <section class="section__container job__container" id="companies">
         <h2 class="section__header"><span>Perusahaan Terkemuka</span> yang Bermitra dengan Kami</h2>
         <p class="section__description">
             Temukan Perusahaan-Perguruan Terkemuka yang Bekerja Sama dengan Platform Tech Radar Kami
@@ -506,7 +506,7 @@
 
     </div>
 
-    <section class="section__container client__container" id="client">
+    <section class="section__container client__container" id="teams">
         <h2 class="section__header">Tim <span>Pengembang</span></h2>
         <p class="section__description">
             Kenali orang-orang dan tim yang berperan penting dalam mengembangkan dan membangun project Tech Radar ini.
@@ -595,9 +595,9 @@
                     <li><a href="#navbar" class="text-white">Home</a></li>
                     <li><a href="#about" class="text-white">About</a></li>
                     <li><a href="#categories" class="text-white">Categories</a></li>
-                    <li><a href="#job" class="text-white">Companies</a></li>
+                    <li><a href="#companies" class="text-white">Companies</a></li>
                     <li><a href="#service" class="text-white">Services</a></li>
-                    <li><a href="#client" class="text-white">Teams</a></li>
+                    <li><a href="#teams" class="text-white">Teams</a></li>
                 </ul>
             </div>
             <div class="footer__col">
@@ -627,7 +627,7 @@
                 </ul>
             </div>
         </div>
-        <div class="footer__bar text-white">
+        <div class="footer__bar text-white" style="border-top:solid;border-top-color:rgba(255, 255, 255, 0.08);border-top-width:0.5px;width:98%;margin-inline:auto">
             Copyright © 2024 Tech Radar Project. All rights reserved.
         </div>
     </footer>
