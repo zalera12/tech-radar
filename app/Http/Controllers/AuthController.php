@@ -49,7 +49,7 @@ class AuthController extends Controller
             Auth::login($user);
     
             // Redirect ke halaman utama dengan pesan sukses
-            return redirect('/index')->with('login_success', "Hey there! You are in. Let's get started!");
+            return redirect('/index')->with('login_success', "Hey there! You are in. Lets get started!");
     
         } catch (\Exception $e) {
             // Jika ada kesalahan lain, arahkan kembali ke halaman login dengan pesan error
