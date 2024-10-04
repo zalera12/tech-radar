@@ -98,7 +98,7 @@
     <nav id="navbar">
         <div class="nav__header">
             <div class="nav__logo">
-                <a href="#" class="logo">Tech<span> Radar</span></a>
+                <a href="#" class="logo">Tech<span>Radar</span></a>
             </div>
             <div class="nav__menu__btn" id="menu-btn">
                 <i class="ri-menu-line"></i>
