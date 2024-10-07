@@ -56,6 +56,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Delete Company User', 'description' => 'Delete Company User'],
             ['name' => 'Read Pending Company User', 'description' => 'Read Pending Company User'],
             ['name' => 'Update Pending Company User', 'description' => 'Update Pending Company User'],
+            ['name' => 'Delete Pending Member', 'description' => 'Delete Pending Member'],
             ['name' => 'Acc Company User', 'description' => 'Acc Company User'],
             ['name' => 'Read Company Role', 'description' => 'Read Company Role'],
             ['name' => 'Add Company Role', 'description' => 'Add Company Role'],

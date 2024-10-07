@@ -80,56 +80,57 @@
                     <div>
                         <div class="table-responsive table-card mb-3">
                             @if ($roles->isNotEmpty())
-                            <table class="table align-middle table-nowrap mb-0" id="roleTable">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th scope="col">No</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Description</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    @foreach ($roles as $index => $role)
+                                <table class="table align-middle table-nowrap mb-0" id="roleTable">
+                                    <thead class="table-light">
                                         <tr>
-                                            <td>{{ $roles->firstItem() + $index }}</td>
-                                            <td class="name">{{ $role->name }}</td>
-                                            <td class="description">{{ $role->description }}</td>
-                                            <td>
-                                                <ul class="list-inline hstack gap-2 mb-0">
-                                                    <li class="list-inline-item edit" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                                                        <a class="edit-item-btn" href="#editModal" data-bs-toggle="modal"
-                                                            data-id="{{ $role->id }}" data-name="{{ $role->name }}"
-                                                            data-description="{{ $role->description }}">
-                                                            <i class="ri-pencil-fill align-bottom text-muted"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="Delete">
-                                                        <a class="remove-item-btn" data-bs-toggle="modal"
-                                                            href="#deleteRecordModal" data-id="{{ $role->id }}">
-                                                            <i class="ri-delete-bin-fill align-bottom text-muted"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </td>
+                                            <th scope="col">No</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Action</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>     
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach ($roles as $index => $role)
+                                            <tr>
+                                                <td>{{ $roles->firstItem() + $index }}</td>
+                                                <td class="name">{{ $role->name }}</td>
+                                                <td class="description">{{ $role->description }}</td>
+                                                <td>
+                                                    <ul class="list-inline hstack gap-2 mb-0">
+                                                        <li class="list-inline-item edit" data-bs-toggle="tooltip"
+                                                            data-bs-trigger="hover" data-bs-placement="top" title="Edit">
+                                                            <a class="edit-item-btn" href="#editModal"
+                                                                data-bs-toggle="modal" data-id="{{ $role->id }}"
+                                                                data-name="{{ $role->name }}"
+                                                                data-description="{{ $role->description }}">
+                                                                <i class="ri-pencil-fill align-bottom text-muted"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-inline-item" data-bs-toggle="tooltip"
+                                                            data-bs-trigger="hover" data-bs-placement="top" title="Delete">
+                                                            <a class="remove-item-btn" data-bs-toggle="modal"
+                                                                href="#deleteRecordModal" data-id="{{ $role->id }}">
+                                                                <i class="ri-delete-bin-fill align-bottom text-muted"></i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             @else
-                            <div class="noresult mt-5">
-                                <div class="text-center">
-                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                        colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
-                                    </lord-icon>
-                                    <h5 class="mt-2">Apologies, No Roles Data Available</h5>
-                                    <p class="text-muted mb-0">Unfortunately, there are no Roles available to display.
-                                    </p>
+                                <div class="noresult mt-5">
+                                    <div class="text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                            colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
+                                        </lord-icon>
+                                        <h5 class="mt-2">Apologies, No Roles Data Available</h5>
+                                        <p class="text-muted mb-0">Unfortunately, there are no Roles available to display.
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
                             @endif
                         </div>
                         <div class="d-flex justify-content-end mt-3">

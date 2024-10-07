@@ -112,6 +112,10 @@ Route::middleware(['web', 'authenticated'])->group(function () {
         Route::put('/companies/pendingMember/update/{member}', [CompaniesController::class, 'updatePendingMember'])
             ->middleware('check.permission:Acc Company User')
             ->name('companies.pendingMember.update');
+        Route::post('/companies/pendingMember/delete', [CompaniesController::class, 'destroyPendingMember'])
+            ->middleware('check.permission:Delete Pending Member');
+            
+            
 
         //Permission: Manage Log
         Route::get('/companies/log/{company}', [LogController::class, 'index'])

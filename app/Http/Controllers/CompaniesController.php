@@ -241,6 +241,52 @@ class CompaniesController extends Controller
         return redirect("/companies/users/$company->id?permission=Read Company User&idcp=$company->id")->with('add_success', 'User has been successfully added to the company.');
     }
 
+    public function destroyPendingMember(Request $request)
+    {
+
+        // Validasi input
+        $request->validate([
+            'member_id' => 'required|exists:users,id',
+            'company_id' => 'required|exists:companies,id',
+        ]);
+
+        // Ambil user dan company
+        $user = User::findOrFail($request->member_id);
+        $company = Company::findOrFail($request->company_id);
+
+        // Cek apakah user_id sama dengan user yang sedang login
+        if (auth()->user()->id == $request->member_id) {
+            return redirect("/companies/pendingMember/$company->id?permission=Read Pending Company User&idcp=$company->id")->with('error', 'Failed to remove user. You cannot remove yourself from the company.');
+        }
+
+        // Cek jika role adalah OWNER
+        if ($request->role == 'OWNER') {
+            return redirect("companies/pendingMember/$company->id?permission=Read Pending Company User&idcp=$company->id")->with('error', 'Failed to remove user. You cannot remove the owner.');
+        }
+
+        // Log penghapusan user
+        Log::create([
+            'id' => Ulid::generate(),
+            'company_id' => $request->company_id,
+            'name' => $request->user,
+            'description' => "Menolak user dengan nama {$user->name} untuk gabung dari perusahaan.",
+        ]);
+
+        Notification::create([
+            'id' => Ulid::generate(),
+            'title' => 'Permohonan Bergabung Anda Ditolak',
+            'message' => 'Kami informasikan bahwa permohonan Anda untuk bergabung dengan perusahaan ' . $company->name . ' telah ditolak. Terima kasih atas minat yang telah Anda tunjukkan.',
+            'user_id' => $user->id,
+            'is_read' => false,
+        ]);
+
+        // Menghapus user dari perusahaan (detach)
+        $user->companies()->detach($company->id);
+
+        // Redirect atau kembalikan response sukses
+        return redirect("/companies/pendingMember/{$company->id}?permission=Read Pending Company User&idcp=$company->id")->with('error', 'You have successfully rejected the workers request to join the company.');
+    }
+
     public function updatePendingMember(Request $request, $memberId)
     {
         $request->validate([
