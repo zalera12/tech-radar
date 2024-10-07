@@ -69,7 +69,7 @@ class DashboardController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required',
-            'photo' => 'nullable|image|file|max:1024', // Nullable untuk memungkinkan tanpa upload gambar
+            'photo' => 'nullable|image|file|max:10048', // Nullable untuk memungkinkan tanpa upload gambar
         ]);
     
         // Cek apakah user mengupload gambar baru
@@ -106,7 +106,7 @@ class DashboardController extends Controller
             'name' => 'required|string|max:100',
             'status' => 'required|string|max:100',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10048',
         ]);
 
         // Cek jika file gambar melebihi batas ukuran
@@ -185,7 +185,7 @@ class DashboardController extends Controller
             'name' => 'required|string|max:100',
             'description' => 'nullable|string',
             'status' => 'required|string|max:100',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10048',
         ]);
 
         // Ambil data company yang akan di-edit
