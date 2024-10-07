@@ -150,8 +150,8 @@
             dengan kebutuhan dan tujuan tim Anda, serta tingkatkan pengembangan.
         </p>
         <div class="header__btns">
-            <a class="btn text-white" href="#job">Jelajahi Teknologi</a>
-            <a href="#">
+            <a class="btn text-white" href="#companies">Jelajahi Teknologi</a>
+            <a href="">
                 <span><i class="ri-play-fill"></i></span>
                 Cara Kerjanya?
             </a>
@@ -552,7 +552,7 @@
                             dalam mengeksplorasi dan memahami informasi tentang teknologi, sehingga mereka dapat
                             dengan mudah membuat pilihan yang tepat.
                         </p>
-                        <h4>Rifki Pratama</h4>
+                        <h4>Rifky Pratama</h4>
                         <h5>UI & UX Designer</h5>
                     </div>
                 </div>
