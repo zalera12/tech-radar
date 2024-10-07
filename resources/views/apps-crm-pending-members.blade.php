@@ -355,8 +355,8 @@
         @endif
         @if (session('error'))
             Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
+                icon: 'success',
+                title: 'Berhasil!',
                 text: "{{ session('error') }}",
                 confirmButtonText: 'Oke',
             });

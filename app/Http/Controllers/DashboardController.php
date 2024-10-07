@@ -71,27 +71,33 @@ class DashboardController extends Controller
             'name' => 'required',
             'photo' => 'nullable|image|file|max:1024', // Nullable untuk memungkinkan tanpa upload gambar
         ]);
-
+    
         // Cek apakah user mengupload gambar baru
         if ($request->hasFile('photo')) {
+            // Cek jika file gambar melebihi batas ukuran
+            if ($request->file('photo')->getSize() > 1024 * 1024) {
+                return redirect()->back()->with('error', 'The photo size is too large. Maximum size allowed is 1MB.');
+            }
+    
             // Hapus gambar lama jika ada
             if ($user->photo && Storage::exists($user->photo)) {
                 Storage::delete($user->photo);
             }
-
+    
             // Simpan gambar baru
             $validated['photo'] = $request->file('photo')->store('folder_images');
         } else {
             // Jika tidak ada gambar baru yang diupload, tetap gunakan gambar lama
             $validated['photo'] = $request->input('old_photo');
         }
-
+    
         // Update user dengan data yang telah divalidasi
         $user->update($validated);
-
+    
         // Redirect kembali dengan pesan sukses
-        return redirect('/auth-profile')->with('success_update', 'Data berhasil diubah');
+        return redirect('/auth-profile')->with('success_update', 'Profile successfully updated!');
     }
+    
 
     public function addCompanies(Request $request)
     {
@@ -102,6 +108,11 @@ class DashboardController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Cek jika file gambar melebihi batas ukuran
+        if ($request->hasFile('image') && $request->file('image')->getSize() > 2048 * 1024) {
+            return redirect('/index')->with('error', 'The image file is too large. Maximum size allowed is 2MB.');
+        }
 
         // Proses upload gambar jika ada
         if ($request->hasFile('image')) {
@@ -182,6 +193,11 @@ class DashboardController extends Controller
 
         // Cek apakah user mengupload gambar baru
         if ($request->hasFile('image')) {
+            // Cek jika file gambar melebihi batas ukuran
+            if ($request->file('image')->getSize() > 2048 * 1024) {
+                return redirect()->back()->with('error', 'The image file is too large. Maximum size allowed is 2MB.');
+            }
+
             // Hapus gambar lama jika ada
             if ($company->image && Storage::exists($company->image)) {
                 Storage::delete($company->image);
@@ -202,8 +218,8 @@ class DashboardController extends Controller
 
         Log::create([
             'id' => Ulid::generate(),
-            'company_id' => $request->id,
-            'name' => $request->user,
+            'company_id' => $company->id,
+            'name' => auth()->user()->name,
             'description' => 'Mengubah nama perusahaan menjadi ' . $request->input('name'),
         ]);
 
@@ -262,7 +278,7 @@ class DashboardController extends Controller
 
         // Step 3: Cek apakah user sudah ada di company tersebut
         $existingCompanyUser = $userMe
-           ->companies()
+            ->companies()
             ->where('company_id', $company->id)
             ->first();
 
@@ -323,7 +339,7 @@ class DashboardController extends Controller
         } else {
             $dataUsers = [];
         }
-        
+
         foreach ($dataUsers as $userId) {
             Notification::create([
                 'id' => Ulid::generate(),
@@ -333,7 +349,6 @@ class DashboardController extends Controller
                 'is_read' => false,
             ]);
         }
-
 
         Notification::create([
             'id' => Ulid::generate(),

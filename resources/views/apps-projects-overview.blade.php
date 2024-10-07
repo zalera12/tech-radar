@@ -53,10 +53,10 @@
                                                 ->first();
                                             $role = App\Models\Role::where('id', $roleId)->first()->name;
                                             ?>
-                                            @if ($role != 'OWNER')
+                                            @if ($role !== 'OWNER')
                                                 <button class="btn btn-danger btn-custom me-2" data-bs-toggle="modal"
                                                     data-bs-target="#leavingCompanyModal" data-id="{{ $company->id }}">
-                                                    <i class="ri-share-forward-2-line align-bottom me-1"></i> Leaving The
+                                                    <i class="ri-share-forward-2-line align-bottom me-1"></i> Leave The
                                                     Company
                                                 </button>
                                             @endif
@@ -471,9 +471,12 @@
                             </div>
                             <div class="card-footer">
                                 @if ($totalTechnologies > 0)
-                                    <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ strtoupper($category->name) }} - {{ $company->name }}.json"
-                                        class="link-success float-end">View Radar <i
-                                            class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i></a>
+                                <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ strtoupper($category->name) }} - {{ $company->name }}.json" 
+                                    class="link-success float-end" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer">
+                                    View Radar <i class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i>
+                                 </a>
                                 @else
                                     <a href="#" class="link-danger float-end">No Technologies Available <i
                                             class="ri-alert-line align-middle ms-1 lh-1"></i></a>

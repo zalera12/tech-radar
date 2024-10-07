@@ -53,10 +53,10 @@
                                                 ->first();
                                             $role = App\Models\Role::where('id', $roleId)->first()->name;
                                             ?>
-                                            <?php if($role != 'OWNER'): ?>
+                                            <?php if($role !== 'OWNER'): ?>
                                                 <button class="btn btn-danger btn-custom me-2" data-bs-toggle="modal"
                                                     data-bs-target="#leavingCompanyModal" data-id="<?php echo e($company->id); ?>">
-                                                    <i class="ri-share-forward-2-line align-bottom me-1"></i> Leaving The
+                                                    <i class="ri-share-forward-2-line align-bottom me-1"></i> Leave The
                                                     Company
                                                 </button>
                                             <?php endif; ?>
@@ -515,9 +515,12 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="card-footer">
                                 <?php if($totalTechnologies > 0): ?>
-                                    <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/<?php echo e(strtoupper($category->name)); ?> - <?php echo e($company->name); ?>.json"
-                                        class="link-success float-end">View Radar <i
-                                            class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i></a>
+                                <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/<?php echo e(strtoupper($category->name)); ?> - <?php echo e($company->name); ?>.json" 
+                                    class="link-success float-end" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer">
+                                    View Radar <i class="ri-arrow-right-s-line align-middle ms-1 lh-1"></i>
+                                 </a>
                                 <?php else: ?>
                                     <a href="#" class="link-danger float-end">No Technologies Available <i
                                             class="ri-alert-line align-middle ms-1 lh-1"></i></a>

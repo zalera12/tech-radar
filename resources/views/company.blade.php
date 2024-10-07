@@ -100,7 +100,12 @@
                         <p>{{ $totalTechnologies }} teknologi</p>
                         
                         @if($totalTechnologies > 0)
-                            <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ strtoupper($category->name) }} - {{ $company->name }}.json" class="btn2 d-block text-center">Lihat Radar</a>
+                        <a href="https://viz.tech-radar.gci.my.id/?documentId=https://viz.tech-radar.gci.my.id/files/{{ strtoupper($category->name) }} - {{ $company->name }}.json" 
+                            class="btn2 d-block text-center" 
+                            target="_blank" 
+                            rel="noopener noreferrer">
+                            Lihat Radar
+                         </a>
                         @else
                             <a href="#" class="btn2 d-block text-center">Tidak Tersedia</a>
                         @endif
