@@ -95,45 +95,48 @@
     <a href="#home" style="position: fixed;right:20px;bottom:35px;background:#fea82b;padding-block:5px;padding-inline:10px;border-radius:5px;z-index:9999;">
         <i class="ri-arrow-up-line" style="font-size:30px;color:white;"></i>
     </a>
-    <nav id="navbar">
-        <div class="nav__header">
-            <div class="nav__logo">
-                <a href="#" class="logo">Tech<span>Radar</span></a>
+    <div class="navbar-container">
+        <nav id="navbar">
+            <div class="nav__header">
+                <div class="nav__logo">
+                    <a href="#" class="logo">Tech<span>Radar</span></a>
+                </div>
+                <div class="nav__menu__btn" id="menu-btn">
+                    <i class="ri-menu-line"></i>
+                </div>
             </div>
-            <div class="nav__menu__btn" id="menu-btn">
-                <i class="ri-menu-line"></i>
-            </div>
-        </div>
-        <ul class="nav__links" id="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#categories">Categories</a></li>
-            <li><a href="#companies">Companies</a></li>
-            <li><a href="#service">Services</a></li>
-            <li><a href="#teams">Teams</a></li>
-            <?php if(Auth::check()): ?>
-            <li><a href="/index">Dashboard</a></li>
+            <ul class="nav__links" id="nav-links" >
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#companies">Companies</a></li>
+                <li><a href="#service">Services</a></li>
+                <li><a href="#faq">Faq</a></li>
+                <li><a href="#teams">Teams</a></li>
+                <?php if(Auth::check()): ?>
+                <li><a href="/index">Dashboard</a></li>
+                <?php endif; ?>
+                <?php if(Auth::check()): ?>
+                <li>
+                    <form action="/logout" method="POST" class="btn" style="display: flex; align-items:center; gap:10px;">
+                        <?php echo csrf_field(); ?>
+                        <button type="submit" style="background: transparent; border: none; color: white; cursor: pointer;">
+                            Logout
+                        </button>
+                    </form>
+                </li> 
+            <?php else: ?>
+                <li>
+                    <a href="/loginAccount" class="btn" style="display: flex;align-items:center;gap:10px;">
+                        <img src="/assets/google.png" style="width: 20px;">
+                        <span style="color: white">Login</span>
+                    </a>
+                </li>              
             <?php endif; ?>
-            <?php if(Auth::check()): ?>
-            <li>
-                <form action="/logout" method="POST" class="btn" style="display: flex; align-items:center; gap:10px;">
-                    <?php echo csrf_field(); ?>
-                    <button type="submit" style="background: transparent; border: none; color: white; cursor: pointer;">
-                        Logout
-                    </button>
-                </form>
-            </li> 
-        <?php else: ?>
-            <li>
-                <a href="/loginAccount" class="btn" style="display: flex;align-items:center;gap:10px;">
-                    <img src="/assets/google.png" style="width: 20px;">
-                    <span style="color: white">Login</span>
-                </a>
-            </li>              
-        <?php endif; ?>
-        </ul>
-    </nav>
-    <header class="section__container header__container" id="home">
+            </ul>
+        </nav>
+    </div>
+    <header class="section__container header__container" id="home" style="margin-top:50px;">
         <img src="/assets/js.png" alt="header" />
         <img src="assets/html.png" alt="header" />
         <img src="assets/amazon.png" alt="header" />
@@ -150,8 +153,8 @@
             dengan kebutuhan dan tujuan tim Anda, serta tingkatkan pengembangan.
         </p>
         <div class="header__btns">
-            <a class="btn text-white" href="#job">Jelajahi Teknologi</a>
-            <a href="#">
+            <a class="btn text-white" href="#companies">Jelajahi Teknologi</a>
+            <a href="">
                 <span><i class="ri-play-fill"></i></span>
                 Cara Kerjanya?
             </a>
@@ -553,7 +556,7 @@
                             dalam mengeksplorasi dan memahami informasi tentang teknologi, sehingga mereka dapat
                             dengan mudah membuat pilihan yang tepat.
                         </p>
-                        <h4>Rifki Pratama</h4>
+                        <h4>Rifky Pratama</h4>
                         <h5>UI & UX Designer</h5>
                     </div>
                 </div>
@@ -652,6 +655,21 @@
                 confirmButtonText: 'Oke',
             });
         <?php endif; ?>   
+
+      
+        window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.navbar-container');
+    
+    // Check if the screen width is more than 768px
+    if (window.innerWidth > 768) {
+        if (window.scrollY > 50) {  // Trigger scroll effect after 50px scroll
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    }
+});
+
         
    
     </script>

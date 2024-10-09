@@ -19,7 +19,7 @@
 .section__container {
     max-width: var(--max-width);
     margin: auto;
-    padding: 5rem 1rem;
+    padding: 7.8rem 1rem;
 }
 
 .section__header {
@@ -118,17 +118,28 @@ body {
     font-family: "Poppins", sans-serif;
 }
 
-nav {
+.navbar-container {
     position: fixed;
-    isolation: isolate;
+    top: 0;
+    left: 0;
+    right: 0;
     width: 100%;
+    z-index: 9;
+    padding: 1rem;
+}
+
+nav {
     max-width: var(--max-width);
     margin-inline: auto;
-    z-index: 9;
+    display: flex;
+}
+
+.navbar-container.scrolled {
+    background: white;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow when scrolled */
 }
 
 .nav__header {
-    padding: 1rem;
     width: 100%;
     display: flex;
     align-items: center;
@@ -152,11 +163,10 @@ nav {
     justify-content: center;
     flex-direction: column;
     gap: 2rem;
-    padding: 2rem;
     background-color: var(--extra-light);
     transition: 0.5s;
     z-index: -1;
-    transform: translateY(-100%);
+    transform: translateY(-150%);
 }
 
 .nav__links.open {
@@ -700,6 +710,15 @@ nav {
         font-size: 3.5rem;
         line-height: 4rem;
     }
+    .navbar-container {
+        padding: 1rem;
+        background: rgb(229, 229, 229);
+    }
+
+    .nav__links {
+        padding-bottom: 20px;
+    }
+
     .section__header {
         font-size: 2rem;
     }
@@ -736,11 +755,19 @@ nav {
 @media (width > 768px) {
     nav {
         position: static;
-        padding: 2rem 1rem;
+        padding: 0.5rem 1rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 2rem;
+    }
+
+    .logo {
+        font-size: 2rem;
+    }
+
+    .navbar-container {
+        padding: 0.5rem;
     }
 
     .nav__header {
@@ -755,10 +782,12 @@ nav {
     .nav__links {
         position: static;
         padding: 0;
+        margin-top: 12px;
         flex-direction: row;
         justify-content: flex-end;
         background-color: transparent;
         transform: none;
+        z-index: 99999;
     }
 
     .steps__grid {
