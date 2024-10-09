@@ -727,82 +727,93 @@ class CompaniesController extends Controller
 }
 
 
-    public function addTechnologiesCompanies(Request $request)
-    {
-        // Validasi input
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'quadrant' => 'required|string|in:Techniques,Platforms,Tools,Languages and Frameworks',
-            'ring' => 'required|string|in:hold,adopt,assess,trial',
-            'category_id' => 'required|exists:categories,id',
-            'company_id' => 'required|exists:companies,id',
-            'user_id' => 'required|exists:users,id',
-        ]);
+public function addTechnologiesCompanies(Request $request)
+{
+    // Validasi input
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'quadrant' => 'required|string|in:Techniques,Platforms,Tools,Languages and Frameworks',
+        'ring' => 'required|string|in:hold,adopt,assess,trial',
+        'category_id' => 'required|exists:categories,id',
+        'company_id' => 'required|exists:companies,id',
+        'user_id' => 'required|exists:users,id',
+        'is_new' => 'required|boolean', // Tambahkan ini
+    ]);
 
-        // Generate ULID untuk id technology
-        $validated['id'] = Ulid::generate();
+    // Generate ULID untuk id technology
+    $validated['id'] = Ulid::generate();
 
-        // Buat technology baru
-        Technology::create($validated);
+    // Pastikan is_new adalah boolean
+    $validated['is_new'] = filter_var($validated['is_new'], FILTER_VALIDATE_BOOLEAN);
 
-        // Update file JSON untuk kategori terkait
-        $this->updateCategoryJson($validated['category_id'], $request->company_id);
+    // Buat technology baru
+    Technology::create($validated);
 
-        // Buat log untuk penambahan teknologi
-        Log::create([
-            'id' => Ulid::generate(),
-            'company_id' => $request->company_id,
-            'name' => $request->user, // Pastikan ini adalah data yang benar untuk log
-            'description' => 'Menambahkan Technology ' . $request->name . '.',
-        ]);
+    // Update file JSON untuk kategori terkait
+    $this->updateCategoryJson($validated['category_id'], $request->company_id);
 
-        // Redirect dengan pesan sukses
-        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")->with('success', 'Technology added successfully.');
+    // Buat log untuk penambahan teknologi
+    Log::create([
+        'id' => Ulid::generate(),
+        'company_id' => $request->company_id,
+        'name' => $request->user, // Pastikan ini adalah data yang benar untuk log
+        'description' => 'Menambahkan Technology ' . $request->name . '.',
+    ]);
+
+    // Redirect dengan pesan sukses
+    return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")
+        ->with('success', 'Technology added successfully.');
+}
+
+
+public function updateTechnologiesCompanies(Request $request)
+{
+    // Validasi input request
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'quadrant' => 'required|string|in:Techniques,Platforms,Tools,Languages and Frameworks',
+        'ring' => 'required|string|in:hold,adopt,assess,trial',
+        'category_id' => 'required|exists:categories,id',
+        'company_id' => 'required|exists:companies,id',
+        'user_id' => 'required|exists:users,id',
+        'is_new' => 'required|boolean', // Tambahkan ini
+    ]);
+
+    // Temukan teknologi berdasarkan id
+    $technology = Technology::findOrFail($request->id);
+
+    // Simpan category_id lama sebelum update
+    $oldCategoryId = $technology->category_id;
+
+    // Pastikan is_new adalah boolean
+    $request->merge(['is_new' => filter_var($request->is_new, FILTER_VALIDATE_BOOLEAN)]);
+
+    // Update teknologi dengan data yang telah divalidasi
+    $technology->update($request->all());
+
+    // Buat log untuk mencatat aktivitas update
+    Log::create([
+        'id' => Ulid::generate(),
+        'company_id' => $request->company_id,
+        'name' => $request->user, // Pastikan ini adalah data yang benar untuk log
+        'description' => 'Mengubah data technology ' . $request->name . '.',
+    ]);
+
+    // Jika category_id berubah, hapus data teknologi dari file JSON kategori lama
+    if ($oldCategoryId != $technology->category_id) {
+        $this->removeTechnologyFromCategoryJson($technology->id, $oldCategoryId, $request->company_id);
     }
 
-    public function updateTechnologiesCompanies(Request $request)
-    {
-        // Validasi input request
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'quadrant' => 'required|string|in:Techniques,Platforms,Tools,Languages and Frameworks',
-            'ring' => 'required|string|in:hold,adopt,assess,trial',
-            'category_id' => 'required|exists:categories,id',
-            'company_id' => 'required|exists:companies,id',
-            'user_id' => 'required|exists:users,id',
-        ]);
-    
-        // Temukan teknologi berdasarkan id
-        $technology = Technology::findOrFail($request->id);
-    
-        // Simpan category_id lama sebelum update
-        $oldCategoryId = $technology->category_id;
-    
-        // Update teknologi dengan data yang telah divalidasi
-        $technology->update($request->all());
-    
-        // Buat log untuk mencatat aktivitas update
-        Log::create([
-            'id' => Ulid::generate(),
-            'company_id' => $request->company_id,
-            'name' => $request->user, // Pastikan ini adalah data yang benar untuk log
-            'description' => 'Mengubah data technology ' . $request->name . '.',
-        ]);
-    
-        // Jika category_id berubah, hapus data teknologi dari file JSON kategori lama
-        if ($oldCategoryId != $technology->category_id) {
-            $this->removeTechnologyFromCategoryJson($technology->id, $oldCategoryId, $request->company_id);
-        }
-    
-        // Update file JSON untuk kategori terkait (kategori baru atau tetap sama)
-        $this->updateCategoryJson($technology->category_id, $request->company_id);
-    
-        // Redirect ke halaman teknologi dengan pesan sukses
-        return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")
-            ->with('success', 'Technology updated successfully.');
-    }
+    // Update file JSON untuk kategori terkait (kategori baru atau tetap sama)
+    $this->updateCategoryJson($technology->category_id, $request->company_id);
+
+    // Redirect ke halaman teknologi dengan pesan sukses
+    return redirect("/companies/technologies/$request->company_id?permission=Read Technology&idcp=$request->company_id")
+        ->with('success', 'Technology updated successfully.');
+}
+
     
 
     public function deleteTechnologiesCompanies(Request $request)

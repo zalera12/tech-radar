@@ -195,7 +195,7 @@
                                                 <td class="category">{{ $technology->category->name }}</td>
                                                 <td class="user">{{ $technology->user->name }}</td>
                                                 <td class="name">{{ $technology->name }}</td>
-                                                <td class="is_new">{{ $technology->is_new ? 'Yes' : 'No' }}</td>
+                                                <td class="is_new">{{ $technology->is_new ? 'TRUE' : 'FALSE' }}</td>
                                                 <td class="quadrant">{{ $technology->quadrant }}</td>
                                                 <td class="ring">{{ $technology->ring }}</td>
                                                 <td>
@@ -209,9 +209,12 @@
                                                                 data-category="{{ $technology->category->id }}"
                                                                 data-description="{{ $technology->description }}"
                                                                 data-quadrant="{{ $technology->quadrant }}"
-                                                                data-ring="{{ $technology->ring }}">
+                                                                data-ring="{{ $technology->ring }}"
+                                                                data-is-new="{{ $technology->is_new ? '1' : '0' }}">
+                                                                <!-- Tambahkan ini -->
                                                                 <i class="ri-pencil-fill align-bottom text-muted"></i>
                                                             </a>
+
                                                         </li>
                                                         <li class="list-inline-item" data-bs-toggle="tooltip"
                                                             data-bs-trigger="hover" data-bs-placement="top"
@@ -223,16 +226,17 @@
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item view-item-btn" href="javascript:void(0);"
-                                                               data-bs-toggle="modal" data-bs-target="#technologyDetailModal"
-                                                               data-id="{{ $technology->id }}"
-                                                               data-category="{{ $technology->category->name }}"
-                                                               data-name="{{ $technology->name }}"
-                                                               data-user="{{ $technology->user->name }}"
-                                                               data-is-new="{{ $technology->is_new ? 'Yes' : 'No' }}"
-                                                               data-quadrant="{{ $technology->quadrant }}"
-                                                               data-ring="{{ ucfirst($technology->ring) }}"
-                                                               data-description="{{ $technology->description }}">
+                                                            <a class="dropdown-item view-item-btn"
+                                                                href="javascript:void(0);" data-bs-toggle="modal"
+                                                                data-bs-target="#technologyDetailModal"
+                                                                data-id="{{ $technology->id }}"
+                                                                data-category="{{ $technology->category->name }}"
+                                                                data-name="{{ $technology->name }}"
+                                                                data-user="{{ $technology->user->name }}"
+                                                                data-is-new="{{ $technology->is_new ? 'Yes' : 'No' }}"
+                                                                data-quadrant="{{ $technology->quadrant }}"
+                                                                data-ring="{{ ucfirst($technology->ring) }}"
+                                                                data-description="{{ $technology->description }}">
                                                                 <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                             </a>
                                                         </li>
@@ -372,6 +376,22 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-12">
+                                                <label for="edit-is_new" class="form-label text-secondary mb-1">Is New
+                                                    <span style="color:var(--error)">*</span>
+                                                </label>
+                                                <select class="form-select @error('is_new') is-invalid @enderror"
+                                                    id="edit-is_new" name="is_new" required>
+                                                    <option value="" disabled>Select Is New</option>
+                                                    <option value="1">TRUE</option>
+                                                    <option value="0">FALSE</option>
+                                                </select>
+                                                @error('is_new')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-lg-12">
                                                 <label for="edit-quadrant" class="form-label text-secondary mb-1">Quadrant
                                                     <span style="color:var(--error)">*</span>
                                                 </label>
@@ -422,13 +442,16 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="modal fade" id="technologyDetailModal" tabindex="-1" aria-labelledby="technologyDetailModalLabel" aria-hidden="true">
+
+                    <div class="modal fade" id="technologyDetailModal" tabindex="-1"
+                        aria-labelledby="technologyDetailModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content border-0">
                                 <div class="modal-header bg-primary text-white p-3">
-                                    <h5 class="modal-title text-white" id="technologyDetailModalLabel">Technology Details</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-detail-modal"></button>
+                                    <h5 class="modal-title text-white" id="technologyDetailModalLabel">Technology Details
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                        id="close-detail-modal"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row g-3">
@@ -475,8 +498,8 @@
                             </div>
                         </div>
                     </div>
-                    
-                    
+
+
 
                     <div class="modal fade" id="addTehcnologyModal" tabindex="-1"
                         aria-labelledby="addTechnologyModalLabel" aria-hidden="true">
@@ -560,6 +583,25 @@
                                                     </option>
                                                 </select>
                                                 @error('quadrant')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <!-- Field is_new -->
+                                            <div class="col-lg-12">
+                                                <label for="is_new" class="form-label text-secondary mb-1">Is New
+                                                    <span style="color:var(--error)">*</span>
+                                                </label>
+                                                <select class="form-select @error('is_new') is-invalid @enderror"
+                                                    id="is_new" name="is_new" required>
+                                                    <option value="" disabled selected>Select Is New</option>
+                                                    <option value="1" {{ old('is_new') == '1' ? 'selected' : '' }}>
+                                                        TRUE</option>
+                                                    <option value="0" {{ old('is_new') == '0' ? 'selected' : '' }}>
+                                                        FALSE</option>
+                                                </select>
+                                                @error('is_new')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
@@ -668,10 +710,12 @@
                     const ring = this.getAttribute('data-ring');
                     const category = this.getAttribute('data-category');
                     const description = this.getAttribute('data-description');
+                    const is_new = this.getAttribute('data-is-new'); // Tambahkan ini
 
                     // Set input values
                     document.getElementById('edit-technology-id').value = id;
                     document.getElementById('edit-name').value = name;
+                    document.getElementById('edit-is_new').value = is_new ; // Set nilai is_new
                     const modalElement = document.getElementById('editTechnologyModal');
                     const modal = new bootstrap.Modal(modalElement);
                     modal.show();
@@ -725,6 +769,8 @@
             });
         });
 
+
+
         // Check if there's a success message in session
         @if (session('success_update'))
             Swal.fire({
@@ -756,29 +802,28 @@
             });
         @endif
         // JavaScript/jQuery to handle the data population in the modal
-$(document).ready(function () {
-    // When view-item-btn is clicked
-    $('.view-item-btn').on('click', function () {
-        // Get the data attributes from the clicked element
-        var category = $(this).data('category');
-        var name = $(this).data('name');
-        var user = $(this).data('user');
-        var isNew = $(this).data('is-new');
-        var quadrant = $(this).data('quadrant');
-        var ring = $(this).data('ring');
-        var description = $(this).data('description');
+        $(document).ready(function() {
+            // When view-item-btn is clicked
+            $('.view-item-btn').on('click', function() {
+                // Get the data attributes from the clicked element
+                var category = $(this).data('category');
+                var name = $(this).data('name');
+                var user = $(this).data('user');
+                var isNew = $(this).data('is-new');
+                var quadrant = $(this).data('quadrant');
+                var ring = $(this).data('ring');
+                var description = $(this).data('description');
 
-        // Set the data in the modal
-        $('#detail-category').text(category);
-        $('#detail-name').text(name);
-        $('#detail-user').text(user);
-        $('#detail-is-new').text(isNew);
-        $('#detail-quadrant').text(quadrant);
-        $('#detail-ring').text(ring);
-        $('#detail-description').html(description);
+                // Set the data in the modal
+                $('#detail-category').text(category);
+                $('#detail-name').text(name);
+                $('#detail-user').text(user);
+                $('#detail-is-new').text(isNew);
+                $('#detail-quadrant').text(quadrant);
+                $('#detail-ring').text(ring);
+                $('#detail-description').html(description);
 
-    });
-});
-
+            });
+        });
     </script>
 @endsection

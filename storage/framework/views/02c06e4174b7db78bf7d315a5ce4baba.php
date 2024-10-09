@@ -196,7 +196,7 @@
                                                 <td class="category"><?php echo e($technology->category->name); ?></td>
                                                 <td class="user"><?php echo e($technology->user->name); ?></td>
                                                 <td class="name"><?php echo e($technology->name); ?></td>
-                                                <td class="is_new"><?php echo e($technology->is_new ? 'Yes' : 'No'); ?></td>
+                                                <td class="is_new"><?php echo e($technology->is_new ? 'TRUE' : 'FALSE'); ?></td>
                                                 <td class="quadrant"><?php echo e($technology->quadrant); ?></td>
                                                 <td class="ring"><?php echo e($technology->ring); ?></td>
                                                 <td>
@@ -210,9 +210,12 @@
                                                                 data-category="<?php echo e($technology->category->id); ?>"
                                                                 data-description="<?php echo e($technology->description); ?>"
                                                                 data-quadrant="<?php echo e($technology->quadrant); ?>"
-                                                                data-ring="<?php echo e($technology->ring); ?>">
+                                                                data-ring="<?php echo e($technology->ring); ?>"
+                                                                data-is-new="<?php echo e($technology->is_new ? '1' : '0'); ?>">
+                                                                <!-- Tambahkan ini -->
                                                                 <i class="ri-pencil-fill align-bottom text-muted"></i>
                                                             </a>
+
                                                         </li>
                                                         <li class="list-inline-item" data-bs-toggle="tooltip"
                                                             data-bs-trigger="hover" data-bs-placement="top"
@@ -224,16 +227,17 @@
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item view-item-btn" href="javascript:void(0);"
-                                                               data-bs-toggle="modal" data-bs-target="#technologyDetailModal"
-                                                               data-id="<?php echo e($technology->id); ?>"
-                                                               data-category="<?php echo e($technology->category->name); ?>"
-                                                               data-name="<?php echo e($technology->name); ?>"
-                                                               data-user="<?php echo e($technology->user->name); ?>"
-                                                               data-is-new="<?php echo e($technology->is_new ? 'Yes' : 'No'); ?>"
-                                                               data-quadrant="<?php echo e($technology->quadrant); ?>"
-                                                               data-ring="<?php echo e(ucfirst($technology->ring)); ?>"
-                                                               data-description="<?php echo e($technology->description); ?>">
+                                                            <a class="dropdown-item view-item-btn"
+                                                                href="javascript:void(0);" data-bs-toggle="modal"
+                                                                data-bs-target="#technologyDetailModal"
+                                                                data-id="<?php echo e($technology->id); ?>"
+                                                                data-category="<?php echo e($technology->category->name); ?>"
+                                                                data-name="<?php echo e($technology->name); ?>"
+                                                                data-user="<?php echo e($technology->user->name); ?>"
+                                                                data-is-new="<?php echo e($technology->is_new ? 'Yes' : 'No'); ?>"
+                                                                data-quadrant="<?php echo e($technology->quadrant); ?>"
+                                                                data-ring="<?php echo e(ucfirst($technology->ring)); ?>"
+                                                                data-description="<?php echo e($technology->description); ?>">
                                                                 <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                             </a>
                                                         </li>
@@ -416,6 +420,36 @@ unset($__errorArgs, $__bag); ?>
                                                 </div>
                                             </div>
                                             <div class="col-lg-12">
+                                                <label for="edit-is_new" class="form-label text-secondary mb-1">Is New
+                                                    <span style="color:var(--error)">*</span>
+                                                </label>
+                                                <select class="form-select <?php $__errorArgs = ['is_new'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                                    id="edit-is_new" name="is_new" required>
+                                                    <option value="" disabled>Select Is New</option>
+                                                    <option value="1">TRUE</option>
+                                                    <option value="0">FALSE</option>
+                                                </select>
+                                                <?php $__errorArgs = ['is_new'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong><?php echo e($message); ?></strong>
+                                                    </span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                                            </div>
+                                            <div class="col-lg-12">
                                                 <label for="edit-quadrant" class="form-label text-secondary mb-1">Quadrant
                                                     <span style="color:var(--error)">*</span>
                                                 </label>
@@ -494,13 +528,16 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="modal fade" id="technologyDetailModal" tabindex="-1" aria-labelledby="technologyDetailModalLabel" aria-hidden="true">
+
+                    <div class="modal fade" id="technologyDetailModal" tabindex="-1"
+                        aria-labelledby="technologyDetailModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content border-0">
                                 <div class="modal-header bg-primary text-white p-3">
-                                    <h5 class="modal-title text-white" id="technologyDetailModalLabel">Technology Details</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-detail-modal"></button>
+                                    <h5 class="modal-title text-white" id="technologyDetailModalLabel">Technology Details
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                        id="close-detail-modal"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row g-3">
@@ -547,8 +584,8 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                         </div>
                     </div>
-                    
-                    
+
+
 
                     <div class="modal fade" id="addTehcnologyModal" tabindex="-1"
                         aria-labelledby="addTechnologyModalLabel" aria-hidden="true">
@@ -694,6 +731,39 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                                             </div>
+                                            <!-- Field is_new -->
+                                            <div class="col-lg-12">
+                                                <label for="is_new" class="form-label text-secondary mb-1">Is New
+                                                    <span style="color:var(--error)">*</span>
+                                                </label>
+                                                <select class="form-select <?php $__errorArgs = ['is_new'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                                    id="is_new" name="is_new" required>
+                                                    <option value="" disabled selected>Select Is New</option>
+                                                    <option value="1" <?php echo e(old('is_new') == '1' ? 'selected' : ''); ?>>
+                                                        TRUE</option>
+                                                    <option value="0" <?php echo e(old('is_new') == '0' ? 'selected' : ''); ?>>
+                                                        FALSE</option>
+                                                </select>
+                                                <?php $__errorArgs = ['is_new'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong><?php echo e($message); ?></strong>
+                                                    </span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                                            </div>
                                             <div class="col-lg-12">
                                                 <label for="ring" class="form-label text-secondary mb-1">Ring
                                                     <span style="color:var(--error)">*</span>
@@ -811,10 +881,12 @@ unset($__errorArgs, $__bag); ?>
                     const ring = this.getAttribute('data-ring');
                     const category = this.getAttribute('data-category');
                     const description = this.getAttribute('data-description');
+                    const is_new = this.getAttribute('data-is-new'); // Tambahkan ini
 
                     // Set input values
                     document.getElementById('edit-technology-id').value = id;
                     document.getElementById('edit-name').value = name;
+                    document.getElementById('edit-is_new').value = is_new ; // Set nilai is_new
                     const modalElement = document.getElementById('editTechnologyModal');
                     const modal = new bootstrap.Modal(modalElement);
                     modal.show();
@@ -868,6 +940,8 @@ unset($__errorArgs, $__bag); ?>
             });
         });
 
+
+
         // Check if there's a success message in session
         <?php if(session('success_update')): ?>
             Swal.fire({
@@ -899,30 +973,29 @@ unset($__errorArgs, $__bag); ?>
             });
         <?php endif; ?>
         // JavaScript/jQuery to handle the data population in the modal
-$(document).ready(function () {
-    // When view-item-btn is clicked
-    $('.view-item-btn').on('click', function () {
-        // Get the data attributes from the clicked element
-        var category = $(this).data('category');
-        var name = $(this).data('name');
-        var user = $(this).data('user');
-        var isNew = $(this).data('is-new');
-        var quadrant = $(this).data('quadrant');
-        var ring = $(this).data('ring');
-        var description = $(this).data('description');
+        $(document).ready(function() {
+            // When view-item-btn is clicked
+            $('.view-item-btn').on('click', function() {
+                // Get the data attributes from the clicked element
+                var category = $(this).data('category');
+                var name = $(this).data('name');
+                var user = $(this).data('user');
+                var isNew = $(this).data('is-new');
+                var quadrant = $(this).data('quadrant');
+                var ring = $(this).data('ring');
+                var description = $(this).data('description');
 
-        // Set the data in the modal
-        $('#detail-category').text(category);
-        $('#detail-name').text(name);
-        $('#detail-user').text(user);
-        $('#detail-is-new').text(isNew);
-        $('#detail-quadrant').text(quadrant);
-        $('#detail-ring').text(ring);
-        $('#detail-description').html(description);
+                // Set the data in the modal
+                $('#detail-category').text(category);
+                $('#detail-name').text(name);
+                $('#detail-user').text(user);
+                $('#detail-is-new').text(isNew);
+                $('#detail-quadrant').text(quadrant);
+                $('#detail-ring').text(ring);
+                $('#detail-description').html(description);
 
-    });
-});
-
+            });
+        });
     </script>
 <?php $__env->stopSection(); ?>
 

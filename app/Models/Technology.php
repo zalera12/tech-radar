@@ -23,6 +23,10 @@ class Technology extends Model
         'ring'
     ];
 
+    protected $casts = [
+        'is_new' => 'boolean', // Tambahkan ini
+    ];
+
     // Relasi ke model Company
     public function company()
     {
