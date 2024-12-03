@@ -334,7 +334,7 @@ unset($__errorArgs, $__bag); ?>
                                                         </p>
                                                         <div class="badge bg-danger fs-12"><?php echo e($company->users->count()); ?>
 
-                                                            orang</div>
+                                                            employee</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-sm-6">
