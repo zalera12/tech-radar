@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title'); ?>
     Pending Members
 <?php $__env->stopSection(); ?>
@@ -15,8 +16,7 @@
         <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
 
-    <h4>Pending Members Page</h4>
-    <div class="row mt-3">
+    <div class="row mt-1">
         <!--end col-->
         <div class="">
             <div class="card" id="companyList">

@@ -35,8 +35,8 @@ class DatabaseSeeder extends Seeder
 
             [
                 'id' => Ulid::generate(),
-                'name' => 'GUEST',
-                'description' => 'Guest',
+                'name' => 'Employee',
+                'description' => 'Employee',
             ],
         ];
 

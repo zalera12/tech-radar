@@ -15,8 +15,7 @@
         @endslot
     @endcomponent
 
-    <h4>Roles Page</h4>
-    <div class="row mt-3">
+    <div class="row mt-1">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">

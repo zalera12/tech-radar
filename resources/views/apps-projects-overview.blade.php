@@ -289,7 +289,7 @@
                                                         <p class="mb-2 fw-medium" style="font-size: 14px;">Total Members :
                                                         </p>
                                                         <div class="badge bg-danger fs-12">{{ $company->users->count() }}
-                                                            orang</div>
+                                                            employee</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-sm-6">
