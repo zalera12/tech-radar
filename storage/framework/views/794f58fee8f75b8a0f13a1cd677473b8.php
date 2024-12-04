@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title'); ?>
     Roles
 <?php $__env->stopSection(); ?>
@@ -15,8 +16,7 @@
         <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
 
-    <h4>Roles Page</h4>
-    <div class="row mt-3">
+    <div class="row mt-1">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
